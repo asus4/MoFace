@@ -14,10 +14,11 @@ autoWah.toMaster()
 const makeEffectUI = (name, effect) => {
   const folder = gui.addFolder(name)
   folder.add(effect.wet, 'value', 0.0, 1.0)
-  folder.add(effect,'baseFrequency', 100, 1500)
+  folder.add(effect, 'baseFrequency', 100, 1500)
 }
 makeEffectUI('wah', autoWah)
 
 micIn.open(0).then(() => {
   console.log('start micIn')
 })
+

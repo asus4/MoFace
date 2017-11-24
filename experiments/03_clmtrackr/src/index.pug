@@ -1,0 +1,15 @@
+//- Variables
+- var title = 'Webcam test'
+
+//- HTML
+doctype html
+html(lang='en')
+    meta(charset="utf-8")
+    title #{title}
+    meta(name='viewport', content='initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width shrink-to-fit=no')
+    link(rel="stylesheet", href="main.css")
+body
+    #container
+        video#video(width='400' height='300' preload='auto' loop playsinline autoplay)
+        canvas#canvas(width='400' height='300')
+    script(src='bundle.js', type='text/javascript')

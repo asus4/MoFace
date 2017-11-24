@@ -1,0 +1,32 @@
+{
+  "name": "experiments",
+  "version": "0.1.0",
+  "author": "Koki Ibukuro",
+  "scripts": {
+    "start": "for step in 'pug:dev' 'css:dev' 'js:dev'; do NODE_ENV=development npm run $step & done",
+    "build": "for step in 'pug:dist' 'css:dist' 'js:dist'; do NODE_ENV=production npm run $step; done",
+    "js:dev": "webpack --watch",
+    "js:dist": "webpack",
+    "pug:dev": "pug src/index.pug -P -w -o public",
+    "pug:dist": "pug src/index.pug -P -o public",
+    "css:dev": "stylus -w src/main.styl -o public/ --sourcemap-inline",
+    "css:dist": "stylus src/main.styl -c -o public/"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "browser-sync": "^2.18.13",
+    "browser-sync-webpack-plugin": "^1.2.0",
+    "clmtrackr": "^1.1.2",
+    "dat-gui": "^0.5.0",
+    "pug": "^2.0.0-rc.3",
+    "pug-cli": "^1.0.0-alpha6",
+    "stats.js": "^0.17.0",
+    "stylus": "^0.54.5",
+    "tone": "^0.11.11",
+    "uglifyjs-webpack-plugin": "^1.1.1",
+    "webpack": "^3.4.1",
+    "webpack-dev-server": "^2.9.4"
+  }
+}

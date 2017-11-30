@@ -1,0 +1,20 @@
+//- Variables
+- var title = 'CLM Mapping Editor'
+
+//- HTML
+doctype html
+html(lang='en')
+    meta(charset="utf-8")
+    title #{title}
+    meta(name='viewport', content='initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width shrink-to-fit=no')
+    link(rel="stylesheet", href="main.css")
+body
+    #container
+        canvas(width=512, height=512)#image
+        canvas(width=512, height=512)#overlay
+    br
+    input#imageLoadButton(type='file')
+    br
+    br
+    button#saveButton(type='button') Save to json
+    script(src='bundle.js', type='text/javascript')

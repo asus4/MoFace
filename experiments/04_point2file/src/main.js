@@ -1,4 +1,5 @@
 import clm from 'clmtrackr/build/clmtrackr'
+import {saveAs} from 'file-saver'
 import Editor from './editor'
 
 const image = document.getElementById('image')
@@ -43,6 +44,8 @@ document.getElementById('imageLoadButton').addEventListener('change', (e) => {
 }, false)
 
 // Save button
-document.getElementById('saveButton').addEventListener('onclick', () => {
-  editor.save()
+document.getElementById('saveButton').addEventListener('click', () => {
+  const points = editor.export()
+  const blob = new Blob([JSON.stringify(points)], {type: 'text/json;charset=utf-8'})
+  saveAs(blob, 'points.json')
 }, false)

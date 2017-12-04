@@ -4,7 +4,7 @@ import Stats from 'stats.js'
 const video = document.getElementById('video')
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
-const tracker = new clm.tracker()
+const tracker = new clm.tracker({useWebGL: true})
 tracker.init()
 
 function setup(stream) {

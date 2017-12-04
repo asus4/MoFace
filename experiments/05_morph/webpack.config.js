@@ -33,7 +33,8 @@ const config = {
       port: 3000,
       server: { baseDir: ['public'] },
       https: true
-    })
+    }),
+    new webpack.ProvidePlugin({'THREE': 'three'})
   ]
 }
 

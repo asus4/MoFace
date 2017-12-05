@@ -18,6 +18,7 @@ const makeBufferGeometry = (pointsArr) => {
       uvs.push(p[0], 1 - p[1])
     })
 
+    // Need position attribute at least
     const append = (i == 0) ? '' : `${i}`
     geometry.addAttribute(`position${append}`, new THREE.BufferAttribute(new Float32Array(vertices), 3))
     geometry.addAttribute(`uv${append}`, new THREE.BufferAttribute(new Float32Array(uvs), 2))
@@ -31,7 +32,7 @@ const makeBufferGeometry = (pointsArr) => {
 export default class Morpher extends THREE.Mesh {
   constructor(images, points) {
     const geometry = makeBufferGeometry(points)
-    console.log(geometry.toJSON())
+    // console.log(geometry.toJSON())
 
     // Material
     const textures = images.map((img) => {

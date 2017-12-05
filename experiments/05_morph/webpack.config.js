@@ -25,7 +25,6 @@ const config = {
       { test: /\.(glsl|frag|vert)$/, loader: 'glslify-loader', exclude: /node_modules/ }
     ]
   },
-  devtool: 'inline-source-map',
   plugins: [
     new BrowserSyncPlugin({
       host: '0.0.0.0',
@@ -38,9 +37,12 @@ const config = {
 }
 
 if (production) {
+  delete config.devtool
   config.plugins.push(
     new webpack.optimize.AggressiveMergingPlugin()
   )
+} else {
+  config.devtool = 'inline-source-map'
 }
 
 module.exports = config

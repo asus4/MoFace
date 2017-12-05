@@ -20,10 +20,9 @@ const config = {
           }
         }
       },
-      {
-        test: /\.json$/,
-        loader: 'json-loader'
-      }
+      { test: /\.json$/, loader: 'json-loader' },
+      { test: /\.(glsl|frag|vert)$/, loader: 'raw-loader', exclude: /node_modules/ },
+      { test: /\.(glsl|frag|vert)$/, loader: 'glslify-loader', exclude: /node_modules/ }
     ]
   },
   devtool: 'inline-source-map',

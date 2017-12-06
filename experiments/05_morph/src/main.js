@@ -1,10 +1,10 @@
 import dat from 'dat-gui'
-import Tone from 'tone'
+
 import 'three'
 
 import {loadImageAsync, loadBuffer} from './async'
 import Morpher from './morpher'
-
+import Mixer from './mixer'
 
 const WIDTH = 512
 const HEIGHT = 512
@@ -12,11 +12,6 @@ const renderer = new THREE.WebGLRenderer({canvas: document.querySelector('canvas
 const camera = new THREE.OrthographicCamera(-WIDTH / 2, WIDTH / 2, HEIGHT / 2, -HEIGHT / 2, -10, 10)
 const scene = new THREE.Scene()
 
-function lerpVolume(start, end, value) {
-  // Apply to EXPO easing function
-  value = Math.pow( 2, 10 * (value - 1))
-  return start * value + end * (1 - value)
-}
 
 function setup(images, buffers) {
   // Init visual
@@ -29,22 +24,15 @@ function setup(images, buffers) {
   scene.add(morpher)
 
   // Init sound
-  const players = buffers.map((buf) => {
-    return new Tone.Player(buf)
-  })
-  players.forEach((player) => {
-    player.loop = true
-    player.toMaster()
-    player.start()
-  })
+  const mixer = new Mixer(buffers)
+
 
   const gui = new dat.GUI()
   gui.add(morpher, 'fade', 0.0, 1.0).onChange((value) => {
-    players[0].volume.value = lerpVolume(-30, 0, value)
-    players[1].volume.value = lerpVolume(-30, 0, 1 - value)
+    mixer.fade = value
   })
   gui.add(morpher, 'wireframe')
-
+  gui.add(mixer, 'fadeEQ')
 
   requestAnimationFrame(update)
 }

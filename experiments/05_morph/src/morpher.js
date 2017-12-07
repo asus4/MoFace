@@ -102,8 +102,6 @@ class Weight {
       }
     }
     this.attribute.needsUpdate = true
-
-    console.log('hgoa')
   }
 
   get outline() { return this.parameters[0] }

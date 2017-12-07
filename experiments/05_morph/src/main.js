@@ -51,6 +51,7 @@ class App {
     switch (keycode) {
       case 32: // space
         this.morpher.fade = value
+        this.mixer.fade = value
         break
       case 65: // a
         this.morpher.weight.eyeL = value

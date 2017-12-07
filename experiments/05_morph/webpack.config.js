@@ -42,7 +42,9 @@ if (production) {
     new webpack.optimize.AggressiveMergingPlugin()
   )
 } else {
-  config.devtool = 'inline-source-map'
+  // failue to load the soucemap sometimes, it might be heavy
+  // config.devtool = 'inline-source-map'
+  config.devtool = 'source-map'
 }
 
 module.exports = config

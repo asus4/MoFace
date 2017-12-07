@@ -15,10 +15,8 @@ export function loadImageAsync(src) {
 
 export function loadBuffer(url) {
   return new Promise((resolve, reject) => {
-    console.log(url)
     const buffer = new Tone.Buffer(url,
       () => {
-        console.log('loaded')
         resolve(buffer)
       },
       (err) => {

@@ -50,4 +50,12 @@ export default class Mixer {
       this.players[1].volume.value = B
     }
   }
+
+  static get mute() {
+    return Tone.Master.mute
+  }
+
+  static set mute(value) {
+    Tone.Master.mute = value
+  }
 }

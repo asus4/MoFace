@@ -52,8 +52,15 @@ Promise.all([
 ]).then((assets) => {
   const images = assets.slice(0, 2)
   const buffers = assets.slice(2, 4)
-  console.log(buffers)
   setup(images, buffers)
 }).catch((err) => {
   console.error(err)
 })
+
+//
+window.onfocus = () => {
+  Mixer.mute = false
+}
+window.onblur = () => {
+  Mixer.mute = true
+}

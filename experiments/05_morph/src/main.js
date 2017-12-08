@@ -56,13 +56,13 @@ class App {
       case 65: // a
         this.morpher.weight.eyeL = value
         break
-      case 83: // a
+      case 83: // s
         this.morpher.weight.eyeR = value
         break
-      case 68: // a
+      case 68: // d
         this.morpher.weight.noseUnder = value
         break
-      case 70: // a
+      case 70: // f
         this.morpher.weight.mouse = value
         break
       default:
@@ -101,3 +101,27 @@ window.addEventListener('keydown', (e) => {
 window.addEventListener('keyup', (e) => {
   app.onKey(e.keyCode, false)
 })
+
+
+// Web-Midi Support
+if (navigator.requestMIDIAccess) {
+  const onMessage = (msg) => {
+    console.log(msg)
+  }
+  const onStateChange = (msg) => {
+    console.log(msg)
+  }
+  const onSuccess = (midi) => {
+    // console.log(midi)
+    const inputs = midi.inputs.values()
+    for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
+      console.log(input)
+      input.value.onmidimessage = onMessage
+      input.value.onstatechange = onStateChange
+    }
+  }
+  const onFail = (err) => {
+    console.log(err)
+  }
+  navigator.requestMIDIAccess().then(onSuccess, onFail)
+}

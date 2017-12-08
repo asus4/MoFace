@@ -19,7 +19,10 @@ const config = {
             presets: ['env'],
           }
         }
-      }
+      },
+      { test: /\.json$/, loader: 'json-loader' },
+      { test: /\.(glsl|frag|vert)$/, loader: 'raw-loader', exclude: /node_modules/ },
+      { test: /\.(glsl|frag|vert)$/, loader: 'glslify-loader', exclude: /node_modules/ }
     ]
   },
   plugins: [
@@ -28,7 +31,8 @@ const config = {
       port: 3000,
       server: { baseDir: ['public'] },
       https: true
-    })
+    }),
+    new webpack.ProvidePlugin({'THREE': 'three'})
   ]
 }
 
@@ -39,8 +43,8 @@ if (production) {
   )
 } else {
   // failue to load the soucemap sometimes, it might be heavy
-  config.devtool = 'inline-source-map'
-  // config.devtool = 'source-map'
+  // config.devtool = 'inline-source-map'
+  config.devtool = 'source-map'
 }
 
 module.exports = config

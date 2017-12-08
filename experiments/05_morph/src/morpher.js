@@ -69,7 +69,7 @@ class Weight {
       1.0, // other
     ]
 
-    // TODO more faster
+    // TODO optimize
     // Find same value from features
     const getFeatureIndex = (meshIndex) => {
       let result = 8
@@ -195,6 +195,7 @@ export default class Morpher extends THREE.Mesh {
       uniforms: {
         map0: {type: 't', value: textures[0]},
         map1: {type: 't', value: textures[1]},
+        ramp: {type: 't', value: textures[2]},
         fade: {type: 'f', value: 0.5},
       },
       vertexShader: require('./shaders/morph.vert'),
@@ -204,9 +205,11 @@ export default class Morpher extends THREE.Mesh {
     })
     super(geometry, material)
 
-
     this.weight = new Weight(geometry.getAttribute('weight'), tris)
 
+    this._fadeMap = 0
+    this.fadeMaps = textures.slice(2)
+    console.log(this._fadeMap)
   }
 
   get fade() {
@@ -223,5 +226,18 @@ export default class Morpher extends THREE.Mesh {
 
   set wireframe(value) {
     this.material.wireframe = value
+  }
+
+  get fadeMap() {
+    return this._fadeMap
+  }
+
+  set fadeMap(value) {
+    this._fadeMap = value
+
+    this.material.uniforms.ramp.value = this.fadeMaps[value]
+    this.fadeMaps[value].needsUpdate = true
+
+    console.log('changed', this.material.uniforms.ramp)
   }
 }

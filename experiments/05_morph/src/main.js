@@ -16,6 +16,7 @@ class App {
   }
 
   setup(images, buffers) {
+    console.log(images, buffers)
     // Init visual
     const POINTS = [require('./data/otabe.json'), require('./data/ryuuta.json')]
     for (const points of POINTS) {
@@ -34,8 +35,9 @@ class App {
       this.mixer.fade = value
     })
     gui.add(this.morpher, 'wireframe')
+    gui.add(this.morpher, 'fadeMap', { TypeA: 0, TypeB: 1, TypeC: 2 } )
     gui.add(this.mixer, 'fadeEQ')
-    this.morpher.weight.makeGUI(gui)
+    // this.morpher.weight.makeGUI(gui)
 
     requestAnimationFrame(this.update.bind(this))
   }
@@ -77,11 +79,14 @@ const app = new App( document.querySelector('canvas'))
 Promise.all([
   loadImageAsync('data/otabe.jpg'),
   loadImageAsync('data/ryuuta.jpg'),
+  loadImageAsync('data/morph0.png'),
+  loadImageAsync('data/morph1.png'),
+  loadImageAsync('data/morph2.png'),
   loadBuffer('data/otabe.mp3'),
   loadBuffer('data/ryuuta.mp3'),
 ]).then((assets) => {
-  const images = assets.slice(0, 2)
-  const buffers = assets.slice(2, 4)
+  const images = assets.slice(0, 5)
+  const buffers = assets.slice(5)
   app.setup(images, buffers)
 }).catch((err) => {
   console.error(err)
@@ -101,27 +106,3 @@ window.addEventListener('keydown', (e) => {
 window.addEventListener('keyup', (e) => {
   app.onKey(e.keyCode, false)
 })
-
-
-// Web-Midi Support
-if (navigator.requestMIDIAccess) {
-  const onMessage = (msg) => {
-    console.log(msg)
-  }
-  const onStateChange = (msg) => {
-    console.log(msg)
-  }
-  const onSuccess = (midi) => {
-    // console.log(midi)
-    const inputs = midi.inputs.values()
-    for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
-      console.log(input)
-      input.value.onmidimessage = onMessage
-      input.value.onstatechange = onStateChange
-    }
-  }
-  const onFail = (err) => {
-    console.log(err)
-  }
-  navigator.requestMIDIAccess().then(onSuccess, onFail)
-}

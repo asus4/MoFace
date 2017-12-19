@@ -1,0 +1,12 @@
+{
+  "name": "tools",
+  "version": "1.0.0",
+  "author": "Koki Ibukuro",
+  "scripts": {
+    "sprite": "src/make_sprite.js"
+  },
+  "devDependencies": {
+    "audiosprite": "^0.7.0",
+    "co": "^4.6.0"
+  }
+}

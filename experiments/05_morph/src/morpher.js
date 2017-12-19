@@ -234,10 +234,7 @@ export default class Morpher extends THREE.Mesh {
 
   set fadeMap(value) {
     this._fadeMap = value
-
     this.material.uniforms.ramp.value = this.fadeMaps[value]
     this.fadeMaps[value].needsUpdate = true
-
-    console.log('changed', this.material.uniforms.ramp)
   }
 }

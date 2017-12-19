@@ -1,5 +1,10 @@
 #!/usr/bin/env node
 
+/*
+# Usage
+./make_sprite.js result_sprite sounds/*.wav
+*/
+
 const fs = require('fs')
 const exec = require('child_process').exec
 const audiosprite = require('audiosprite')
@@ -48,7 +53,7 @@ co(function *() {
   const options = {
     output: out_path,
     export: 'wav',
-    gap: 0.1
+    gap: 0.05
   }
   audiosprite(tmp_files, options, (err, obj) => {
     if (err) {

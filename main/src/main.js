@@ -1,14 +1,11 @@
-import Modernizr from 'exports-loader?Modernizr!../web_modules/modernizr-custom'
+
 import Tone from 'tone'
 
 import {loadBuffer} from './js/async'
 import Voicer from './js/voicer'
 import VirtualKeyboard from './js/virtual-keyboard'
 
-console.log(Modernizr)
-
-
-function  setup(buffers) {
+function setup(buffers) {
   const voicer = new Voicer(buffers, [
     require('./data/otabe.json').spritemap,
     require('./data/ryuuta.json').spritemap
@@ -21,7 +18,10 @@ function  setup(buffers) {
   })
 }
 
-export default function() {
+export default function(manifest) {
+  console.log(manifest)
+  // console.log(manifest.getResult('./data/otabe.mp3'))
+  // console.log(manifest.getResult('./data/ryuuta.mp3'))
   // Load all images
   console.time('buffer load')
   Promise.all([
@@ -43,3 +43,5 @@ export default function() {
   }, false)
 
 }
+
+

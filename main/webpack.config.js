@@ -9,7 +9,6 @@ const config = {
   entry: './src/index.js',
   output: {
     path: `${__dirname}/public`,
-    chunkFilename: '[name].bundle.js',
     filename: 'bundle.js'
   },
   module: {

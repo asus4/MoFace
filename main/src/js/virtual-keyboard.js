@@ -45,7 +45,6 @@ export default class VirtualKeyboard extends EventEmitter {
     const checkKey = (keyCode) => {
       // is range of [A - Z]
       if (65 <= keyCode && keyCode <= 90) {
-        //inputs += e.key.toLowerCase()
         inputs += String.fromCharCode(keyCode).toLowerCase()
         for (const input in KEYMAP) {
           if (inputs.startsWith(input)) {

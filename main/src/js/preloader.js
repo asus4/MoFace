@@ -24,6 +24,8 @@ export default class Preloader extends EventEmitter {
 
     this.queue = new createjs.LoadQueue()
     this.progress = 0
+
+    this.buffers = []
   }
 
   load() {
@@ -77,6 +79,10 @@ export default class Preloader extends EventEmitter {
     if (item.src.indexOf('.mp3') >= 0) {
       this._decode(e.result).then((buff) => {
         item.buffer = buff
+        this.buffers.push({
+          id: item.id,
+          buffer: buff
+        })
         if (this.decoded && this.loaded) {
           this.emit('complete')
         }

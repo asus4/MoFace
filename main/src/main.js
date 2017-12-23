@@ -1,13 +1,12 @@
 
 import Tone from 'tone'
 
-import {loadBuffer} from './js/async'
 import Voicer from './js/voicer'
 import VirtualKeyboard from './js/virtual-keyboard'
 
 function setup(buffers) {
   const voicer = new Voicer(buffers, [
-    require('./data/otabe.json').spritemap,
+    require('./data/kogawa.json').spritemap,
     require('./data/ryuuta.json').spritemap
   ])
 
@@ -19,20 +18,10 @@ function setup(buffers) {
 }
 
 export default function(manifest) {
-  console.log(manifest)
-  // console.log(manifest.getResult('./data/otabe.mp3'))
-  // console.log(manifest.getResult('./data/ryuuta.mp3'))
-  // Load all images
-  console.time('buffer load')
-  Promise.all([
-    loadBuffer('./data/otabe.mp3'),
-    loadBuffer('./data/ryuuta.mp3'),
-  ]).then((assets) => {
-    setup(assets)
-    console.timeEnd('buffer load')
-  }).catch((err) => {
-    console.error(err)
-  })
+  setup([
+    manifest[0].buffer,
+    manifest[1].buffer,
+  ])
 
   // Events
   window.addEventListener('focus', () => {
@@ -43,5 +32,3 @@ export default function(manifest) {
   }, false)
 
 }
-
-

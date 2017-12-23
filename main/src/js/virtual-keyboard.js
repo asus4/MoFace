@@ -1,103 +1,21 @@
 const EventEmitter = require('events').EventEmitter
 
-// Roma-ji input Mapping
-const KEYMAP = {
-  a: 'あ',
-  i: 'い',
-  u: 'う',
-  e: 'え',
-  o: 'お',
-  ka: 'か',
-  ki: 'き',
-  ku: 'く',
-  ke: 'け',
-  ko: 'こ',
-  ga: 'が',
-  gi: 'ぎ',
-  gu: 'ぐ',
-  ge: 'げ',
-  go: 'ご',
-  sa: 'さ',
-  si: 'し',
-  shi: 'し',
-  su: 'す',
-  se: 'せ',
-  so: 'そ',
-  za: 'ざ',
-  zi: 'じ',
-  ji: 'じ',
-  zu: 'ず',
-  ze: 'ぜ',
-  zo: 'ぞ',
-  ta: 'た',
-  ti: 'ち',
-  chi: 'ち',
-  tu: 'つ',
-  tsu: 'つ',
-  te: 'て',
-  to: 'と',
-  da: 'だ',
-  di: 'ぢ',
-  du: 'づ',
-  de: 'で',
-  do: 'ど',
-  na: 'な',
-  ni: 'に',
-  nu: 'ぬ',
-  ne: 'ね',
-  no: 'の',
-  ha: 'は',
-  hi: 'ひ',
-  hu: 'ふ',
-  fu: 'ふ',
-  he: 'へ',
-  ho: 'ほ',
-  ba: 'ば',
-  bi: 'び',
-  bu: 'ぶ',
-  be: 'べ',
-  bo: 'ぼ',
-  pa: 'ぱ',
-  pi: 'ぴ',
-  pu: 'ぷ',
-  pe: 'ぺ',
-  po: 'ぽ',
-  ma: 'ま',
-  mi: 'み',
-  mu: 'む',
-  me: 'め',
-  mo: 'も',
-  ra: 'ら',
-  ri: 'り',
-  ru: 'る',
-  re: 'れ',
-  ro: 'ろ',
-  ya: 'や',
-  yu: 'ゆ',
-  yo: 'よ',
-  wa: 'わ',
-  wo: 'を',
-  nn: 'ん',
-}
+import Modernizr from 'exports-loader?Modernizr!modernizr-custom'
+import KEYMAP from './roma-ji'
 
 // Touch screen mapping
 const SCREENMAP = [
   ['あ', 'い', 'う', 'え', 'お'],
   ['か', 'き', 'く', 'け', 'こ'],
   ['さ', 'し', 'す', 'せ', 'そ'],
-  ['ざ', 'じ', 'ず', 'ぜ', 'ぞ'],
   ['た', 'ち', 'つ', 'て', 'と'],
-  ['だ', 'ぢ', 'づ', 'で', 'ど'],
   ['な', 'に', 'ぬ', 'ね', 'の'],
   ['は', 'ひ', 'ふ', 'へ', 'ほ'],
-  ['ば', 'び', 'ぶ', 'べ', 'ぼ'],
-  ['ぱ', 'ぴ', 'ぷ', 'ぺ', 'ぽ'],
   ['ま', 'み', 'む', 'め', 'も'],
   ['や', 'ゆ', 'よ'],
   ['ら', 'り', 'る', 'れ', 'ろ'],
   ['わ', 'を', 'ん'],
 ]
-
 
 // function remap(value, low1, high1, low2, high2) {
 //   return low2 + (high2 - low2) * (value - low1) / (high1 - low1)
@@ -108,35 +26,53 @@ function remapTrim(value, low1, high1, low2, high2) {
   return Math.max(low2, Math.min(n, high2))
 }
 
-
 export default class VirtualKeyboard extends EventEmitter {
-  constructor(dom) {
+  constructor() {
     super()
-    this.keyboard(dom)
-    this.touch(dom)
-
-    this.dom = dom
+    this.keyboard()
+    if (Modernizr.touchevents) {
+      this.touch()
+    }
   }
 
-  keyboard(dom) {
+  keyboard() {
     let inputs = ''
     let mouseX = 0
     window.addEventListener('mousemove', (e) => {
       mouseX = e.pageX / window.innerWidth
     })
-    dom.addEventListener('keydown', (e) => {
-      inputs += e.key.toLowerCase()
-      for (const input in KEYMAP) {
-        if (inputs.startsWith(input)) {
-          inputs = ''
-          this.emit('key', KEYMAP[input], mouseX)
-          break
+
+    const checkKey = (keyCode) => {
+      // is range of [A - Z]
+      if (65 <= keyCode && keyCode <= 90) {
+        //inputs += e.key.toLowerCase()
+        inputs += String.fromCharCode(keyCode).toLowerCase()
+        for (const input in KEYMAP) {
+          if (inputs.startsWith(input)) {
+            inputs = ''
+            this.emit('key', KEYMAP[input], mouseX)
+            break
+          }
         }
       }
-      if (inputs.length > 3) {
-        inputs = ''
+      // 'ん' N word check
+      if (inputs.length > 1 && inputs[0] == 'n') {
+        inputs = inputs.substr(1)
+        this.emit('key', KEYMAP['nn'], mouseX)
       }
-    })
+      // 'っ' word check
+      if (inputs.length > 1 && inputs[0] == inputs[1]) {
+        inputs = inputs.substr(1)
+        checkKey(0)
+      }
+      // TOOD っぁぃぅぇぉ check
+      if (inputs.length > 2) {
+        inputs = inputs.substr(1)
+        checkKey(0)
+      }
+      // console.log(inputs)
+    }
+    document.addEventListener('keydown', (e) => {checkKey(e.keyCode)})
   }
 
   touch() {

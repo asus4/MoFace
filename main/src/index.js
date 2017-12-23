@@ -15,8 +15,8 @@ if (!Modernizr.webaudio && !Modernizr.webgl) {
   // Preloader setup
   const _BINARY_TYPE = createjs.LoadQueue.BINARY
   const manifest = [
-    {src: './data/otabe.mp3', type: _BINARY_TYPE, weight: 3},
-    {src: './data/ryuuta.mp3', type: _BINARY_TYPE, weight: 3},
+    {id: 'sound-kogawa', src: './data/kogawa.mp3', type: _BINARY_TYPE, weight: 3},
+    {id: 'sound-ryuuta', src: './data/ryuuta.mp3', type: _BINARY_TYPE, weight: 3},
   ]
 
   const preloader = new Preloader(manifest)

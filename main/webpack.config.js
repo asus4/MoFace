@@ -1,5 +1,6 @@
 /*global module __dirname process */
 
+const path = require('path')
 const webpack = require('webpack')
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
 
@@ -12,21 +13,25 @@ const config = {
     filename: 'bundle.js'
   },
   module: {
-    loaders: [{
-      test: /\.js$/,
-      exclude: /node_modules|web_modules/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          presets: ['env'],
-          plugins: ['dynamic-import-webpack']
+    loaders: [
+      { // babel
+        test: /\.js$/,
+        exclude: /node_modules|web_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['env'],
+            plugins: ['dynamic-import-webpack']
+          }
         }
-      }
-    },
-    {test: /\.json$/, loader: 'json-loader'},
-    {test: /\.(glsl|frag|vert)$/, loader: 'raw-loader', exclude: /node_modules/},
-    {test: /\.(glsl|frag|vert)$/, loader: 'glslify-loader', exclude: /node_modules/}
+      },
+      {test: /\.json$/, loader: 'json-loader'},
+      {test: /\.(glsl|frag|vert)$/, loader: 'raw-loader', exclude: /node_modules/},
+      {test: /\.(glsl|frag|vert)$/, loader: 'glslify-loader', exclude: /node_modules/}
     ]
+  },
+  resolve: {
+    modules: [path.resolve(__dirname, 'web_modules'), 'node_modules']
   },
   plugins: [
     new BrowserSyncPlugin({
@@ -46,7 +51,7 @@ if (production) {
     new webpack.optimize.AggressiveMergingPlugin()
   )
 } else {
-  config.devtool = 'inline-source-map'
+  config.devtool = 'inline-source-map' // this might be heavy..
   // config.devtool = 'source-map'
 }
 

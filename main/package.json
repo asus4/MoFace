@@ -9,8 +9,8 @@
     "js:dist": "webpack -p",
     "pug:dev": "pug src/index.pug -P -w -o public",
     "pug:dist": "pug src/index.pug -P -o public",
-    "css:dev": "stylus --use ./node_modules/poststylus --with \"['autoprefixer']\" -w src/main.styl -o public/ --sourcemap-inline",
-    "css:dist": "stylus --use ./node_modules/poststylus --with \"['autoprefixer']\" src/main.styl -c -o public/"
+    "css:dev": "stylus --use ./node_modules/poststylus --with \"['autoprefixer']\" -w src/main.styl -o public/ -u nib --sourcemap-inline",
+    "css:dist": "stylus --use ./node_modules/poststylus --with \"['autoprefixer']\" src/main.styl -c -o public/ -u nib"
   },
   "devDependencies": {
     "autoprefixer": "^7.2.3",
@@ -23,14 +23,17 @@
     "dat-gui": "^0.5.0",
     "delaunay-fast": "^1.0.1",
     "exports-loader": "^0.6.4",
+    "glsl-lut": "^1.1.0",
     "glslify": "^6.1.0",
     "glslify-loader": "^1.0.2",
     "json-loader": "^0.5.7",
+    "nib": "^1.1.2",
     "poststylus": "^1.0.0",
     "preload-js": "^0.6.3",
     "pug": "^2.0.0-rc.4",
     "pug-cli": "^1.0.0-alpha6",
     "raw-loader": "^0.5.1",
+    "stats.js": "^0.17.0",
     "stylus": "^0.54.5",
     "three": "^0.89.0",
     "tone": "^0.11.12",

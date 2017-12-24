@@ -1,8 +1,29 @@
+@import 'nib'
+
+global-reset()
+
+*
+  box-sizing: border-box
+
 body
     color: #999
-    background: #FFF
+    background: #000
     font-family: monospace
 
+#main
+    position: fixed
+    pointer-events: none
+    overflow: hidden
 
-:fullscreen a
-    display: flex
+#loading
+    position: fixed
+    pointer-events: none
+    height: 20px
+    width: 0px
+    bottom: 0
+    background: #FFF
+    visibility: visible
+    opacity: 1
+    transition: width 1s ease
+    transition: visibility 1s ease
+    transition: opacity 1s ease

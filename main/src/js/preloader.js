@@ -41,6 +41,10 @@ export default class Preloader extends EventEmitter {
   dispose() {
     this.context.close()
     this.context = null
+
+    this.manifest = null
+    this.queue = null
+    this.buffers = null
   }
 
   get loaded() {

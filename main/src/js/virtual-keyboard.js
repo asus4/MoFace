@@ -80,11 +80,10 @@ export default class VirtualKeyboard extends EventEmitter {
       accX = remapTrim(e.accelerationIncludingGravity.x, -7, 7, 0, 1)
     })
     document.addEventListener('touchstart', (e) => {
-      console.log(e)
       const p = [e.pageX / window.innerWidth, e.pageY / window.innerHeight]
       const y = Math.floor(p[1] * SCREENMAP.length)
       const x = Math.floor(p[0] * SCREENMAP[y].length)
-      console.log(p, y, x)
+      // console.log(p, y, x)
       this.emit('key', SCREENMAP[y][x], accX)
     })
   }

@@ -42,17 +42,22 @@ const config = {
       open: false,
     }),
     new webpack.ProvidePlugin({'THREE': 'three'}),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+    }),
   ]
 }
 
 if (production) {
   config.plugins.push(
-    new webpack.optimize.UglifyJsPlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      extractComments: true
+    }),
     new webpack.optimize.AggressiveMergingPlugin()
   )
 } else {
-  config.devtool = 'inline-source-map' // this might be heavy..
-  // config.devtool = 'source-map'
+  // config.devtool = 'inline-source-map' // this might be heavy..
+  config.devtool = 'source-map'
 }
 
 module.exports = config

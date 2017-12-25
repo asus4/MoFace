@@ -44,6 +44,13 @@ export default class View {
     this.composer.render()
   }
 
+  updateMorph(morphs) {
+    console.log(morphs)
+    this.morphers.forEach((m, i) => {
+      m.morph = morphs[i]
+    })
+  }
+
   resize() {
     const width = window.innerWidth
     const height = window.innerHeight

@@ -71,20 +71,20 @@ export default class VirtualKeyboard extends EventEmitter {
       }
       // console.log(inputs)
     }
-    document.addEventListener('keydown', (e) => {checkKey(e.keyCode)})
+    document.addEventListener('keydown', (e) => {checkKey(e.keyCode)}, false)
   }
 
   touch() {
     let accX = 0
     window.addEventListener('devicemotion', (e) => {
       accX = remapTrim(e.accelerationIncludingGravity.x, -7, 7, 0, 1)
-    })
+    }, false)
     document.addEventListener('touchstart', (e) => {
-      const p = [e.pageX / window.innerWidth, e.pageY / window.innerHeight]
+      const touch = e.touches[0]
+      const p = [touch.clientX / window.innerWidth, touch.clientY / window.innerHeight]
       const y = Math.floor(p[1] * SCREENMAP.length)
       const x = Math.floor(p[0] * SCREENMAP[y].length)
-      // console.log(p, y, x)
       this.emit('key', SCREENMAP[y][x], accX)
-    })
+    }, false)
   }
 }

@@ -1,6 +1,6 @@
 //- Variables
 - var title = 'MoFace'
-- var description = 'TODO description'
+- var description = 'TODO description '
 
 //- HTML
 doctype html
@@ -28,9 +28,17 @@ html(lang='ja')
     meta(property='og:site_name' content='TODO site name')
     //- font
     link(rel='stylesheet', href='main.css')
-body
-    //- h1 #{title}
+body        
     #main
         canvas
+    nav
+        ul
+            a#about-button.button
+                li About
+            a#makeface-button.button
+                li Use Your Face 
+    
+    include pages/about
+    include pages/makeface
     #loading
     script(src='bundle.js')

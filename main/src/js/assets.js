@@ -1,8 +1,8 @@
 
 
 export default {
-  buffers: [],
-  images: [],
+  buffers: [], // sound buffers
+  images: [], // face images
   spritemaps: [ // sprite maps
     require('../data/iwata.json').spritemap,
     require('../data/kogawa.json').spritemap,

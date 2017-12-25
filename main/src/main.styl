@@ -10,6 +10,46 @@ body
     background: #000
     font-family: monospace
 
+nav
+    position: fixed
+    bottom: 20px
+    right: 20px
+
+h2
+    font-size: 40px
+    text-align: center
+
+p
+    text-align: center
+
+.hidden
+    display: none
+
+.modal
+    position: absolute
+    width: calc(100% - 40px)
+    height: calc(100% - 40px)
+    margin: 20px
+    outline: solid 1px #FFF    
+    background-color: rgba(0,0,0,0.7)
+
+.button
+    display: block
+    outline: solid 1px #FFF
+    margin: 10px
+    padding: 10px
+    font-size: 20px
+    text-align: center
+    user-select: none
+    transition: background-color 0.3s ease
+
+.big-button
+    height: 120px
+
+.button:hover, .button:active
+    background-color: rgba(255,255,255,0.1)
+
+
 #main
     position: fixed
     pointer-events: none
@@ -24,6 +64,4 @@ body
     background: #FFF
     visibility: visible
     opacity: 1
-    transition: width 1s ease
-    transition: visibility 1s ease
-    transition: opacity 1s ease
+    transition: all 1s ease

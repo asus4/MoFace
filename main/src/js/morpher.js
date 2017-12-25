@@ -8,9 +8,18 @@ export default class Morpher extends THREE.Mesh {
 
     const geometry = new THREE.PlaneGeometry(1000, 500, 1, 1)
     const material = new THREE.MeshBasicMaterial({
-      map: texture
+      map: texture,
+      transparent: true
     })
 
     super(geometry, material)
+  }
+
+  get morph() {
+    return this.material.opacity
+  }
+
+  set morph(value) {
+    this.material.opacity = value
   }
 }

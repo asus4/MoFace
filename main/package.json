@@ -28,6 +28,7 @@
     "glslify": "^6.1.0",
     "glslify-loader": "^1.0.2",
     "json-loader": "^0.5.7",
+    "mathjs": "^3.18.0",
     "nib": "^1.1.2",
     "poststylus": "^1.0.0",
     "preload-js": "^0.6.3",

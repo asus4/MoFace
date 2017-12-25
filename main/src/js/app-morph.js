@@ -11,7 +11,7 @@ import 'three/examples/js/postprocessing/RenderPass'
 import assets from './assets'
 import CompositePass from './composite-pass'
 import Morpher from './morpher'
-import Voicer from './voicer'
+import VoiceMixer from './voice-mixer'
 import VirtualKeyboard from './virtual-keyboard'
 
 
@@ -31,11 +31,11 @@ export default class AppMorph {
       this.addFace(img, null)
     }
 
-    this.voicer = new Voicer(assets.buffers, assets.spritemaps)
+    this.mixer = new VoiceMixer(assets.buffers, assets.spritemaps)
     const keyboard = new VirtualKeyboard(window)
     keyboard.on('key', (input, pan) => {
       console.log('on key:', input, pan)
-      this.voicer.play(input, pan)
+      this.mixer.play(input, pan)
     })
   }
 

@@ -10,14 +10,16 @@ section#makeface-capture.modal.hidden
     h2 Capture User Face
     p 枠にカメラを合わせて、固定してください
     canvas#makeface-canvas
+    canvas#makeface-overlay
     .button.close-button Cancel
 
 
 section#makeface-confirm.modal.hidden
+    h2 Confirm
     p これで良いですか？
     .face-confirm
-    #ok-button.button OK
-    #retake-button.button RETRY
+    .ok-button.button OK
+    .retake-button.button RETRY
 
 section#makeface-retry.modal.hidden
     p 顔認識に失敗しました。他の写真をお試し下さい。

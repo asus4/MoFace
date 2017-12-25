@@ -1,5 +1,6 @@
 node_modules
 public/*.js
+public/*.js.LICENSE
 public/*.html
 public/*.css
 public/*.map

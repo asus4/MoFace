@@ -7,6 +7,7 @@ export default class CompositePass extends THREE.ShaderPass {
     lut.generateMipmaps = false
     lut.flipY = false
 
+
     super({
       uniforms: {
         tDiffuse: {type: 't', value: null},

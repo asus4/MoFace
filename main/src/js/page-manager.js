@@ -1,7 +1,7 @@
 const EventEmitter = require('events').EventEmitter
 
-const onClick = (id, listener) => {
-  document.getElementById(id).addEventListener('click', listener)
+const onClick = (query, listener) => {
+  document.querySelector(query).addEventListener('click', listener)
 }
 
 class PageManager extends EventEmitter {
@@ -9,24 +9,45 @@ class PageManager extends EventEmitter {
     super()
 
     // Top button
-    onClick('about-button', () => {
+    onClick('#about-button', () => {
       this.showModal('about')
     })
-    onClick('makeface-button', () => {
+    onClick('#makeface-button', () => {
       this.showModal('makeface')
     })
 
     // In capture button
-    onClick('capture-button', () => {
+    onClick('#capture-button', () => {
       this.showModal('makeface-capture')
-
-      this.emit('face-detect')
+      this.emit('face-detect', false)
     })
-    onClick('cameraroll-button', () => {
+    // Load from camera roll
+    onClick('#cameraroll-button', () => {
       const input = document.createElement('input')
       input.type = 'file'
       input.accept = 'image/*'
+      input.addEventListener('change', (e) => {
+        const files = e.target.files
+        if (files.length == 0) {
+          return
+        }
+        this.showModal('makeface-capture')
+        this.emit('face-detect', files[0])
+      })
       input.click()
+    })
+
+    // In confirm button
+    onClick('#makeface-confirm .ok-button', () => {
+      const img = document.querySelector('#makeface-confirm .face-confirm img')
+      console.log('#makeface-confirm .ok-button', img)
+      this.hideModal(this.currentModal)
+      this.emit('new-face', img)
+    })
+    onClick('#makeface-confirm .retake-button', () => {
+      const container = document.querySelector('#makeface-confirm .face-confirm')
+      container.removeChild(container.lastChild)
+      this.showModal('makeface')
     })
 
     this.currentModal = false
@@ -42,10 +63,14 @@ class PageManager extends EventEmitter {
     modal.classList.remove('hidden')
     this.emit('pause', true)
     const close = modal.querySelector('.close-button')
-    close.addEventListener('click', () => {
-      modal.classList.add('hidden')
-      this.emit('pause', false)
-    }, false)
+    if (close) {
+      close.addEventListener('click', () => {
+        modal.classList.add('hidden')
+        this.emit('pause', false)
+      }, false)
+    }
+
+    return modal
   }
 
   hideModal(id) {
@@ -54,7 +79,11 @@ class PageManager extends EventEmitter {
     const modal = document.getElementById(id)
     modal.classList.add('hidden')
     this.emit('pause', false)
+
+    return modal
   }
+
 }
 
+// export as Singleton
 export default new PageManager()

@@ -1,6 +1,6 @@
 import Tone from 'tone'
 
-export default class Voicer {
+export default class VoiceMixer {
   constructor(buffers, infos) {
     this.crossFade = new Tone.CrossFade()
     this.players = buffers.map((buf) => {

@@ -8,16 +8,42 @@ import 'three/examples/js/postprocessing/EffectComposer'
 import 'three/examples/js/postprocessing/ShaderPass'
 import 'three/examples/js/postprocessing/RenderPass'
 
-import Morpher from './morpher'
+import assets from './assets'
 import CompositePass from './composite-pass'
+import Morpher from './morpher'
+import Voicer from './voicer'
+import VirtualKeyboard from './virtual-keyboard'
 
-export default class View {
+
+export default class AppMorph {
   constructor(canvas) {
+    this.canvas = canvas
+    this.morphers = []
+
+    this.initScene()
+    this.resize()
+
+    // Morph Parameter
+    this.morphs = assets.buffers.map(() => {return 1})
+    this.morphs.push(1) // user channel
+
+    for (const img of assets.images) {
+      this.addFace(img, null)
+    }
+
+    this.voicer = new Voicer(assets.buffers, assets.spritemaps)
+    const keyboard = new VirtualKeyboard(window)
+    keyboard.on('key', (input, pan) => {
+      console.log('on key:', input, pan)
+      this.voicer.play(input, pan)
+    })
+  }
+
+  initScene() {
     // Scene
     const width = window.innerWidth
     const height = window.innerHeight
-    this.canvas = canvas
-    this.renderer = new THREE.WebGLRenderer({canvas})
+    this.renderer = new THREE.WebGLRenderer({canvas: this.canvas})
     this.renderer.setSize(width, height)
     this.camera = new THREE.OrthographicCamera(-width / 2, width / 2, height / 2, -height / 2, -10, 10)
     this.scene = new THREE.Scene()
@@ -29,9 +55,6 @@ export default class View {
     this.composer.addPass(this.composite)
     this.composer.passes[this.composer.passes.length - 1].renderToScreen = true
 
-    this.morphers = []
-
-    this.resize()
   }
 
   addFace(img, data) {
@@ -42,12 +65,14 @@ export default class View {
 
   update() {
     this.composer.render()
+    if (this.stats) {
+      this.stats.update()
+    }
   }
 
-  updateMorph(morphs) {
-    console.log(morphs)
+  updateMorph() {
     this.morphers.forEach((m, i) => {
-      m.morph = morphs[i]
+      m.morph = this.morphs[i]
     })
   }
 
@@ -77,7 +102,14 @@ export default class View {
    * @memberof View
    */
   addGui(gui) {
-    const f = gui.addFolder('view')
-    f.add(this.composite, 'blend', 0, 1)
+    const morphs = gui.addFolder('morphs')
+    for (let i = 0; i < this.morphs.length; ++i) {
+      morphs.add(this.morphs, i, 0.0, 1.0).name(`morph ${i}`).onChange(() => {
+        this.updateMorph()
+      })
+    }
+
+    const effects = gui.addFolder('other')
+    effects.add(this.composite, 'blend', 0, 1)
   }
 }

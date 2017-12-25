@@ -2,10 +2,8 @@ import Tone from 'tone'
 import Stats from 'stats.js'
 import dat from 'dat-gui'
 
-import assets from './assets'
-import Voicer from './voicer'
-import View from './view'
-import VirtualKeyboard from './virtual-keyboard'
+import AppMorph from './app-morph'
+import AppFaceDetect from './app-face-detect'
 import pageManager from './page-manager'
 
 const DEV = process.env.NODE_ENV === 'development'
@@ -23,31 +21,20 @@ const gui = DEV ? new dat.GUI() : null
 // Main
 export default function() {
   let pause = false
-  // Morphing parameters
-  const morphs = assets.buffers.map(() => {return 1})
-  morphs.push(1) // user channel
+  let faceDetect = false
 
-  const voicer = new Voicer(assets.buffers, assets.spritemaps)
-  const view = new View(document.querySelector('#main canvas'))
-  for (const img of assets.images) {
-    view.addFace(img, null)
+  const app = new AppMorph(document.querySelector('#main canvas'))
+  if (DEV) {
+    app.stats = stats
+    app.addGui(gui)
   }
-
-  const keyboard = new VirtualKeyboard(window)
-  keyboard.on('key', (input, pan) => {
-    console.log('on key:', input, pan)
-    voicer.play(input, pan)
-  })
 
   const update = () => {
     if (pause) {
       return
     }
     requestAnimationFrame(update)
-    view.update()
-    if (DEV) {
-      stats.update()
-    }
+    app.update()
   }
 
   // Events
@@ -58,26 +45,24 @@ export default function() {
     Tone.Master.mute = true
   }, false)
   window.addEventListener('resize', () => {
-    view.resize()
+    app.resize()
   }, false)
   pageManager.on('pause', (isPause) => {
     pause = isPause
     if (!pause) {
+      if (faceDetect) {
+        faceDetect.dispose()
+        faceDetect = null
+      }
       update()
     }
   })
+  pageManager.on('face-detect', () => {
+    console.log('face detect')
+    faceDetect = new AppFaceDetect(document.getElementById('makeface-canvas'), stats)
+  })
 
-  // GUI
-  if (gui) {
-    const f = gui.addFolder('morphs')
-    for (let i = 0; i < morphs.length; ++i) {
-      f.add(morphs, i, 0.0, 1.0).name(`morph ${i}`).onChange(() => {
-        view.updateMorph(morphs)
-      })
-    }
-    view.addGui(gui)
-  }
-
+  // Start
   update()
 }
 

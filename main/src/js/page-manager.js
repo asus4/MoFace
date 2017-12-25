@@ -39,7 +39,6 @@ class PageManager extends EventEmitter {
 
     // In confirm button
     onClick('#makeface-confirm .ok-button', () => {
-      const img = document.querySelector('#makeface-confirm .face-confirm img')
       console.log('#makeface-confirm .ok-button', img)
       this.hideModal(this.currentModal)
       this.emit('new-face', img)

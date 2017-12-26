@@ -9,8 +9,8 @@ class PageManager extends EventEmitter {
     super()
 
     // Top button
-    onClick('#about-button', () => {
-      this.showModal('about')
+    onClick('#info-button', () => {
+      this.showModal('info')
     })
     onClick('#makeface-button', () => {
       this.showModal('makeface')

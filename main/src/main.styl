@@ -1,71 +1,61 @@
 @import 'nib'
+@import 'pages/_common'
 
 global-reset()
+
+_keyColor = #DF2F30
+
 
 *
   box-sizing: border-box
 
+html, body, ul, h2, h3, hr, p, hr
+  -webkit-margin-before: 0
+  -webkit-margin-after: 0
+
 body
-    color: #999
-    background: #000
-    font-family: monospace
-
-nav
-    position: fixed
-    bottom: 20px
-    right: 20px
-
-h2
-    font-size: 40px
-    text-align: center
+  color: _keyColor
+  background: #FFF
+  font-family: 'Questrial', 'Rounded Mplus 1c', sans-serif
+  font-size: 12px
 
 p
-    text-align: center
+  line-height: 2em
 
-.hidden
-    display: none
+.futura
+  font-family: 'Futura', sans-serif
 
 .modal
-    position: absolute
-    width: calc(100% - 40px)
-    height: calc(100% - 40px)
-    margin: 20px
-    outline: solid 1px #FFF    
-    background-color: rgba(0,0,0,0.7)
+  position: absolute
+  width: calc(100% - 40px)
+  height: calc(100% - 40px)
+  margin: 20px
+  outline: solid 1px #FFF  
+  background-color: rgba(0,0,0,0.7)
 
 .button
-    display: block
-    outline: solid 1px #FFF
-    margin: 10px
-    padding: 10px
-    font-size: 20px
-    text-align: center
-    user-select: none
-    transition: background-color 0.3s ease
+  display: block
+  outline: solid 1px _keyColor
+  margin: 10px
+  padding: 10px
+  font-size: 20px
+  text-align: center
+  user-select: none
+  transition: background-color 0.3s ease
 
 .big-button
-    height: 120px
+  height: 120px
 
 .button:hover, .button:active
-    background-color: rgba(255,255,255,0.1)
+  background-color: rgba(255,255,255,0.1)
 
 
 #main
-    position: fixed
-    pointer-events: none
-    overflow: hidden
+  position: fixed
+  overflow: hidden
 
 #makeface-capture
-    canvas
-        position: absolute
-
-#loading
-    position: fixed
-    pointer-events: none
-    height: 20px
-    width: 0px
-    bottom: 0
-    background: #FFF
-    visibility: visible
-    opacity: 1
-    transition: all 1s ease
+  canvas
+    position: absolute
+  
+@require 'pages/loading'

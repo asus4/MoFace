@@ -1,6 +1,8 @@
 {
   "minify": false,
   "options": [
+    "addTest",
+    "testStyles",
     "setClasses"
   ],
   "feature-detects": [

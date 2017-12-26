@@ -27,15 +27,15 @@ function remapTrim(value, low1, high1, low2, high2) {
 }
 
 export default class VirtualKeyboard extends EventEmitter {
-  constructor() {
+  constructor(target) {
     super()
-    this.keyboard()
+    this.keyboard(target)
     if (Modernizr.touchevents) {
-      this.touch()
+      this.touch(target)
     }
   }
 
-  keyboard() {
+  keyboard(target) {
     let inputs = ''
     let mouseX = 0
     window.addEventListener('mousemove', (e) => {
@@ -71,15 +71,15 @@ export default class VirtualKeyboard extends EventEmitter {
       }
       // console.log(inputs)
     }
-    document.addEventListener('keydown', (e) => {checkKey(e.keyCode)}, false)
+    target.addEventListener('keydown', (e) => {checkKey(e.keyCode)}, false)
   }
 
-  touch() {
+  touch(target) {
     let accX = 0
     window.addEventListener('devicemotion', (e) => {
       accX = remapTrim(e.accelerationIncludingGravity.x, -7, 7, 0, 1)
     }, false)
-    document.addEventListener('touchstart', (e) => {
+    target.addEventListener('touchstart', (e) => {
       const touch = e.touches[0]
       const p = [touch.clientX / window.innerWidth, touch.clientY / window.innerHeight]
       const y = Math.floor(p[1] * SCREENMAP.length)

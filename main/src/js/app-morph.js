@@ -32,7 +32,7 @@ export default class AppMorph {
     }
 
     this.mixer = new VoiceMixer(assets.buffers, assets.spritemaps)
-    const keyboard = new VirtualKeyboard(window)
+    const keyboard = new VirtualKeyboard(canvas)
     keyboard.on('key', (input, pan) => {
       console.log('on key:', input, pan)
       this.mixer.play(input, pan)

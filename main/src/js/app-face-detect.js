@@ -40,7 +40,9 @@ export default class AppFaceDetect extends EventEmitter {
     const option = {
       audio: false,
       video: {
-        facingMode: 'user' // use facing camera
+        facingMode: 'user', // use facing camera
+        width: { min: 480, ideal: 640, max: 1280 },
+        height: { min: 480, ideal: 640, max: 1280 }
       }
     }
     navigator.getUserMedia(option, this.setupCamera.bind(this), (err) => {

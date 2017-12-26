@@ -1,8 +1,21 @@
 // Entry point of all
 import Modernizr from 'exports-loader?Modernizr!modernizr-custom'
+import MobileDetect from 'mobile-detect'
 import createjs from 'preload-js'
 import loadingBar from './js/loading-bar'
 import Preloader from './js/preloader'
+
+{
+  // Modernizr + MobileDetect Mix-in
+  const md = new MobileDetect(navigator.userAgent)
+  const grade = md.mobileGrade()
+  Modernizr.addTest({
+    mobile: !!md.mobile(),
+    phone: !!md.phone(),
+    tablet: !!md.tablet(),
+    mobilegradea: grade === 'A'
+  })
+}
 
 console.log('GitHub https://github.com/asus4/morph-identity')
 

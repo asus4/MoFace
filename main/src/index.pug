@@ -31,28 +31,27 @@ html(lang='ja')
   link(href='https://fonts.googleapis.com/css?family=Questrial' rel='stylesheet')
   link(rel='stylesheet', href='main.css')
 body    
-  #main.no_touch
+  #main
     canvas
   nav
-    h1.futura MoFace
-    ul
-      a#info-button.button
-        li About
-      a#makeface-button.button
-        li Use Your Face 
+    h1.futura.pc-only MoFace
+    a#info-button.button
+    a#makeface-button.button
+    a#mode-button.button
+      span speak
 
   footer
-    .mode.pc
+    .mode.pc-only
       .button Edit Text
       .button Play Text
-    .mode.mobile
+    .mode.mobile-only
       .button.keyboard
     .share
       span share
       a.icon.facebook
       span |
       a.icon.twitter
-    .copyright Copyright © 2018 invisible designs lab, All rights reserved.
+    .copyright.pc-only Copyright © 2018 invisible designs lab, All rights reserved.
 
   //- Pages
   include pages/info

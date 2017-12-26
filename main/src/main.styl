@@ -5,7 +5,6 @@ global-reset()
 
 _keyColor = #DF2F30
 
-
 *
   box-sizing: border-box
 
@@ -13,7 +12,7 @@ html, body, ul, h2, h3, hr, p, hr
   -webkit-margin-before: 0
   -webkit-margin-after: 0
 
-body
+html, body
   color: _keyColor
   background: #FFF
   font-family: 'Questrial', 'Rounded Mplus 1c', sans-serif
@@ -25,37 +24,58 @@ p
 .futura
   font-family: 'Futura', sans-serif
 
-.modal
-  position: absolute
-  width: calc(100% - 40px)
-  height: calc(100% - 40px)
-  margin: 20px
-  outline: solid 1px #FFF  
-  background-color: rgba(0,0,0,0.7)
-
 .button
   display: block
-  outline: solid 1px _keyColor
-  margin: 10px
-  padding: 10px
-  font-size: 20px
-  text-align: center
-  user-select: none
+  cursor: pointer
   transition: background-color 0.3s ease
+  &:hover, $:active
+    opacity: 0.5
 
-.big-button
-  height: 120px
+nav
+  position: fixed
+  width: 100%
+  padding: 15px
 
-.button:hover, .button:active
-  background-color: rgba(255,255,255,0.1)
+  /#info-button
+    position: absolute
+    width: 70px
+    height: 50px
+    right: 0
+    background: url(images/sp/info_button_white.svg) no-repeat center/30%
+    /.text-mode #info-button
+      background-image: url(images/sp/info_button_orange.svg)
 
+  /#makeface-button
+    position: absolute
+    width: 70px
+    height: 50px
+    left: 50%
+    transform: translate(-50%, 0)
+    background: url(images/sp/addyourself_white.svg) no-repeat center/50%
+    /.text-mode #info-button
+      background-image: url(images/sp/addyourself_orange.svg)
+
+  /#mode-button
+    position: absolute
+    width: 40px
+    height: 40px
+    left: 0
+    background: url(images/sp/modeswitch_white.svg) no-repeat center/50%
+    color: #fff
+    span
+      position: absolute
+      margin: 22px 0px 0px 34px
+    /.text-mode #info-button
+      background-image: url(images/sp/modeswitch_orange.svg)
+      color: _keyColor
 
 #main
   position: fixed
   overflow: hidden
+  user-select: none
 
 #makeface-capture
   canvas
     position: absolute
-  
+
 @require 'pages/loading'

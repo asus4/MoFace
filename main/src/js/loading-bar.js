@@ -29,7 +29,7 @@ class LoadingBar {
     this.finished = true
     this.progressBar.style.width = '100%'
 
-    if (mobileDetect.mobile() || true) {
+    if (mobileDetect.mobile()) {
       this.showEnter()
     } else {
       this.fadeout()

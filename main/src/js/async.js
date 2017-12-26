@@ -4,7 +4,7 @@
  * @export
  * @param {any} src 
  */
-export function loadImageAsync(src) {
+export function loadIamgeAsync(src) {
   return new Promise((resolve, reject) => {
     const image = new Image()
     image.onload = () => {

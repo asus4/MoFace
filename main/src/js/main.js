@@ -73,7 +73,9 @@ export default function() {
       faceDetect.dispose()
       faceDetect = null
       const modal = pageManager.showModal('makeface-confirm')
-      modal.querySelector('.face-confirm').appendChild(image)
+      const preview = modal.querySelector('.preview')
+      preview.innerHTML = '' // reset
+      preview.appendChild(image)
     })
   })
 

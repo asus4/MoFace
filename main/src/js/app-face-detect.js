@@ -174,12 +174,12 @@ export default class AppFaceDetect extends EventEmitter {
 
   onTrackerFailue() {
     console.log('onTrackerFailue')
-    this.tracker.stop()
+    // this.tracker.stop()
   }
 
   onTrackrConverged() {
     console.log('onTrackrConverged')
-    this.tracker.stop()
+    // this.tracker.stop()
   }
 
 }

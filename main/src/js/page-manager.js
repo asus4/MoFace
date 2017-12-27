@@ -1,4 +1,6 @@
 const EventEmitter = require('events').EventEmitter
+import {openPhotoLibrary} from './async'
+
 
 const onClick = (query, listener) => {
   document.querySelector(query).addEventListener('click', listener)
@@ -21,30 +23,27 @@ class PageManager extends EventEmitter {
       this.showModal('makeface-capture')
       this.emit('face-detect', false)
     })
+
     // Load from camera roll
     onClick('#cameraroll-button', () => {
-      const input = document.createElement('input')
-      input.type = 'file'
-      input.accept = 'image/*'
-      input.addEventListener('change', (e) => {
-        const files = e.target.files
-        if (files.length == 0) {
-          return
-        }
-        this.showModal('makeface-capture')
-        this.emit('face-detect', files[0])
+      openPhotoLibrary().then((file) => {
+        const page = this.showModal('makeface-capture')
+        page.querySelectorAll('.guide').forEach((e) => {
+          e.classList.add('hidden')
+        })
+        this.emit('face-detect', file)
       })
-      input.click()
     })
 
     // In confirm button
     onClick('#makeface-confirm .ok-button', () => {
+      const img = document.querySelector('#makeface-confirm img')
       console.log('#makeface-confirm .ok-button', img)
       this.hideModal(this.currentModal)
       this.emit('new-face', img)
     })
     onClick('#makeface-confirm .retake-button', () => {
-      const container = document.querySelector('#makeface-confirm .face-confirm')
+      const container = document.querySelector('#makeface-confirm .preview')
       container.removeChild(container.lastChild)
       this.showModal('makeface')
     })

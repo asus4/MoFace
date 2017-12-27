@@ -1,0 +1,123 @@
+section.modal
+  position: fixed
+  width: 100%
+  height: 100%
+  top: 0
+  background-color: rgba(0,0,0,70%)
+  text-align: center
+  color #FFF
+  h3
+    font-size: 12px
+    letter-spacing: 0.2em
+  
+  .close-button
+    position: fixed
+    top: 15px
+    left: 15px
+    svg
+      stroke: #fff
+  
+  .makeface-icon
+    width: 33px
+    height: 22px
+    background: url(images/sp/addyourself_white.svg) no-repeat center/100%
+    margin: 15px auto 20px auto
+  
+  .preview, .overlay, canvas
+    position: fixed
+    top:0
+    left:0
+    width: 100%
+    height: 100%
+  
+//----------------------
+// Makeface
+//----------------------
+.vcenter
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+
+
+#makeface  
+    .button
+      margin: 23px 0
+      span
+        display: block
+        margin: 12px 0 0 0
+        font-size: 10px
+        letter-spacing: 0.2em
+  .icon
+    width: 106px
+    height: 106px
+    margin: auto
+  #capture-button
+    .icon
+      background: url(images/sp/from_incam_white.svg) no-repeat center/100%
+  #cameraroll-button
+    .icon
+      background: url(images/sp/from_photo_white.svg) no-repeat center/100%
+  
+  .legal
+    position: absolute
+    width: 188px
+    height: 20px
+    bottom: 54px
+    left: 50%
+    transform: translate(-50%, 0)
+    border-radius: 6px
+    border: 1px solid #fff
+    line-height: 20px
+
+//----------------------
+// Capture
+//----------------------  
+
+#makeface-capture
+  .overlay
+    background-color: rgba(0, 0, 0, 30%)
+    p
+      position: absolute
+      top: 50%
+      left: 50%
+      transform: translate(-50%, -50%)
+      font-size: 8px
+  svg.guide
+    position: fixed
+    width: 100%
+    height: 100%
+    top: 0
+    left: 0
+    fill: none
+    stroke: #FFF
+    stroke-width: 1
+    stroke-dasharray: 10 10
+  canvas
+    transform: scaleX(-1)
+  
+//----------------------
+// Confirm
+//----------------------
+
+#makeface-confirm
+  .overlay
+    background-color: rgba(0, 0, 0, 30%)
+  .vcenter
+    .button
+      width: 150px
+      margin: 10px
+      border-radius: 6px
+      border: 1px solid #fff
+      line-height: 20px      
+
+    
+
+//----------------------
+// Retry
+//----------------------

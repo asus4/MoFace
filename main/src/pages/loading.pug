@@ -1,11 +1,14 @@
 #loading
-  .container
-    .fade.hidden.mobile-only
-      h1.futura MoFace
+  .container.mobile-only
+    .logo.hidden
     .progress
       .bar
-    .fade.hidden.mobile-only
+    .loading.futura loading...
+    .hidden
       .button.futura ENTER
       p このサイトでは音が出ます。
         br
         | volumeをあげてお楽しみください。
+  .container.pc-only
+    svg(viewBox='0 0 508 508')
+      circle(cx='254' cy='254', r='252')

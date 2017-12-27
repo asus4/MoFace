@@ -57,7 +57,7 @@ if (!Modernizr.webaudio && !Modernizr.webgl) {
 
   const preloader = new Preloader(manifest)
   preloader.on('progress', (n) => {
-    loadingBar.progress(n)
+    loadingBar.progress = n
   })
   preloader.load()
 

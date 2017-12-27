@@ -1,58 +1,65 @@
 
-section#info.modal.hidden
-  section#about
-    h2 ABOUT
-    hr.mini
-    p Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text 
-    hr.mini  
-  section#howtoplay
-    h2 HOW TO PLAY
-    hr.mini
-    .column.webcam
-      .description webカメラでの体験方法
-      .description TOPページで 
-        br
-        | ADD YOURSELFを選択
-      .description From in-cam
-        br
-        | を選択
-      .description カメラの使用を許可
-      .description 表示されたガイドに顔を合わせる
-      .description 認識されると体験開始
-    .column.cameraroll
-      .description 既存の画像での体験方法
-      .description TOPページで 
-        br
-        | ADD YOURSELFを選択
-      .description From Photo
-        br
-        | を選択
-      .description 画像の準備
-      .description 画像ファイルを
-        br
-        | クリックして選択
-      .description 顔認識位置を確認して、OKをクリック体験開始
-  section#credit
-    h2 CREDIT
-    hr.mini
-    .profile
-      img()
-      .right
-        .name Yudai Kogawa
-        .company invisible designs lab
-        .job Job title
-    .profile
-      img()
-      .right
-        .name Tsuyoshi Otabe 
-        .company invisible designs lab
-        .job Job title
-    .profile
-      img()
-      .right
-        .name Koki Ibukuro
-        .company dot by dot inc.
-        .job Engineer
+#info.modal.hidden
+  .content
+    section#about
+      h2 ABOUT
+      hr.mini
+      p Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text 
+      hr.mini  
+    section#howtoplay
+      h2 HOW TO PLAY
+      hr.mini
+      .columns
+        .column.webcam
+          .icon.icon-webcam
+          .description webカメラでの体験方法
+          .vline
+          .screenshot
+          .description TOPページで 
+            br
+            | ADD YOURSELFを選択
+          .description From in-cam
+            br
+            | を選択
+          .description カメラの使用を許可
+          .description 表示されたガイドに顔を合わせる
+          .description 認識されると体験開始
+
+        .column.cameraroll
+          .icon.icon-photo
+          .description 既存の画像での体験方法
+          .description TOPページで 
+            br
+            | ADD YOURSELFを選択
+          .description From Photo
+            br
+            | を選択
+          .description 画像の準備
+          .description 画像ファイルを
+            br
+            | クリックして選択
+          .description 顔認識位置を確認して、OKをクリック体験開始
+    section#credit
+      h2 CREDIT
+      hr.mini
+      .profile
+        img()
+        .right
+          .name Yudai Kogawa
+          .company invisible designs lab
+          .job Job title
+      .profile
+        img()
+        .right
+          .name Tsuyoshi Otabe 
+          .company invisible designs lab
+          .job Job title
+      .profile
+        img()
+        .right
+          .name Koki Ibukuro
+          .company dot by dot inc.
+          .job Engineer
   .menu
     .button.close-button Close
     ul

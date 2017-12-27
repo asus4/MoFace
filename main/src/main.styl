@@ -3,7 +3,7 @@
 
 global-reset()
 
-_keyColor = #DF2F30
+_keyColor = #ed3a24
 
 *
   box-sizing: border-box
@@ -21,15 +21,6 @@ html, body
 p
   line-height: 2em
 
-.futura
-  font-family: 'Futura', sans-serif
-
-.button
-  display: block
-  cursor: pointer
-  transition: background-color 0.3s ease
-  &:hover, $:active
-    opacity: 0.5
 
 nav
   position: fixed
@@ -78,4 +69,5 @@ nav
   canvas
     position: absolute
 
+@require 'pages/info'
 @require 'pages/loading'

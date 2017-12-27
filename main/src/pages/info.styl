@@ -1,0 +1,62 @@
+_infoMenuHeight = 68px
+
+#info.modal
+  position: fixed
+  width: 100%
+  background: #fff
+  top: 0
+  bottom: 0
+  overflow: scroll
+
+  .content
+    margin: _infoMenuHeight 10px 10px 10px
+
+  h2
+    font-size: 30px
+    letter-spacing: 0.1em
+
+  hr.mini
+    display: block
+    width: 10px
+    height: 1px
+    margin: 20px 0 20px 0
+    background-color: _keyColor
+    border: 0
+  
+  .menu
+    position: absolute
+    width: 100%
+    height: _infoMenuHeight
+    top: 0
+    left: 0
+    background: #fff
+
+  //----------------------
+  // How to play
+  //----------------------
+
+  .columns
+    display: flex
+    text-align: center
+
+  .column
+    width: 160px
+    margin: 0 10px
+
+    .description
+      margin: 10px 0
+
+    .screenshot      
+      width: 87px
+      height: 56px
+      margin: auto
+      background: url(images/dummy.png) no-repeat center
+
+    .icon
+      width: 87px
+      height: 87px
+      margin: auto
+    .icon-webcam
+      background: url(images/sp/from_incam_orange.svg) no-repeat center/100%
+    .icon-photo
+      background: url(images/sp/from_photo_orange.svg) no-repeat center/100%

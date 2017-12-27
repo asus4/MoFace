@@ -1,13 +1,17 @@
 import MobileDetect from 'mobile-detect'
 
 const mobileDetect = new MobileDetect(navigator.userAgent)
+const isMobile = mobileDetect.mobile()
 
 class LoadingBar {
-
   constructor() {
     this.background = document.getElementById('loading')
-    this.progressBar = document.querySelector('#loading .bar')
-    this.rate = 0
+    this.progressBar = this.background.querySelector('.bar')
+    this.progressCircle = this.background.querySelector('circle')
+
+    this.progress = 0
+    this.smoothProgress = 0
+
     this.finished = false
     this.update()
   }
@@ -16,20 +20,15 @@ class LoadingBar {
     if (!this.finished) {
       requestAnimationFrame(this.update.bind(this))
     }
-    this.progressBar.style.width = `${this.rate * 100}%`
-  }
-
-  progress(rate) {
-    this.rate = rate
-    this.progressBar.style.width = `${this.rate * 100}%`
+    this.smoothProgress += (this.progress - this.smoothProgress) * 0.1
+    this._setProgress(this.smoothProgress)
   }
 
   finish() {
-    this.rate = 1
+    this.smoothProgress = this.progress = 1
     this.finished = true
-    this.progressBar.style.width = '100%'
 
-    if (mobileDetect.mobile()) {
+    if (isMobile) {
       this.showEnter()
     } else {
       this.fadeout()
@@ -37,14 +36,16 @@ class LoadingBar {
   }
 
   showEnter() {
-    const hiddens = this.background.querySelectorAll('.fade.hidden')
+    const container = this.background.querySelector('#loading .container.mobile-only')
+    const hiddens = container.querySelectorAll('.hidden')
     hiddens.forEach((d) => {
       d.classList.remove('hidden')
+      d.classList.add('fade')
     })
-    const button = this.background.querySelector('.button')
-    button.addEventListener('click', () => {
+    container.querySelector('.loading').classList.add('hidden')
+    this.background.addEventListener('click', () => {
       this.fadeout()
-    })
+    }, false)
   }
 
   fadeout() {
@@ -52,6 +53,16 @@ class LoadingBar {
     setTimeout(() => {
       this.background.style.display = 'none'
     }, 1000)
+  }
+
+  _setProgress(value) {
+    if (isMobile) {
+      this.progressBar.style.width = `${value * 100}%`
+    } else {
+      const len = this.progressCircle.getTotalLength()
+      this.progressCircle.style.strokeDasharray = `${len} ${len}`
+      this.progressCircle.style.strokeDashoffset = (1 - value) * len
+    }
   }
 }
 

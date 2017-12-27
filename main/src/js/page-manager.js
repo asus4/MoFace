@@ -23,6 +23,9 @@ class PageManager extends EventEmitter {
       this.showModal('makeface-capture')
       this.emit('face-detect', false)
     })
+    onClick('.legal.button', () => {
+      this.showModal('makeface-legal')
+    })
 
     // Load from camera roll
     onClick('#cameraroll-button', () => {
@@ -34,6 +37,8 @@ class PageManager extends EventEmitter {
         this.emit('face-detect', file)
       })
     })
+
+
 
     // In confirm button
     onClick('#makeface-confirm .ok-button', () => {

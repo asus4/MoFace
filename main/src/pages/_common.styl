@@ -1,3 +1,5 @@
+_keyColor = #ed3a24
+
 html.mobile .pc-only
   display: none
 
@@ -51,3 +53,11 @@ html.no-mobile .mobile-only
   transition: background-color 0.3s ease
   &:hover, $:active
     opacity: 0.5
+
+.close-button
+  width: 20px
+  height: 20px
+  svg
+    fill: none
+    stroke: _keyColor
+    stroke-width: 1

@@ -1,6 +1,9 @@
 _infoMenuHeight = 68px
+_images = '../public/images'
+_imagesSp = pathjoin(_images, 'sp')
+_imagesPc = pathjoin(_images, 'pc')
 
-#info.modal
+#info
   position: fixed
   width: 100%
   background: #fff
@@ -9,7 +12,7 @@ _infoMenuHeight = 68px
   overflow: scroll
 
   .content
-    margin: _infoMenuHeight 10px 10px 10px
+    margin: _infoMenuHeight 15px 15px 15px
 
   h2
     font-size: 30px
@@ -24,17 +27,47 @@ _infoMenuHeight = 68px
     border: 0
   
   .menu
-    position: absolute
+    position: fixed
     width: 100%
     height: _infoMenuHeight
+    padding: 15px    
     top: 0
     left: 0
     background: #fff
+    display: flex
+    align-items: flex-end
+    ul
+      display: flex
+      margin: 0 0 0 18px
+    li
+      margin: 0 6px 0 0
+    a
+      text-decoration: none
+      color _keyColor
 
   //----------------------
   // How to play
   //----------------------
 
+  .figure
+    margin: 44px auto 0 auto
+    &.textmode
+      img = image-size(pathjoin(_imagesSp, 'howto_textmode.jpg'))
+      width: (img[0]/2)
+      height: (img[1]/2)
+      background: url(images/sp/howto_textmode.jpg) no-repeat center/100%
+    &.speakmode
+      img = image-size(pathjoin(_imagesSp, 'howto_speakmode.jpg'))
+      width: (img[0]/2)
+      height: (img[1]/2)
+      background: url(images/sp/howto_speakmode.jpg) no-repeat center/100%
+
+  .icon.makeface
+    width: 66px
+    height: 40px
+    margin: 44px auto 0 auto
+    background: url(images/sp/addyourself_orange.svg) no-repeat center/50%
+    
   .columns
     display: flex
     text-align: center
@@ -44,11 +77,12 @@ _infoMenuHeight = 68px
     margin: 0 10px
 
     .description
-      margin: 10px 0
+      font-size: 12px
+      margin: 10px 0 0 0
 
     .screenshot      
-      width: 87px
-      height: 56px
+      width: 110px
+      height: 76px
       margin: auto
       background: url(images/dummy.png) no-repeat center
 
@@ -60,3 +94,41 @@ _infoMenuHeight = 68px
       background: url(images/sp/from_incam_orange.svg) no-repeat center/100%
     .icon-photo
       background: url(images/sp/from_photo_orange.svg) no-repeat center/100%
+  
+  .vline
+    width: 1px
+    height: 34px
+    background-color: _keyColor
+    margin: 14px auto
+  
+  //----------------------
+  // Credit
+  //----------------------
+
+  .profile
+    display: flex
+    margin: 50px 10px
+    img
+      width: 120px
+      height: 120px
+      background: url(images/dummy.png) no-repeat center
+    .right
+      margin: 0 0 0 15px
+      display: flex
+      flex-flow: column nowrap
+      justify-content: flex-end
+      font-size: 11px
+      div
+        margin: 4px 0 0 0
+      .name
+        font-size: 22px
+    
+  .invisi
+    margin: 100px 10px
+    .logo
+      width: 266px
+      height: 67px
+      background: url(images/invisi-logo.svg) no-repeat center/100%
+      
+
+    

@@ -1,72 +1,106 @@
 
 #info.modal.hidden
   .content
-    section#about
-      h2 ABOUT
-      hr.mini
-      p Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text Sample Text 
-      hr.mini  
     section#howtoplay
       h2 HOW TO PLAY
       hr.mini
+      p タップでひらがなを発音し、
+        br
+        | 端末を傾けることで顔をモーフィングさせることができます。
+        | 下記2つのモードで遊ぶことができます。
+      
+      .figure.textmode
+      .figure.speakmode
+
+      .icon.makeface
+      p.description 上記アイコンから、自分の顔を読み込ませて体験することができます。
+
       .columns
         .column.webcam
           .icon.icon-webcam
-          .description webカメラでの体験方法
+          p.description webカメラでの体験方法
           .vline
           .screenshot
-          .description TOPページで 
+          p.description TOPページで 
             br
             | ADD YOURSELFを選択
-          .description From in-cam
+          .vline
+          .screenshot
+          p.description From in-cam
             br
             | を選択
-          .description カメラの使用を許可
-          .description 表示されたガイドに顔を合わせる
-          .description 認識されると体験開始
+          .vline
+          .screenshot
+          p.description カメラの使用を許可
+          .vline
+          .screenshot
+          p.description 表示されたガイドに顔を合わせる
+          .vline
+          .screenshot
+          p.description 認識されると体験開始
 
         .column.cameraroll
           .icon.icon-photo
-          .description 既存の画像での体験方法
-          .description TOPページで 
+          p.description 既存の画像での体験方法
+          .vline
+          .screenshot
+          p.description TOPページで 
             br
             | ADD YOURSELFを選択
-          .description From Photo
+          .vline
+          .screenshot
+          p.description From Photo
             br
             | を選択
-          .description 画像の準備
-          .description 画像ファイルを
+          .vline
+          .screenshot
+          p.description 画像の準備
+          .vline
+          .screenshot
+          p.description 画像ファイルを
             br
             | クリックして選択
-          .description 顔認識位置を確認して、OKをクリック体験開始
+          .vline
+          .screenshot
+          p.description 顔認識位置を確認して、OKをクリック体験開始
+    
+    hr.mini
     section#credit
       h2 CREDIT
       hr.mini
       .profile
-        img()
+        img
         .right
+          .job Planner
           .name Yudai Kogawa
           .company invisible designs lab
-          .job Job title
       .profile
-        img()
+        img
         .right
+          .job Designer
           .name Tsuyoshi Otabe 
           .company invisible designs lab
-          .job Job title
       .profile
-        img()
+        img
         .right
+          .job Engineer
           .name Koki Ibukuro
           .company dot by dot inc.
-          .job Engineer
+      .invisi
+        .logo
+        .description 大切な事は見えない。見えないものには大きな価値があります。
+          br
+          | アイディアやイマジネーション、インスピレーション。
+          br
+          | それらを見える形で新しい発想で表現していく音を軸としたクリエイティブチーム
+      
   .menu
-    .button.close-button Close
+    .button.close-button
+      include parts/button-close
     ul
       li
-        a(href='#about') ABOUT
-      li
         a(href='#howtoplay') HOW TO PLAY
+      li /
       li
         a(href='#credit') CREDIT
     

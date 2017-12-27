@@ -39,7 +39,7 @@ const config = {
       server: { baseDir: ['public'] },
       https: true,
       injectChanges: true,
-      files: ['public/**/*.html, public/**/*.css'],
+      files: ['public/**/*.html', 'public/**/*.css'],
       open: false,
     }),
     new webpack.ProvidePlugin({'THREE': 'three'}),

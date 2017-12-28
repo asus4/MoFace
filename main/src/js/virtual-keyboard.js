@@ -54,13 +54,20 @@ const drawTouchGrids = (canvas) => {
 
 
 export default class VirtualKeyboard extends EventEmitter {
-  constructor(target) {
+  constructor() {
     super()
-    this.keyboard(target)
+    this.keyboard()
     if (Modernizr.touchevents) {
-      this.touch(target)
-      drawTouchGrids(target)
+      this.addX = 0
+      window.addEventListener('devicemotion', (e) => {
+        this.accX = remapTrim(e.accelerationIncludingGravity.x, -7, 7, 0, 1)
+      }, false)
     }
+    this.lastVoice = ''
+  }
+
+  drawGrids(target) {
+    drawTouchGrids(target)
   }
 
   keyboard() {
@@ -102,18 +109,17 @@ export default class VirtualKeyboard extends EventEmitter {
     document.addEventListener('keydown', (e) => {checkKey(e.keyCode)}, false)
   }
 
-  touch(target) {
-    let accX = 0
-    window.addEventListener('devicemotion', (e) => {
-      accX = remapTrim(e.accelerationIncludingGravity.x, -7, 7, 0, 1)
-    }, false)
-    target.addEventListener('touchstart', (e) => {
-      const touch = e.touches[0]
-      const rect = e.target.getBoundingClientRect()
-      const p = [(touch.clientX - rect.x) / rect.width, (touch.clientY - rect.y) / rect.height]
-      const y = Math.floor(p[1] * SCREENMAP.length)
-      const x = Math.floor(p[0] * SCREENMAP[y].length)
-      this.emit('key', SCREENMAP[y][x], accX)
-    }, false)
+  onTouch(e, force = false) {
+    const touch = e.touches[0]
+    const rect = e.target.getBoundingClientRect()
+    const p = [(touch.clientX - rect.x) / rect.width, (touch.clientY - rect.y) / rect.height]
+    const y = Math.floor(p[1] * SCREENMAP.length)
+    const x = Math.floor(p[0] * SCREENMAP[y].length)
+
+    const voice = SCREENMAP[y][x]
+    if (force || this.lastVoice != voice) {
+      this.emit('key', voice, this.accX)
+      this.lastVoice = voice
+    }
   }
 }

@@ -2,25 +2,21 @@ import Tone from 'tone'
 import Stats from 'stats.js'
 import dat from 'dat-gui'
 import Vue from 'vue'
-import ShareUtil from './share-util'
+
 
 import AppMorph from './app-morph'
 import AppFaceDetect from './app-face-detect'
-// import pageManager from './page-manager'
 import config from './config'
 import VirtualKeyboard from './virtual-keyboard'
-
+import KanaIME from './kana-ime'
+import ShareUtil from './share-util'
 
 
 // Stats
 const stats = config.DEV ? new Stats() : null
 if (stats) {
   const style = stats.domElement.style
-  // Place bottom / right
-  // style.position = 'absolute'
-  // style.bottom = style.right = '0px'
   style.top = '20%'
-  // style.top = style.left = null
   document.body.appendChild(stats.domElement)
 }
 // Dat GUI
@@ -34,7 +30,9 @@ export default function() {
     isMobile: document.documentElement.classList.contains('mobile'),
     pause: false,
     showInfo: false,
-    morph: null
+    morph: null,
+    ime: new KanaIME(),
+    keyboard: new VirtualKeyboard()
   }
 
   const update = () => {
@@ -48,6 +46,9 @@ export default function() {
   new Vue({
     el: '#app-morph',
     data: store,
+    //-------------------
+    // Life cycle
+    //-------------------
     mounted: () => {
       // App
       store.morph = new AppMorph()
@@ -57,18 +58,19 @@ export default function() {
       }
 
       // Events
-      const keyboard = new VirtualKeyboard(document.querySelector('#main .ui'))
-      keyboard.on('key', (input, pan) => {
+      store.keyboard.on('key', (input, pan) => {
         if (store.speakMode) {
-          console.log('on key:', input, pan)
+          // console.log('on key:', input, pan)
           store.morph.mixer.play(input, pan)
         } else {
           // todo
         }
       })
-
       update()
     },
+    //-------------------
+    // Events
+    //-------------------
     methods: {
       // Info
       infoShowClick() {
@@ -80,11 +82,6 @@ export default function() {
         this.pause = false
         update()
       },
-      // Modo
-      modoToggle() {
-        this.speakMode = !this.speakMode
-      },
-      //
       makeFaceClick() {
         console.log('make new face')
       },
@@ -101,13 +98,15 @@ export default function() {
           url: 'https://invisi.jp/',
           hashtags: 'moface'
         })
+      },
+      //
+      onKeyboardTouch(event) {
+        this.keyboard.onTouch(event)
       }
     }
   })
 
-
-
-  // Events
+  // Global Events
   window.addEventListener('focus', () => {
     Tone.Master.mute = false
   }, false)

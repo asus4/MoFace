@@ -1,11 +1,9 @@
 const EventEmitter = require('events').EventEmitter
 import KEYMAP from './roma-ji'
 
-
 const KANA = new RegExp(/[\u30a1-\u30f6]/, 'g')
 const HIRA = new RegExp(/[\u3041-\u3096]/, 'g')
 const AtoZ = new RegExp(/[a-z]/, 'g')
-
 
 const convert = (str) => {
   // A to a
@@ -36,7 +34,6 @@ const checkKey = (key) => {
 }
 
 const shrink = (str) => {
-  // shrink
   let hiragana = ''
   let romaji = ''
 
@@ -75,29 +72,18 @@ console.time('kana-ime asset')
 console.timeEnd('kana-ime asset')
 */
 
-/**
- * Original IME
- * 
- * @export
- * @class KanaIME
- */
 export default class KanaIME  extends EventEmitter {
-  /**
-   * Creates an instance of KanaIME.
-   * @param {HTMLInputElement} input 
-   * @memberof KanaIME
-   */
-  constructor(input) {
+  constructor() {
     super()
+  }
 
-    this.input = input
-    input.addEventListener('input', () => {
-      // console.log('input:', input.value)
-      input.value = convert(input.value)
-    })
-    input.addEventListener('change', () => {
-      console.log('change:', input.value)
-      input.value = shrink(convert(input.value))
-    })
+  onInput(event) {
+    const t = event.target
+    t.value = convert(t.value)
+  }
+
+  onChange(event) {
+    const t = event.target
+    t.value = shrink(convert(t.value))
   }
 }

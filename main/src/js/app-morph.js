@@ -12,9 +12,6 @@ import assets from './assets'
 import CompositePass from './composite-pass'
 import Morpher from './morpher'
 import VoiceMixer from './voice-mixer'
-import VirtualKeyboard from './virtual-keyboard'
-import KanaIME from './kana-ime'
-
 
 export default class AppMorph {
   /**
@@ -34,7 +31,6 @@ export default class AppMorph {
     this.morphs.push(1) // user channel
 
     for (const img of assets.images) {
-      console.log('add face', img)
       this.addFace(img, null)
     }
     this.mixer = new VoiceMixer(assets.buffers, assets.spritemaps)

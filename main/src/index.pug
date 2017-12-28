@@ -35,13 +35,20 @@ body
   #app-morph
     #main
       canvas.webgl
-      canvas.ui
-    
+      transition(appear
+        v-on:appear='keyboard.drawGrids($event)'
+        v-on:enter='keyboard.drawGrids($event)'
+      )
+        canvas.ui(
+          v-if='speakMode'
+          v-on:touchstart='keyboard.onTouch($event, true)'
+          v-on:touchmove='keyboard.onTouch($event, false)'
+        )
     nav(v-bind:class="{ 'text-mode':!speakMode }")
       h1.futura.pc-only MoFace
       a#info-button.button(v-on:click='infoShowClick')
       a#makeface-button.button(v-on:click='makeFaceClick')
-      a#mode-button(v-on:click='modoToggle')
+      a#mode-button(v-on:click='speakMode = !speakMode')
         span {{speakMode ? 'speak' : 'text'}}
     
     footer(v-if='!speakMode')
@@ -49,9 +56,15 @@ body
         .button Edit Text
         .button Play Text
       .mode.mobile-only
-        .input-log あ
-        input#kana-input.input-log(type='text' name='message')
-        .button.keyboard
+        .hbox
+          .input-log
+          input#kana-input.input-log(
+            type='text' name='message'
+            ref='kanaInput'
+            v-on:input='ime.onInput'
+            v-on:change='ime.onChange'
+          )
+        .button.keyboard(v-on:click='$refs.kanaInput.focus()')
       .share
         span.pc-only share
         a.icon.facebook(v-on:click='shareFacebookClick')
@@ -61,7 +74,7 @@ body
 
     //- Info Page
     include pages/info
-  include pages/makeface
+    include pages/makeface
   include pages/loading
 
   script(src='bundle.js')

@@ -1,5 +1,7 @@
 const EventEmitter = require('events').EventEmitter
 import KEYMAP from './roma-ji'
+import Vue from 'vue'
+console.log(Vue)
 
 
 const KANA = new RegExp(/[\u30a1-\u30f6]/, 'g')
@@ -92,7 +94,7 @@ export default class KanaIME  extends EventEmitter {
 
     this.input = input
     input.addEventListener('input', () => {
-      console.log('input:', input.value)
+      // console.log('input:', input.value)
       input.value = convert(input.value)
     })
     input.addEventListener('change', () => {

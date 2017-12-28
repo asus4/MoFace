@@ -105,6 +105,22 @@ footer
   /.text-mode canvas.ui
     display: none
 
+.input-log
+  margin: 0 0 0 10px
+  color: _keyColor
+  font-family: 'PixelMplus12'
+  // remove background
+  background-color: rgba(0,0,0,0)
+  outline: none
+  border-style: none
+  &::before
+    display: inline-block
+    content: '>'
+    color: _keyColor
+    font-family: 'PixelMplus12'
+  
+
+
 @require 'pages/info'
 @require 'pages/makeface'
 @require 'pages/loading'

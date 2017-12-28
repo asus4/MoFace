@@ -13,6 +13,7 @@ import CompositePass from './composite-pass'
 import Morpher from './morpher'
 import VoiceMixer from './voice-mixer'
 import VirtualKeyboard from './virtual-keyboard'
+import KanaIME from './kana-ime'
 
 
 export default class AppMorph {
@@ -24,7 +25,6 @@ export default class AppMorph {
   constructor() {
     this.canvas = document.querySelector('#main .webgl')
     this.morphers = []
-    this.speakMode = true
 
     this.initScene()
     this.resize()
@@ -47,6 +47,10 @@ export default class AppMorph {
       console.log('on key:', input, pan)
       this.mixer.play(input, pan)
     })
+    const ime = new KanaIME(document.getElementById('kana-input'))
+
+
+    this.isSpeakMode = true
   }
 
   initScene() {

@@ -10,6 +10,7 @@ class PageManager extends EventEmitter {
   constructor() {
     super()
 
+    //-----------------------
     // Top button
     onClick('#info-button', () => {
       this.showModal('info')
@@ -21,6 +22,7 @@ class PageManager extends EventEmitter {
       this.emit('mode-toggle')
     })
 
+    //-----------------------
     // In capture button
     onClick('#capture-button', () => {
       this.showModal('makeface-capture')
@@ -30,7 +32,8 @@ class PageManager extends EventEmitter {
       this.showModal('makeface-legal')
     })
 
-    // Load from camera roll
+    //-----------------------
+    // Makeface - Load from camera roll
     onClick('#cameraroll-button', () => {
       openPhotoLibrary().then((file) => {
         const page = this.showModal('makeface-capture')
@@ -41,7 +44,8 @@ class PageManager extends EventEmitter {
       })
     })
 
-    // In confirm button
+    //-----------------------
+    // Makeface - Confirm button
     onClick('#makeface-confirm .ok-button', () => {
       const img = document.querySelector('#makeface-confirm img')
       console.log('#makeface-confirm .ok-button', img)
@@ -54,9 +58,18 @@ class PageManager extends EventEmitter {
       this.showModal('makeface')
     })
 
-    //
+    //-----------------------
+    // Text input
+    onClick('footer .button.keyboard', () => {
+      console.log('button keyboard')
+      const input = document.querySelector('footer input')
+      console.log(input)
+      input.focus()
+    })
+
+    //-----------------------
+    // Share
     onClick('a.facebook', () => {
-      console.log(ShareUtil)
       ShareUtil.facebook({
         app_id: '12345678',
         href: 'https://https://invisi.jp/'

@@ -1,0 +1,28 @@
+#app-morph
+  #main
+    canvas.webgl
+    canvas.ui
+  nav
+    h1.futura.pc-only MoFace
+    a#info-button.button
+    a#makeface-button.button
+    a#mode-button
+      span speak
+
+  footer
+    .mode.pc-only
+      .button Edit Text
+      .button Play Text
+    .mode.mobile-only
+      .input-log あ
+      input#kana-input.input-log(type='text' name='message')
+      .button.keyboard
+    .share
+      span.pc-only share
+      a.icon.facebook
+      span |
+      a.icon.twitter
+    .copyright.pc-only Copyright © 2018 invisible designs lab, All rights reserved.
+
+  //- Info Page
+  include info

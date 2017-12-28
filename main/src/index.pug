@@ -31,34 +31,36 @@ html(lang='ja')
   link(href='https://fonts.googleapis.com/earlyaccess/roundedmplus1c.css' rel='stylesheet')
   link(href='https://fonts.googleapis.com/css?family=Questrial' rel='stylesheet')
   link(rel='stylesheet', href='main.css')
-body    
-  #main
-    canvas.webgl
-    canvas.ui
-  nav
-    h1.futura.pc-only MoFace
-    a#info-button.button
-    a#makeface-button.button
-    a#mode-button
-      span speak
+body
+  #app-morph
+    #main
+      canvas.webgl
+      canvas.ui
+    
+    nav(v-bind:class="{ 'text-mode':!speakMode }")
+      h1.futura.pc-only MoFace
+      a#info-button.button(v-on:click='infoShowClick')
+      a#makeface-button.button(v-on:click='makeFaceClick')
+      a#mode-button(v-on:click='modoToggle')
+        span {{speakMode ? 'speak' : 'text'}}
+    
+    footer(v-if='!speakMode')
+      .mode.pc-only
+        .button Edit Text
+        .button Play Text
+      .mode.mobile-only
+        .input-log あ
+        input#kana-input.input-log(type='text' name='message')
+        .button.keyboard
+      .share
+        span.pc-only share
+        a.icon.facebook(v-on:click='shareFacebookClick')
+        span |
+        a.icon.twitter(v-on:click='shareTwitterClick')
+      .copyright.pc-only Copyright © 2018 invisible designs lab, All rights reserved.
 
-  footer
-    .mode.pc-only
-      .button Edit Text
-      .button Play Text
-    .mode.mobile-only
-      .input-log あ
-      input#kana-input.input-log(type='text' name='message')
-      .button.keyboard
-    .share
-      span.pc-only share
-      a.icon.facebook
-      span |
-      a.icon.twitter
-    .copyright.pc-only Copyright © 2018 invisible designs lab, All rights reserved.
-
-  //- Pages
-  include pages/info
+    //- Info Page
+    include pages/info
   include pages/makeface
   include pages/loading
 

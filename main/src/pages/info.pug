@@ -1,5 +1,5 @@
 
-#info.hidden
+#info(v-if='showInfo')
   .content
     section#howtoplay
       h2 HOW TO PLAY
@@ -95,7 +95,7 @@
           | それらを見える形で新しい発想で表現していく音を軸としたクリエイティブチーム
       
   .menu
-    .button.close-button
+    .button.close-button(v-on:click='infoCloseClick')
       include parts/button-close
     ul
       li

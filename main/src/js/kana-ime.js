@@ -1,7 +1,5 @@
 const EventEmitter = require('events').EventEmitter
 import KEYMAP from './roma-ji'
-import Vue from 'vue'
-console.log(Vue)
 
 
 const KANA = new RegExp(/[\u30a1-\u30f6]/, 'g')

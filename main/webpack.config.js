@@ -31,7 +31,10 @@ const config = {
     ]
   },
   resolve: {
-    modules: [path.resolve(__dirname, 'web_modules'), 'node_modules']
+    modules: [path.resolve(__dirname, 'web_modules'), 'node_modules'],
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js'
+    }
   },
   plugins: [
     new BrowserSyncPlugin({

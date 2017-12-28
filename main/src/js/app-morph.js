@@ -16,9 +16,15 @@ import VirtualKeyboard from './virtual-keyboard'
 
 
 export default class AppMorph {
-  constructor(canvas) {
-    this.canvas = canvas
+  /**
+   * Creates an instance of AppMorph.
+   * @param {element} container 
+   * @memberof AppMorph
+   */
+  constructor() {
+    this.canvas = document.querySelector('#main .webgl')
     this.morphers = []
+    this.speakMode = true
 
     this.initScene()
     this.resize()
@@ -32,8 +38,12 @@ export default class AppMorph {
     }
 
     this.mixer = new VoiceMixer(assets.buffers, assets.spritemaps)
-    const keyboard = new VirtualKeyboard(canvas)
+    const keyboard = new VirtualKeyboard(document.querySelector('#main .ui'))
     keyboard.on('key', (input, pan) => {
+      if (!this.speakMode) {
+        console.log('ignore key:', input, pan)
+        return
+      }
       console.log('on key:', input, pan)
       this.mixer.play(input, pan)
     })
@@ -111,5 +121,23 @@ export default class AppMorph {
 
     const effects = gui.addFolder('other')
     effects.add(this.composite, 'blend', 0, 1)
+  }
+
+  get isSpeakMode() {
+    return this.speakMode
+  }
+  set isSpeakMode(value) {
+    const cl = document.documentElement.classList
+    const modeInfo = document.querySelector('#mode-button span')
+    if (value) {
+      cl.add('speak-mode')
+      cl.remove('text-mode')
+      modeInfo.innerHTML = 'speak'
+    } else {
+      cl.remove('speak-mode')
+      cl.add('text-mode')
+      modeInfo.innerHTML = 'text'
+    }
+    this.speakMode = value
   }
 }

@@ -11,8 +11,11 @@ import config from './config'
 // Stats
 const stats = config.DEV ? new Stats() : null
 if (stats) {
-  stats.domElement.style.position = 'absolute'
-  stats.domElement.style.top = '0px'
+  const style = stats.domElement.style
+  // Place bottom / right
+  style.position = 'absolute'
+  style.bottom = style.right = '0px'
+  style.top = style.left = null
   document.body.appendChild(stats.domElement)
 }
 // Dat GUI
@@ -24,7 +27,7 @@ export default function() {
   let faceDetect = false
   let requestID = -1
 
-  const app = new AppMorph(document.querySelector('#main canvas'))
+  const app = new AppMorph()
   if (config.DEV) {
     app.stats = stats
     app.addGui(gui)
@@ -81,6 +84,11 @@ export default function() {
 
   pageManager.on('new-face', (img) => {
     app.addFace(img)
+  })
+
+  pageManager.on('mode-toggle', () => {
+    app.isSpeakMode = !app.isSpeakMode
+    console.log(`Toggle speakmode: ${app.isSpeakMode}`)
   })
 
   // Start

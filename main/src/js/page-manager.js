@@ -17,6 +17,9 @@ class PageManager extends EventEmitter {
     onClick('#makeface-button', () => {
       this.showModal('makeface')
     })
+    onClick('#mode-button', () => {
+      this.emit('mode-toggle')
+    })
 
     // In capture button
     onClick('#capture-button', () => {

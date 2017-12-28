@@ -26,16 +26,44 @@ function remapTrim(value, low1, high1, low2, high2) {
   return Math.max(low2, Math.min(n, high2))
 }
 
+const drawTouchGrids = (canvas) => {
+  const rect = canvas.getBoundingClientRect()
+  const width = canvas.width = rect.width
+  const height = canvas.height = rect.height
+  const ctx = canvas.getContext('2d')
+
+  ctx.beginPath()
+  ctx.lineWidth = 1
+  ctx.strokeStyle = '#fff'
+
+  const ylen = SCREENMAP.length
+  for (let j = 1; j < ylen; ++j) {
+    const xlen = SCREENMAP[j].length
+    for (let i = 1; i < xlen; ++i) {
+      // Draw cross
+      const x = Math.round(i * width / xlen)
+      const y = Math.round(j * height / ylen)
+      ctx.moveTo(x, y - 3)
+      ctx.lineTo(x, y + 3)
+      ctx.moveTo(x - 3, y)
+      ctx.lineTo(x + 3, y)
+    }
+  }
+  ctx.stroke()
+}
+
+
 export default class VirtualKeyboard extends EventEmitter {
   constructor(target) {
     super()
     this.keyboard(target)
     if (Modernizr.touchevents) {
       this.touch(target)
+      drawTouchGrids(target)
     }
   }
 
-  keyboard(target) {
+  keyboard() {
     let inputs = ''
     let mouseX = 0
     window.addEventListener('mousemove', (e) => {
@@ -71,7 +99,7 @@ export default class VirtualKeyboard extends EventEmitter {
       }
       // console.log(inputs)
     }
-    target.addEventListener('keydown', (e) => {checkKey(e.keyCode)}, false)
+    document.addEventListener('keydown', (e) => {checkKey(e.keyCode)}, false)
   }
 
   touch(target) {
@@ -81,7 +109,8 @@ export default class VirtualKeyboard extends EventEmitter {
     }, false)
     target.addEventListener('touchstart', (e) => {
       const touch = e.touches[0]
-      const p = [touch.clientX / window.innerWidth, touch.clientY / window.innerHeight]
+      const rect = e.target.getBoundingClientRect()
+      const p = [(touch.clientX - rect.x) / rect.width, (touch.clientY - rect.y) / rect.height]
       const y = Math.floor(p[1] * SCREENMAP.length)
       const x = Math.floor(p[0] * SCREENMAP[y].length)
       this.emit('key', SCREENMAP[y][x], accX)

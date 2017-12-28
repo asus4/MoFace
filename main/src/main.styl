@@ -58,6 +58,35 @@ nav
       background-image: url(images/sp/modeswitch_orange.svg)
       color: _keyColor
 
+footer
+  position: absolute
+  width: 100%
+  bottom: 0
+  .button.keyboard
+    width: (98/2)px
+    height: (74/2)px
+    background: url(images/sp/key.svg) no-repeat center/50%
+    margin: auto
+  .share
+    position: absolute
+    display: flex
+    right: 0px
+    bottom: 0
+    .facebook
+      width: 32px
+      height: 32px
+      background: url(images/sp/facebook.svg) no-repeat center/23%
+    .twitter
+      width: 32px
+      height: 32px
+      background: url(images/sp/twitter.svg) no-repeat center/50%
+    span
+      display: block
+      margin: 10px 0 0 0
+/.speak-mode footer
+  display: none
+
+
 #main
   position: fixed
   overflow: hidden

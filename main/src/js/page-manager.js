@@ -1,6 +1,6 @@
 const EventEmitter = require('events').EventEmitter
 import {openPhotoLibrary} from './async'
-
+import ShareUtil from './share-util'
 
 const onClick = (query, listener) => {
   document.querySelector(query).addEventListener('click', listener)
@@ -41,8 +41,6 @@ class PageManager extends EventEmitter {
       })
     })
 
-
-
     // In confirm button
     onClick('#makeface-confirm .ok-button', () => {
       const img = document.querySelector('#makeface-confirm img')
@@ -54,6 +52,22 @@ class PageManager extends EventEmitter {
       const container = document.querySelector('#makeface-confirm .preview')
       container.removeChild(container.lastChild)
       this.showModal('makeface')
+    })
+
+    //
+    onClick('a.facebook', () => {
+      console.log(ShareUtil)
+      ShareUtil.facebook({
+        app_id: '12345678',
+        href: 'https://https://invisi.jp/'
+      })
+    })
+    onClick('a.twitter', () => {
+      ShareUtil.twitter({
+        text: '新年のあいさつ',
+        url: 'https://https://invisi.jp/',
+        hashtags: 'moface'
+      })
     })
 
     this.currentModal = false

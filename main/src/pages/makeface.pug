@@ -1,54 +1,60 @@
 
-section#makeface.modal.hidden
+section#makeface.modal(v-if="detect.scene == 'select'")
   .makeface-icon
   h3 ADD YOUR SELF
   .vcenter
-    #capture-button.button.big-button
+    #capture-button.button.big-button(v-on:click="startWebcamFaceDetect")
       .icon
       span From in-Camera
-    #cameraroll-button.button.big-button
+    #cameraroll-button.button.big-button(v-on:click="startPhotoFaceDetect")
       .icon
       span From Photo
-  .legal.button.round-button > 画像使用に関する免責事項 <
-  .button.close-button
+  .legal.button.round-button(v-on:click="detect.scene = 'legal'")
+    | > 画像使用に関する免責事項 <
+  .button.close-button(v-on:click="detect.scene = ''")
     include parts/button-close
 
-section#makeface-capture.modal.hidden
-  .preview
-    canvas#makeface-canvas
-    canvas#makeface-overlay
-  .overlay
-    .makeface-icon
-    svg.guide(viewBox='0 0 512 512')
-      ellipse(cx='256' cy='256' rx='120' ry='160')
-    p.guide 顔を正面に向け、
-      br
-      | 枠内に合わせてください
-  .button.close-button
-    include parts/button-close
+transition(v-on:enter='detect.detector.start(detect.file, $refs.detectFaceCanvas, $refs.detectFaceOverlay)')
+  section#makeface-capture.modal(v-if="detect.scene == 'capture'")
+    .preview
+      canvas#makeface-canvas(ref='detectFaceCanvas')
+      canvas#makeface-overlay(ref='detectFaceOverlay')
+    .overlay
+      .makeface-icon
+      svg.guide(viewBox='0 0 512 512')
+        ellipse(cx='256' cy='256' rx='120' ry='160')
+      p.guide 顔を正面に向け、
+        br
+        | 枠内に合わせてください
+    .button.close-button(v-on:click="detect.scene = 'select'")
+      include parts/button-close
 
-section#makeface-confirm.modal.hidden
+section#makeface-confirm.modal(v-if="detect.scene == 'confirm'")
   .preview
+    img(v-bind:src='detect.result.src')
   .overlay
     .makeface-icon
     .vcenter
       p これで良いですか？
-      .ok-button.button OK
-      .retake-button.button RETRY
+      .ok-button.button(v-on:click="addNewFace")
+        | OK
+      .retake-button.button(v-on:click="detect.scene = 'select'")
+        | RETRY
   
 
-section#makeface-retry.modal.hidden
+section#makeface-retry.modal(v-if="detect.scene == 'retry'")
   .preview
   .overlay
     .makeface-icon
     .vcenter
       p 顔認識に失敗しました。他の写真をお試し下さい。
-      #retake-button.button RETRY
+      #retake-button.button(v-on:click="detect.scene = 'select'")
+        | RETRY
 
-section#makeface-legal.modal.hidden
+section#makeface-legal.modal(v-if="detect.scene == 'legal'")
   .content
     .makeface-icon
     h3 > 画像使用に関する免責事項 <
     p サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字サンプル文字
-  .button.close-button
+  .button.close-button(v-on:click="detect.scene = 'select'")
     include parts/button-close

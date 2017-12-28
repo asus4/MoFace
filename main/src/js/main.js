@@ -3,7 +3,7 @@ import Stats from 'stats.js'
 import dat from 'dat-gui'
 import Vue from 'vue'
 
-
+import {openPhotoLibrary} from './async'
 import AppMorph from './app-morph'
 import AppFaceDetect from './app-face-detect'
 import config from './config'
@@ -32,7 +32,13 @@ export default function() {
     showInfo: false,
     morph: null,
     ime: new KanaIME(),
-    keyboard: new VirtualKeyboard()
+    keyboard: new VirtualKeyboard(),
+    detect: {
+      scene: '',
+      detector: null,
+      result: null,
+      file: null
+    }
   }
 
   const update = () => {
@@ -68,22 +74,22 @@ export default function() {
       })
       update()
     },
+    watch: {
+      pause(value) {
+        console.log('pause changed', value)
+        if (!value) {
+          update()
+        }
+      }
+    },
     //-------------------
     // Events
     //-------------------
     methods: {
       // Info
-      infoShowClick() {
-        this.showInfo = true
-        this.pause = true
-      },
-      infoCloseClick() {
-        this.showInfo = false
-        this.pause = false
-        update()
-      },
-      makeFaceClick() {
-        console.log('make new face')
+      infoShowClick(isShow) {
+        this.showInfo = isShow
+        this.pause = isShow
       },
       // SNS
       shareFacebookClick() {
@@ -102,7 +108,49 @@ export default function() {
       //
       onKeyboardTouch(event) {
         this.keyboard.onTouch(event)
-      }
+      },
+      // Face detect
+      makeFaceClick() {
+        this.detect.scene = 'select'
+        this.pause = true
+      },
+      startWebcamFaceDetect() {
+        this.detect.file = null
+        this.detect.result = null
+        this.detect.detector = new AppFaceDetect(stats)
+        this.detect.scene = 'capture'
+        this.detect.detector.on('capture', (result) => {
+          this.detect.result = result
+          this.detect.scene = 'confirm'
+          this.detect.detector.dispose()
+          this.detect.detector = null
+        })
+      },
+      startPhotoFaceDetect() {
+        openPhotoLibrary().then((file) => {
+          this.detect.file = file
+          this.detect.result = null
+          this.detect.detector = new AppFaceDetect(stats)
+          this.detect.scene = 'capture'
+          this.detect.detector.on('capture', (result) => {
+            this.detect.result = result
+            this.detect.scene = 'confirm'
+            this.detect.detector.dispose()
+            this.detect.detector = null
+          })
+        })
+      },
+      addNewFace() {
+        this.morph.addFace(this.detect.result)
+        this.detect.scene = ''
+        this.detect.file = null
+        this.detect.result = null
+        if (this.detect.detector) {
+          this.detect.detector.dispose()
+          this.detect.detector = null
+        }
+        this.pause = false
+      },
     }
   })
 

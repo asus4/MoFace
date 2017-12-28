@@ -18,8 +18,6 @@ export default class AppFaceDetect extends EventEmitter {
   constructor(stats) {
     super()
 
-    this.canvas = document.getElementById('makeface-canvas')
-    this.overlay = document.getElementById('makeface-overlay')
 
     if (stats) {
       this.stats = stats
@@ -33,6 +31,20 @@ export default class AppFaceDetect extends EventEmitter {
     this.tracker.init()
 
     this.histories = []
+  }
+
+  start(file, detectFaceCanvas, detecgtFaceOverlay) {
+
+    this.canvas = detectFaceCanvas
+    this.overlay = detecgtFaceOverlay
+
+    console.log(file, detectFaceCanvas, detecgtFaceOverlay)
+
+    if (file) {
+      this.startImage(file)
+    } else {
+      this.startCamera()
+    }
   }
 
   startCamera() {

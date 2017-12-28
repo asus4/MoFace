@@ -46,7 +46,7 @@ body
         )
     nav(v-bind:class="{ 'text-mode':!speakMode }")
       h1.futura.pc-only MoFace
-      a#info-button.button(v-on:click='infoShowClick')
+      a#info-button.button(v-on:click='infoShowClick(true)')
       a#makeface-button.button(v-on:click='makeFaceClick')
       a#mode-button(v-on:click='speakMode = !speakMode')
         span {{speakMode ? 'speak' : 'text'}}

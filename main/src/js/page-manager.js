@@ -1,6 +1,5 @@
 const EventEmitter = require('events').EventEmitter
 import {openPhotoLibrary} from './async'
-import ShareUtil from './share-util'
 
 const onClick = (query, listener) => {
   document.querySelector(query).addEventListener('click', listener)
@@ -11,25 +10,10 @@ class PageManager extends EventEmitter {
     super()
 
     //-----------------------
-    // Top button
-    onClick('#info-button', () => {
-      this.showModal('info')
-    })
-    onClick('#makeface-button', () => {
-      this.showModal('makeface')
-    })
-    onClick('#mode-button', () => {
-      this.emit('mode-toggle')
-    })
-
-    //-----------------------
     // In capture button
     onClick('#capture-button', () => {
       this.showModal('makeface-capture')
       this.emit('face-detect', false)
-    })
-    onClick('.legal.button', () => {
-      this.showModal('makeface-legal')
     })
 
     //-----------------------
@@ -56,31 +40,6 @@ class PageManager extends EventEmitter {
       const container = document.querySelector('#makeface-confirm .preview')
       container.removeChild(container.lastChild)
       this.showModal('makeface')
-    })
-
-    //-----------------------
-    // Text input
-    onClick('footer .button.keyboard', () => {
-      console.log('button keyboard')
-      const input = document.querySelector('footer input')
-      console.log(input)
-      input.focus()
-    })
-
-    //-----------------------
-    // Share
-    onClick('a.facebook', () => {
-      ShareUtil.facebook({
-        app_id: '12345678',
-        href: 'https://https://invisi.jp/'
-      })
-    })
-    onClick('a.twitter', () => {
-      ShareUtil.twitter({
-        text: '新年のあいさつ',
-        url: 'https://https://invisi.jp/',
-        hashtags: 'moface'
-      })
     })
 
     this.currentModal = false

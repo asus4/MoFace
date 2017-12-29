@@ -1,25 +1,102 @@
-import clm from 'clmtrackr/build/clmtrackr'
+import clm from 'clmtrackr'
 import {saveAs} from 'file-saver'
 import Editor from './editor'
 
 const image = document.getElementById('image')
 const tracker = new clm.tracker()
 tracker.init()
-const editor = new Editor(document.getElementById('overlay'))
 
-function start(img) {
-  image.getContext('2d').drawImage(img, 0, 0, 1024, 1024, 0, 0, 512, 512)
-  tracker.start(image)
+let editor = null
+let converged = false
+let trackStart = performance.now()
+
+const start = (img) => {
+  const width = img.width
+  const height = img.height
+  {
+    // Resize canvas
+    document.querySelectorAll('canvas').forEach((element) => {
+      element.width = width
+      element.height = height
+    })
+    const container = document.getElementById('container')
+    container.style.width = `${width}px`
+    container.style.height = `${height}px`
+  }
+  image.getContext('2d').drawImage(img, 0, 0, width, height)
+
+
+
+  document.addEventListener('clmtrackrConverged', () => {
+    converged = true
+  }, false)
+  document.removeEventListener('clmtrackrNotFound', () => {
+    console.log('clmtrackrNotFound')
+  }, false)
+  document.removeEventListener('clmtrackrLost', () => {
+    console.log('clmtrackrNotFound')
+  }, false)
+
+  selectFaceArea()
+}
+
+const selectFaceArea = () => {
+  const overlay = document.getElementById('overlay')
+  const ctx = overlay.getContext('2d')
+  ctx.lineWidth = 2
+  ctx.strokeStyle = '#00FF00'
+  const rect = {
+    x: 0, y: 0, width: 10, height: 10
+  }
+
+  const onMouse = (e) => {
+    if (e.type === 'mousedown') {
+      rect.x = e.offsetX
+      rect.y = e.offsetY
+    } else if (e.type === 'mousemove') {
+      rect.width = e.offsetX - rect.x
+      rect.height = e.offsetY - rect.y
+    } else if (e.type === 'mouseup') {
+      rect.width = e.offsetX - rect.x
+      rect.height = e.offsetY - rect.y
+      overlay.removeEventListener('mousedown', onMouse, false)
+      overlay.removeEventListener('mousemove', onMouse, false)
+      overlay.removeEventListener('mouseup', onMouse, false)
+      startTrack(rect)
+    }
+    ctx.clearRect(0, 0, overlay.width, overlay.height)
+    ctx.rect(rect.x, rect.y, rect.width, rect.height)
+    ctx.stroke()
+
+  }
+
+  overlay.addEventListener('mousedown', onMouse, false)
+  overlay.addEventListener('mousemove', onMouse, false)
+  overlay.addEventListener('mouseup', onMouse, false)
+
+
+}
+
+const startTrack = (rect) => {
+  tracker.start(image, [rect.x, rect.y, rect.width, rect.height])
+  editor = new Editor(document.getElementById('overlay'))
+  trackStart = performance.now()
   requestAnimationFrame(trackLoop)
 }
 
-function trackLoop() {
-  overlay.getContext('2d').clearRect(0, 0, 512, 512)
+
+const trackLoop = (now) => {
+  const trackTime = now - trackStart
+  overlay.getContext('2d').clearRect(0, 0, overlay.width, overlay.height)
 
   const position = tracker.getCurrentPosition()
-  if (position) {
+  if (position && converged) { // timeout 10sec
+    editor.start(position)
+  } else if (position && trackTime > 10000) { // timeout 10sec
+    console.warn('timeout')
     editor.start(position)
   } else {
+    tracker.draw(overlay)
     requestAnimationFrame(trackLoop)
   }
 }

@@ -4,16 +4,16 @@ export default {
   buffers: [], // sound buffers
   images: [], // face images
   spritemaps: [ // sprite maps
-    require('../data/iwata.json').spritemap,
-    require('../data/kikuchi.json').spritemap,
-    require('../data/kiyokawa.json').spritemap,
-    require('../data/kogawa.json').spritemap,
-    require('../data/matsuo.json').spritemap,
-    require('../data/nakamura.json').spritemap,
-    require('../data/noda.json').spritemap,
-    require('../data/onodera.json').spritemap,
-    require('../data/otabe.json').spritemap,
-    require('../data/takaki.json').spritemap,
+    require('../data/iwata.json'),
+    require('../data/kikuchi.json'),
+    require('../data/kiyokawa.json'),
+    require('../data/kogawa.json'),
+    require('../data/matsuo.json'),
+    require('../data/nakamura.json'),
+    require('../data/noda.json'),
+    require('../data/onodera.json'),
+    require('../data/otabe.json'),
+    require('../data/takaki.json'),
   ],
   lut: null
 }

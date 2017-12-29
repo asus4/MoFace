@@ -31,7 +31,7 @@ if (!Modernizr.webaudio && !Modernizr.webgl) {
     // Sounds
     {id: 'voice-iwata', src: './data/iwata.mp3', type: TYPE_AUDIO, weight: 3},
     {id: 'voice-kikuchi', src: './data/kikuchi.mp3', type: TYPE_AUDIO, weight: 3},
-    {id: 'voice-kiyokawa', src: './data/kiyokawa.mp3', type: TYPE_AUDIO, weight: 3},
+    // {id: 'voice-kiyokawa', src: './data/kiyokawa.mp3', type: TYPE_AUDIO, weight: 3},
     // {id: 'voice-kogawa', src: './data/kogawa.mp3', type: TYPE_AUDIO, weight: 3},
     // {id: 'voice-matsuo', src: './data/matsuo.mp3', type: TYPE_AUDIO, weight: 3},
     // {id: 'voice-nakamura', src: './data/nakamura.mp3', type: TYPE_AUDIO, weight: 3},
@@ -44,7 +44,8 @@ if (!Modernizr.webaudio && !Modernizr.webgl) {
     // TODO: Might be better to use smaller image on mobile
     {id: 'face-iwata', src: './data/iwata.jpg', weight: 1},
     {id: 'face-kikuchi', src: './data/kikuchi.jpg', weight: 1},
-    {id: 'face-kogawa', src: './data/kogawa.jpg', weight: 1},
+    // {id: 'face-kiyokawa', src: './data/kiyokawa.jpg', weight: 1},
+    // {id: 'face-kogawa', src: './data/kogawa.jpg', weight: 1},
     // {id: 'face-matsuo', src: './data/matsuo.jpg', weight: 1},
     // {id: 'face-nakamura', src: './data/nakamura.jpg', weight: 1},
     // {id: 'face-noda', src: './data/noda.jpg', weight: 1},

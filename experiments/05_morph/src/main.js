@@ -18,7 +18,8 @@ class App {
   setup(images, buffers) {
     console.log(images, buffers)
     // Init visual
-    const POINTS = [require('./data/otabe.json'), require('./data/ryuuta.json')]
+    // const POINTS = [require('./data/otabe.json'), require('./data/ryuuta.json')]
+    const POINTS = [require('./data/iwata.json'), require('./data/kikuchi.json')]
     for (const points of POINTS) {
       points.push([0, 0], [0.5, 0], [1, 0], [1, 0.5], [1, 1], [1, 0.5], [0, 1], [0, 0.5])
     }
@@ -77,8 +78,8 @@ const app = new App( document.querySelector('canvas'))
 
 // Load all images
 Promise.all([
-  loadImageAsync('data/otabe.jpg'),
-  loadImageAsync('data/ryuuta.jpg'),
+  loadImageAsync('data/iwata.jpg'),
+  loadImageAsync('data/kikuchi.jpg'),
   loadImageAsync('data/morph0.png'),
   loadImageAsync('data/morph1.png'),
   loadImageAsync('data/morph2.png'),

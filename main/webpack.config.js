@@ -3,6 +3,8 @@
 const path = require('path')
 const webpack = require('webpack')
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
+const CompressionPlugin = require('compression-webpack-plugin')
+
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -57,7 +59,8 @@ if (production) {
     new webpack.optimize.UglifyJsPlugin({
       extractComments: true
     }),
-    new webpack.optimize.AggressiveMergingPlugin()
+    new webpack.optimize.AggressiveMergingPlugin(),
+    new CompressionPlugin({test: /\.(js)$/})
   )
 } else {
   // config.devtool = 'inline-source-map' // this might be heavy..

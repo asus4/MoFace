@@ -2,6 +2,7 @@ const EventEmitter = require('events').EventEmitter
 
 import Modernizr from 'exports-loader?Modernizr!modernizr-custom'
 import KEYMAP from './roma-ji'
+import {remapTrim} from './math'
 
 // Touch screen mapping
 const SCREENMAP = [
@@ -16,15 +17,6 @@ const SCREENMAP = [
   ['ら', 'り', 'る', 'れ', 'ろ'],
   ['わ', 'や', 'お', 'ん', 'ん'], // irregular
 ]
-
-// function remap(value, low1, high1, low2, high2) {
-//   return low2 + (high2 - low2) * (value - low1) / (high1 - low1)
-// }
-
-function remapTrim(value, low1, high1, low2, high2) {
-  const n = low2 + (high2 - low2) * (value - low1) / (high1 - low1)
-  return Math.max(low2, Math.min(n, high2))
-}
 
 const drawTouchGrids = (canvas) => {
   const rect = canvas.getBoundingClientRect()

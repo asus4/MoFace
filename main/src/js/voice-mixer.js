@@ -1,34 +1,54 @@
 import Tone from 'tone'
+import {lerp} from './math'
 
 export default class VoiceMixer {
   constructor(buffers, infos) {
-    this.crossFade = new Tone.CrossFade()
-    this.players = buffers.map((buf) => {
-      return new Tone.Player(buf)
-    })
-    this.players[0].connect(this.crossFade, 0, 0)
-    this.players[1].connect(this.crossFade, 0, 1)
+    // create duration
+    for (const info of infos) {
+      for (const key in info) {
+        const o = info[key]
+        o.duration = o.end - o.start
+      }
+    }
     this.infos = infos
+    this.buffers = buffers
+
+    this.crossFade = new Tone.CrossFade()
     this.crossFade.toMaster()
   }
 
   play(key, mix) {
-    if (!(key in this.infos[0])) {
-      console.warn(`unkown 0 key${  key}`)
+    // error check
+    const playDatas = [
+      this.getPlayData(0, key),
+      this.getPlayData(1, key)
+    ]
+    if (playDatas.some((i) => {return i === null})) {
       return
     }
-    if (!(key in this.infos[1])) {
-      console.warn(`unkown 1 key${  key}`)
-      return
-    }
-    const curr =  Tone.context.currentTime + 0.01
-    this.infos[key]
+    const targetDuration = lerp(playDatas[0].info.duration, playDatas[1].info.duration, mix)
     this.crossFade.fade.value = mix
-    this.players.forEach((player, index) => {
-
-
-      const info = this.infos[index][key]
-      player.start(curr + 0, info.start, info.end - info.start)
+    playDatas.forEach((data, index) => {
+      const playbackRate = data.info.duration / targetDuration
+      const source = new Tone.BufferSource({
+        buffer: data.buffer,
+        playbackRate
+      })
+      source.connect(this.crossFade, 0, index)
+      source.start(Tone.context.currentTime + 0.01, data.info.start, data.info.duration / playbackRate)
     })
+
+  }
+
+  getPlayData(index, key) {
+    // error check
+    if (!(key in this.infos[index])) {
+      console.error(`unkown ${index} key${key}`)
+      return null
+    }
+    return {
+      info: this.infos[index][key],
+      buffer: this.buffers[index]
+    }
   }
 }

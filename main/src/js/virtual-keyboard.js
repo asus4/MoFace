@@ -112,7 +112,7 @@ export default class VirtualKeyboard extends EventEmitter {
   onTouch(e, force = false) {
     const touch = e.touches[0]
     const rect = e.target.getBoundingClientRect()
-    const p = [(touch.clientX - rect.x) / rect.width, (touch.clientY - rect.y) / rect.height]
+    const p = [(touch.clientX - rect.left) / rect.width, (touch.clientY - rect.top) / rect.height]
     const y = Math.floor(p[1] * SCREENMAP.length)
     const x = Math.floor(p[0] * SCREENMAP[y].length)
 

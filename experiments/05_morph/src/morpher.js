@@ -1,38 +1,20 @@
 /* global THREE */
-import Delaunay from 'delaunay-fast'
 import 'three'
 
-
-
-const makeBufferGeometry = (pointsArr, triangles) => {
-  const geometry = new THREE.BufferGeometry()
-
-  pointsArr.forEach((points, i) => {
-    const vertices = []
-    const uvs = []
-
-    triangles.forEach((index) => {
-      const p = points[index]
-      vertices.push(p[0] - 0.5, -p[1] + 0.5, 0)
-      uvs.push(p[0], 1 - p[1])
-    })
-
-    // Need position attribute at least
-    const append = (i == 0) ? '' : `${i}`
-    geometry.addAttribute(`position${append}`, new THREE.Float32BufferAttribute(vertices, 3))
-    geometry.addAttribute(`uv${append}`, new THREE.Float32BufferAttribute(uvs, 2))
+const makePosUv = (points, triangles) => {
+  const vertices = []
+  const uvs = []
+  triangles.forEach((index) => {
+    const p = points[index]
+    vertices.push(p[0] - 0.5, -p[1] + 0.5, 0)
+    uvs.push(p[0], 1 - p[1])
   })
-
-  // WIP
-  // weight map
-  const weight = []
-  triangles.forEach(() => {
-    weight.push(1.0)
-  })
-  geometry.addAttribute('weight', new THREE.Float32BufferAttribute(weight, 1))
-
-  return geometry
+  return {
+    vertices: new THREE.Float32BufferAttribute(vertices, 3),
+    uvs: new THREE.Float32BufferAttribute(uvs, 2)
+  }
 }
+
 
 class Weight {
   /**
@@ -180,9 +162,36 @@ class Weight {
 
 
 export default class Morpher extends THREE.Mesh {
-  constructor(images, points) {
-    const tris = Delaunay.triangulate(points[0])
-    const geometry = makeBufferGeometry(points, tris)
+  constructor(images, pointsArr) {
+    // Use Delaunay cache 
+    // const tris = Delaunay.triangulate(points[0])
+    const triangles = require('./data/indexes.json')
+    const geometry = new THREE.BufferGeometry()
+    {
+      // Setup geometry
+      pointsArr.forEach((points, i) => {
+        const attrs = makePosUv(points, triangles)
+        // Need position attribute at least
+        const append = (i == 0) ? '' : `${i}`
+        geometry.addAttribute(`position${append}`, attrs.vertices)
+        geometry.addAttribute(`uv${append}`, attrs.uvs)
+      })
+
+      // Setup
+      {
+        const points = require('./data/depthpoints.json')
+        const attrs = makePosUv(points, triangles)
+        geometry.addAttribute('weightPosition', attrs.vertices)
+        geometry.addAttribute('weightUv', attrs.uvs)
+      }
+
+      // weight map
+      const weight = []
+      triangles.forEach(() => {
+        weight.push(1.0)
+      })
+      geometry.addAttribute('weight', new THREE.Float32BufferAttribute(weight, 1))
+    }
     // console.log(geometry.toJSON())
 
     // Material
@@ -195,8 +204,11 @@ export default class Morpher extends THREE.Mesh {
       uniforms: {
         map0: {type: 't', value: textures[0]},
         map1: {type: 't', value: textures[1]},
-        ramp: {type: 't', value: textures[2]},
+        depthMap: {type: 't', value: textures[2]},
+        ramp: {type: 't', value: textures[3]},
         fade: {type: 'f', value: 0.5},
+        look: {type: 'v2', value: new THREE.Vector2(0, 0)},
+        parallax: {type: 'f', value: 0.1},
       },
       vertexShader: require('./shaders/morph.vert'),
       fragmentShader: require('./shaders/morph.frag'),
@@ -205,11 +217,10 @@ export default class Morpher extends THREE.Mesh {
     })
     super(geometry, material)
 
-    this.weight = new Weight(geometry.getAttribute('weight'), tris)
+    this.weight = new Weight(geometry.getAttribute('weight'), triangles)
 
     this._fadeMap = 0
-    this.fadeMaps = textures.slice(2)
-    console.log(this._fadeMap)
+    this.fadeMaps = textures.slice(3)
   }
 
   get fade() {
@@ -237,4 +248,14 @@ export default class Morpher extends THREE.Mesh {
     this.material.uniforms.ramp.value = this.fadeMaps[value]
     this.fadeMaps[value].needsUpdate = true
   }
+
+  get lookX() {return this.material.uniforms.look.value.x}
+  set lookX(value) {this.material.uniforms.look.value.x = value}
+
+  get lookY() {return this.material.uniforms.look.value.y}
+  set lookY(value) {this.material.uniforms.look.value.y = value}
+
+  get parallax() {return this.material.uniforms.parallax.value}
+  set parallax(value) {this.material.uniforms.parallax.value = value}
+
 }

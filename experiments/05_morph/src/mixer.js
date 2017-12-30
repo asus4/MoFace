@@ -21,7 +21,8 @@ export default class Mixer {
       })
       player.connect(eq)
       eq.toMaster()
-      player.start()
+      player.autostart = true
+      // player.start()
       return eq
     })
 

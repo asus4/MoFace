@@ -1,5 +1,5 @@
 import dat from 'dat-gui'
-
+import Tone from 'tone'
 import 'three'
 
 import {loadImageAsync, loadBuffer} from './async'
@@ -16,14 +16,10 @@ class App {
   }
 
   setup(images, buffers) {
-    console.log(images, buffers)
-    // Init visual
-    // const POINTS = [require('./data/otabe.json'), require('./data/ryuuta.json')]
-    const POINTS = [require('./data/iwata.json'), require('./data/kikuchi.json')]
-    for (const points of POINTS) {
-      points.push([0, 0], [0.5, 0], [1, 0], [1, 0.5], [1, 1], [1, 0.5], [0, 1], [0, 0.5])
-    }
-    this.morpher = new Morpher(images, POINTS)
+    this.morpher = new Morpher(images, [
+      require('./data/iwata.json'),
+      require('./data/kikuchi.json')])
+
     this.morpher.scale.set(512, 512, 1)
     this.scene.add(this.morpher)
 
@@ -37,8 +33,12 @@ class App {
     })
     gui.add(this.morpher, 'wireframe')
     gui.add(this.morpher, 'fadeMap', { TypeA: 0, TypeB: 1, TypeC: 2 } )
+    gui.add(this.morpher, 'lookX', -1.0, 1.0)
+    gui.add(this.morpher, 'lookY', -1.0, 1.0)
+    gui.add(this.morpher, 'parallax', 0.0, 0.1)
     gui.add(this.mixer, 'fadeEQ')
     // this.morpher.weight.makeGUI(gui)
+
 
     requestAnimationFrame(this.update.bind(this))
   }
@@ -80,14 +80,15 @@ const app = new App( document.querySelector('canvas'))
 Promise.all([
   loadImageAsync('data/iwata.jpg'),
   loadImageAsync('data/kikuchi.jpg'),
+  loadImageAsync('data/depth.jpg'),
   loadImageAsync('data/morph0.png'),
   loadImageAsync('data/morph1.png'),
   loadImageAsync('data/morph2.png'),
   loadBuffer('data/otabe.mp3'),
   loadBuffer('data/ryuuta.mp3'),
 ]).then((assets) => {
-  const images = assets.slice(0, 5)
-  const buffers = assets.slice(5)
+  const images = assets.filter((a) => {return a instanceof HTMLImageElement})
+  const buffers = assets.filter((a) => {return a instanceof Tone.Buffer})
   app.setup(images, buffers)
 }).catch((err) => {
   console.error(err)

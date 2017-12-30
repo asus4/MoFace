@@ -1,4 +1,5 @@
 import paper from 'paper'
+import Delaunay from 'delaunay-fast'
 
 import landmarks from './landmarks'
 const _LANDMARKS = Object.values(landmarks)
@@ -14,6 +15,7 @@ export default class Editor {
 
     this.circles = []
     this.pathes = []
+    this.polygons = []
 
     let dragging = null
     const tool = new paper.Tool()
@@ -51,9 +53,32 @@ export default class Editor {
   start(points) {
     const defaultCount = points.length
     const extColor = '#FF00FF' // Purple
+
+    // Add head point
     const head = headPoints(points)
-    console.log(head)
     points.push(...head)
+
+    // Add corner point
+    {
+      const w = this.canvas.width
+      const h = this.canvas.height
+      points.push([0, 0], [w, 0], [w, h], [0, h])
+    }
+
+    // Add polygons
+    {
+      const polygonColor = '#0000aa'
+      const indexes = Delaunay.triangulate(points)
+      for (let i = 0; i < indexes.length; i += 3) {
+        const path = new paper.Path()
+        path.strokeColor = polygonColor
+        path.add(points[indexes[i]])
+        path.add(points[indexes[i + 1]])
+        path.add(points[indexes[i + 2]])
+        path.closed = true
+        this.polygons.push(path)
+      }
+    }
 
     // Add circles
     this.circles = points.map((p, i) => {
@@ -63,7 +88,6 @@ export default class Editor {
     })
 
     // Add pathes
-    this.pathes = []
     for (const landmark of _LANDMARKS) {
       const path = new paper.Path()
       path.strokeColor = _COLOR
@@ -82,6 +106,22 @@ export default class Editor {
         segment.point = this.circles[index].position
       })
     })
+
+
+    // Draw polygon
+    const pts = this.circles.map((c) => {
+      return [c.position.x, c.position.y]
+    })
+    console.time('Delaunay')
+    const indexes = Delaunay.triangulate(pts)
+    console.timeEnd('Delaunay')
+    this.polygons.forEach((path, i) => {
+      path.segments.forEach((segment, j) => {
+        const p = pts[indexes[i * 3 + j]]
+        segment.point.x = p[0]
+        segment.point.y = p[1]
+      })
+    })
   }
 
   clear() {
@@ -89,7 +129,7 @@ export default class Editor {
     this.pathes = [] // 
   }
 
-  export() {
+  exportPoints() {
     const w = this.canvas.width
     const h = this.canvas.height
     return this.circles.map((circle) => {
@@ -101,5 +141,12 @@ export default class Editor {
       y = Math.floor(y * 1000) / 1000
       return [x, y]
     })
+  }
+
+  exportIndexes() {
+    const pts = this.circles.map((c) => {
+      return [c.position.x, c.position.y]
+    })
+    return Delaunay.triangulate(pts)
   }
 }

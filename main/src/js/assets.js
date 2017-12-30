@@ -15,5 +15,17 @@ export default {
     require('../data/voicesprites/otabe.json'),
     require('../data/voicesprites/takaki.json'),
   ],
+  featurepoints: [ // sprite maps
+    require('../data/featurepoints/iwata.json'),
+    require('../data/featurepoints/kikuchi.json'),
+    require('../data/featurepoints/kiyokawa.json'),
+    require('../data/featurepoints/kogawa.json'),
+    require('../data/featurepoints/matsuo.json'),
+    require('../data/featurepoints/nakamura.json'),
+    require('../data/featurepoints/noda.json'),
+    require('../data/featurepoints/onodera.json'),
+    require('../data/featurepoints/otabe.json'),
+    require('../data/featurepoints/takaki.json'),
+  ],
   lut: null
 }

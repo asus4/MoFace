@@ -121,8 +121,15 @@ document.getElementById('imageLoadButton').addEventListener('change', (e) => {
 }, false)
 
 // Save button
-document.getElementById('saveButton').addEventListener('click', () => {
-  const points = editor.export()
+document.getElementById('savePointsButton').addEventListener('click', () => {
+  const points = editor.exportPoints()
   const blob = new Blob([JSON.stringify(points)], {type: 'text/json;charset=utf-8'})
   saveAs(blob, 'points.json')
+}, false)
+
+// Save button
+document.getElementById('saveIndexesButton').addEventListener('click', () => {
+  const indexes = editor.exportIndexes()
+  const blob = new Blob([JSON.stringify(indexes)], {type: 'text/json;charset=utf-8'})
+  saveAs(blob, 'indexes.json')
 }, false)

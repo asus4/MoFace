@@ -21,20 +21,19 @@ export default class AppMorph {
    */
   constructor() {
     this.canvas = document.querySelector('#main .webgl')
-    this.morphers = []
 
     this.initScene()
     this.resize()
 
     // Morph Parameter
-    this.morphs = assets.buffers.map(() => {return 1})
+    this.morphs = assets.voices.map(() => {return 1})
     this.morphs.push(1) // user channel
 
-    for (const img of assets.images) {
-      this.addFace(img, null)
-    }
-    this.mixer = new VoiceMixer(assets.buffers, assets.spritemaps)
-    // const ime = new KanaIME(document.getElementById('kana-input'))
+    this.mixer = new VoiceMixer(assets.voices, assets.spritemaps)
+
+    this.morpher = new Morpher()
+    this.morpher.scale.set(512 * (1920 / 1280), 512, 1)
+    this.scene.add(this.morpher)
   }
 
   initScene() {
@@ -58,7 +57,6 @@ export default class AppMorph {
   addFace(img, data) {
     const morpher = new Morpher(img, data)
     this.scene.add(morpher)
-    this.morphers.push(morpher)
   }
 
   update() {
@@ -101,11 +99,15 @@ export default class AppMorph {
    */
   addGui(gui) {
     const morphs = gui.addFolder('morphs')
-    for (let i = 0; i < this.morphs.length; ++i) {
-      morphs.add(this.morphs, i, 0.0, 1.0).name(`morph ${i}`).onChange(() => {
-        this.updateMorph()
-      })
-    }
+    morphs.add(this.morpher, 'fade', 0.0, 1.0).onChange((value) => {
+      this.mixer.fade = value
+    })
+    morphs.add(this.morpher, 'wireframe')
+    morphs.add(this.morpher, 'fadeMap', { TypeA: 0, TypeB: 1, TypeC: 2 } )
+    morphs.add(this.morpher, 'lookX', -1.0, 1.0)
+    morphs.add(this.morpher, 'lookY', -1.0, 1.0)
+    morphs.add(this.morpher, 'parallax', 0.0, 0.1)
+
     const effects = gui.addFolder('other')
     effects.add(this.composite, 'blend', 0, 1)
   }

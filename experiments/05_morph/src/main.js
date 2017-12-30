@@ -8,7 +8,7 @@ import Mixer from './mixer'
 
 class App {
   constructor(canvas) {
-    const WIDTH = 512
+    const WIDTH = 512 * (1920 / 1280)
     const HEIGHT = 512
     this.renderer = new THREE.WebGLRenderer({canvas})
     this.camera = new THREE.OrthographicCamera(-WIDTH / 2, WIDTH / 2, HEIGHT / 2, -HEIGHT / 2, -10, 10)
@@ -20,7 +20,7 @@ class App {
       require('./data/iwata.json'),
       require('./data/kikuchi.json')])
 
-    this.morpher.scale.set(512, 512, 1)
+    this.morpher.scale.set(512 * (1920 / 1280), 512, 1)
     this.scene.add(this.morpher)
 
     // Init sound

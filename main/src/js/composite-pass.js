@@ -2,7 +2,7 @@ import assets from './assets'
 
 export default class CompositePass extends THREE.ShaderPass {
   constructor() {
-    const lut = new THREE.CanvasTexture(assets.lut)
+    const lut = new THREE.CanvasTexture(assets.textures.lut)
     lut.magFilter = lut.minFilter = THREE.NearestFilter
     lut.generateMipmaps = false
     lut.flipY = false

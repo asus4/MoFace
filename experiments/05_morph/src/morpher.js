@@ -208,7 +208,7 @@ export default class Morpher extends THREE.Mesh {
         ramp: {type: 't', value: textures[3]},
         fade: {type: 'f', value: 0.5},
         look: {type: 'v2', value: new THREE.Vector2(0, 0)},
-        parallax: {type: 'f', value: 0.1},
+        parallax: {type: 'f', value: 0.03},
       },
       vertexShader: require('./shaders/morph.vert'),
       fragmentShader: require('./shaders/morph.frag'),
@@ -257,5 +257,4 @@ export default class Morpher extends THREE.Mesh {
 
   get parallax() {return this.material.uniforms.parallax.value}
   set parallax(value) {this.material.uniforms.parallax.value = value}
-
 }

@@ -1,25 +1,112 @@
 import 'three'
 
+import assets from './assets'
+
+const makePosUv = (points, triangles) => {
+  const vertices = []
+  const uvs = []
+  triangles.forEach((index) => {
+    const p = points[index]
+    vertices.push(p[0] - 0.5, -p[1] + 0.5, 0)
+    uvs.push(p[0], 1 - p[1])
+  })
+  return {
+    vertices: new THREE.Float32BufferAttribute(vertices, 3),
+    uvs: new THREE.Float32BufferAttribute(uvs, 2)
+  }
+}
+
+const toTexture = (img) => {
+  const tex = new THREE.Texture(img, THREE.UVMapping, THREE.RepeatWrapping, THREE.RepeatWrapping)
+  tex.needsUpdate = true
+  return tex
+}
+
+
 export default class Morpher extends THREE.Mesh {
-  constructor(image, points) {
-    const texture = new THREE.Texture(image, THREE.UVMapping, THREE.ClampToEdgeWrapping, THREE.ClampToEdgeWrapping)
-    texture.generateMipmaps = true
-    texture.needsUpdate = true
+  constructor() {
+    // Use Delaunay cache 
+    // const tris = Delaunay.triangulate(points[0])
+    const triangles = require('../data/triangles.json')
+    const geometry = new THREE.BufferGeometry()
+    {
+      // Setup geometry
+      assets.featurepoints.forEach((points, i) => {
+        const attrs = makePosUv(points, triangles)
+        // Need position attribute at least
+        const append = (i == 0) ? '' : `${i}`
+        geometry.addAttribute(`position${append}`, attrs.vertices)
+        geometry.addAttribute(`uv${append}`, attrs.uvs)
+      })
 
-    const geometry = new THREE.PlaneGeometry(1000, 500, 1, 1)
-    const material = new THREE.MeshBasicMaterial({
-      map: texture,
-      transparent: true
+      // Setup
+      {
+        const points = require('../data/depthpoints.json')
+        const attrs = makePosUv(points, triangles)
+        geometry.addAttribute('weightPosition', attrs.vertices)
+        geometry.addAttribute('weightUv', attrs.uvs)
+      }
+    }
+    // console.log(geometry.toJSON())
+
+    // Material
+    const faceTexes = assets.faces.map(toTexture)
+    const fadeMaps = assets.textures.morphs.map(toTexture)
+    const material = new THREE.ShaderMaterial({
+      uniforms: {
+        map0: {type: 't', value: faceTexes[0]},
+        map1: {type: 't', value: faceTexes[1]},
+        depthMap: {type: 't', value: toTexture(assets.textures.depth)},
+        ramp: {type: 't', value: fadeMaps[0]},
+        fade: {type: 'f', value: 0.5},
+        look: {type: 'v2', value: new THREE.Vector2(0, 0)},
+        parallax: {type: 'f', value: 0.03},
+      },
+      vertexShader: require('../shaders/morph.vert'),
+      fragmentShader: require('../shaders/morph.frag'),
+      // side: THREE.DoubleSide,
+      wireframe: false
     })
-
     super(geometry, material)
+
+    // this.weight = new Weight(geometry.getAttribute('weight'), triangles)
+
+    this._fadeMap = 0
+    this.fadeMaps = fadeMaps
   }
 
-  get morph() {
-    return this.material.opacity
+  get fade() {
+    return this.material.uniforms.fade.value
   }
 
-  set morph(value) {
-    this.material.opacity = value
+  set fade(value) {
+    this.material.uniforms.fade.value = value
   }
+
+  get wireframe() {
+    return this.material.wireframe
+  }
+
+  set wireframe(value) {
+    this.material.wireframe = value
+  }
+
+  get fadeMap() {
+    return this._fadeMap
+  }
+
+  set fadeMap(value) {
+    this._fadeMap = value
+    this.material.uniforms.ramp.value = this.fadeMaps[value]
+    this.fadeMaps[value].needsUpdate = true
+  }
+
+  get lookX() {return this.material.uniforms.look.value.x}
+  set lookX(value) {this.material.uniforms.look.value.x = value}
+
+  get lookY() {return this.material.uniforms.look.value.y}
+  set lookY(value) {this.material.uniforms.look.value.y = value}
+
+  get parallax() {return this.material.uniforms.parallax.value}
+  set parallax(value) {this.material.uniforms.parallax.value = value}
 }

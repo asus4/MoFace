@@ -1,9 +1,9 @@
 // Entry point of all
 import Modernizr from 'exports-loader?Modernizr!modernizr-custom'
 import MobileDetect from 'mobile-detect'
-import createjs from 'preload-js'
 import loadingBar from './js/loading-bar'
 import Preloader from './js/preloader'
+import manifest from './data/manifest'
 
 {
   // Modernizr + MobileDetect Mix-in
@@ -24,39 +24,6 @@ if (!Modernizr.webaudio && !Modernizr.webgl) {
   console.warn('No supported environment')
   loadingBar.finish()
 } else {
-
-  // Preloader setup
-  const TYPE_AUDIO = createjs.LoadQueue.BINARY
-  const manifest = [
-    // Sounds
-    {id: 'voice-iwata', src: './data/iwata.mp3', type: TYPE_AUDIO, weight: 3},
-    {id: 'voice-kikuchi', src: './data/kikuchi.mp3', type: TYPE_AUDIO, weight: 3},
-    // {id: 'voice-kiyokawa', src: './data/kiyokawa.mp3', type: TYPE_AUDIO, weight: 3},
-    // {id: 'voice-kogawa', src: './data/kogawa.mp3', type: TYPE_AUDIO, weight: 3},
-    // {id: 'voice-matsuo', src: './data/matsuo.mp3', type: TYPE_AUDIO, weight: 3},
-    // {id: 'voice-nakamura', src: './data/nakamura.mp3', type: TYPE_AUDIO, weight: 3},
-    // {id: 'voice-noda', src: './data/noda.mp3', type: TYPE_AUDIO, weight: 3},
-    // {id: 'voice-onodera', src: './data/onodera.mp3', type: TYPE_AUDIO, weight: 3},
-    // {id: 'voice-otabe', src: './data/otabe.mp3', type: TYPE_AUDIO, weight: 3},
-    // {id: 'voice-takaki', src: './data/takaki.mp3', type: TYPE_AUDIO, weight: 3},
-
-    // Images
-    // TODO: Might be better to use smaller image on mobile
-    {id: 'face-iwata', src: './data/iwata.jpg', weight: 1},
-    {id: 'face-kikuchi', src: './data/kikuchi.jpg', weight: 1},
-    // {id: 'face-kiyokawa', src: './data/kiyokawa.jpg', weight: 1},
-    // {id: 'face-kogawa', src: './data/kogawa.jpg', weight: 1},
-    // {id: 'face-matsuo', src: './data/matsuo.jpg', weight: 1},
-    // {id: 'face-nakamura', src: './data/nakamura.jpg', weight: 1},
-    // {id: 'face-noda', src: './data/noda.jpg', weight: 1},
-    // {id: 'face-onodera', src: './data/onodera.jpg', weight: 1},
-    // {id: 'face-otabe', src: './data/otabe.jpg', weight: 1},
-    // {id: 'face-takaki', src: './data/takaki.jpg', weight: 1},
-
-    // Texture
-    {id: 'lut', src: './textures/lut.png', weight: 1}
-  ]
-
   const preloader = new Preloader(manifest)
   preloader.on('progress', (n) => {
     loadingBar.progress = n
@@ -72,13 +39,18 @@ if (!Modernizr.webaudio && !Modernizr.webgl) {
     const start = () => {
       // set assets
       const assets = require('./js/assets').default
-      assets.buffers = manifest
+      const queue = preloader.queue
+      assets.voices = manifest
         .filter((m) => {return m.id.startsWith('voice')})
         .map((m) => {return m.buffer})
-      assets.images = manifest
+      assets.faces = manifest
         .filter((m) => {return m.id.startsWith('face')})
-        .map((m) => {return preloader.queue.getResult(m.src)})
-      assets.lut = preloader.queue.getResult('lut')
+        .map((m) => {return queue.getResult(m.src)})
+      assets.textures.lut = queue.getResult('lut')
+      assets.textures.depth = queue.getResult('depth')
+      assets.textures.morphs = manifest
+        .filter((m) => {return m.id.startsWith('morph')})
+        .map((m) => {return queue.getResult(m.src)})
 
       main()
 

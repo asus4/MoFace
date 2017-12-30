@@ -1,8 +1,8 @@
 
 
 export default {
-  buffers: [], // sound buffers
-  images: [], // face images
+  voices: [], // sound buffers
+  faces: [], // face images
   spritemaps: [ // sprite maps
     require('../data/voicesprites/iwata.json'),
     require('../data/voicesprites/kikuchi.json'),
@@ -27,5 +27,9 @@ export default {
     require('../data/featurepoints/otabe.json'),
     require('../data/featurepoints/takaki.json'),
   ],
-  lut: null
+  textures: {
+    lut: null,
+    depth: null,
+    morphs: []
+  }
 }

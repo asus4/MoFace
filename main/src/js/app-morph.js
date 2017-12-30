@@ -70,10 +70,11 @@ export default class AppMorph {
 
   setPosition(x, y) {
     this.mixer.fade = this.morpher.fade = x
-    // const look = this.morpher.look
 
-    this.morpher.lookX = remap(x, 0, 1, -1, 1)
-    this.morpher.lookY = remap(y, 0, 1, -1, 1)
+    // invert look angle on mobile
+    const direction = config.mobile ? -1 : 1
+    this.morpher.lookX = remap(x, 0, 1, -1, 1) * direction
+    this.morpher.lookY = remap(y, 0, 1, -1, 1) * direction
   }
 
   update() {

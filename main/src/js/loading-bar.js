@@ -1,7 +1,4 @@
-import MobileDetect from 'mobile-detect'
-
-const mobileDetect = new MobileDetect(navigator.userAgent)
-const isMobile = mobileDetect.mobile()
+import config from './config'
 
 class LoadingBar {
   constructor() {
@@ -28,7 +25,7 @@ class LoadingBar {
     this.smoothProgress = this.progress = 1
     this.finished = true
 
-    if (isMobile) {
+    if (config.mobile) {
       this.showEnter()
     } else {
       this.fadeout()
@@ -56,7 +53,7 @@ class LoadingBar {
   }
 
   _setProgress(value) {
-    if (isMobile) {
+    if (config.mobile) {
       this.progressBar.style.width = `${value * 100}%`
     } else {
       const len = this.progressCircle.getTotalLength()

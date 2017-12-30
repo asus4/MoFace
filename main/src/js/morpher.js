@@ -107,6 +107,8 @@ export default class Morpher extends THREE.Mesh {
   get lookY() {return this.material.uniforms.look.value.y}
   set lookY(value) {this.material.uniforms.look.value.y = value}
 
+  get look() {return this.material.uniforms.look}
+
   get parallax() {return this.material.uniforms.parallax.value}
   set parallax(value) {this.material.uniforms.parallax.value = value}
 }

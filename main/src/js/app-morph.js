@@ -12,6 +12,8 @@ import assets from './assets'
 import CompositePass from './composite-pass'
 import Morpher from './morpher'
 import VoiceMixer from './voice-mixer'
+import config from './config'
+import {remap} from './math'
 
 export default class AppMorph {
   /**
@@ -21,19 +23,14 @@ export default class AppMorph {
    */
   constructor() {
     this.canvas = document.querySelector('#main .webgl')
-
     this.initScene()
-    this.resize()
-
-    // Morph Parameter
-    this.morphs = assets.voices.map(() => {return 1})
-    this.morphs.push(1) // user channel
 
     this.mixer = new VoiceMixer(assets.voices, assets.spritemaps)
 
     this.morpher = new Morpher()
-    this.morpher.scale.set(512 * (1920 / 1280), 512, 1)
     this.scene.add(this.morpher)
+
+    this.resize()
   }
 
   initScene() {
@@ -51,12 +48,32 @@ export default class AppMorph {
     this.composite = new CompositePass()
     this.composer.addPass(this.composite)
     this.composer.passes[this.composer.passes.length - 1].renderToScreen = true
-
   }
 
   addFace(img, data) {
-    const morpher = new Morpher(img, data)
-    this.scene.add(morpher)
+    // TODO
+    console.warn('TODO implement addFace')
+  }
+
+  say(word, pan) {
+    this.morpher.fade = pan
+    this.mixer.play(word, pan)
+  }
+
+  get fade() {
+    return this.morpher.fade
+  }
+  set fade(value) {
+    this.mixer.fade = this.morpher.fade = value
+    this.morpher.lookX = remap(value, 0, 1, -1, 1)
+  }
+
+  setPosition(x, y) {
+    this.mixer.fade = this.morpher.fade = x
+    // const look = this.morpher.look
+
+    this.morpher.lookX = remap(x, 0, 1, -1, 1)
+    this.morpher.lookY = remap(y, 0, 1, -1, 1)
   }
 
   update() {
@@ -64,12 +81,6 @@ export default class AppMorph {
     if (this.stats) {
       this.stats.update()
     }
-  }
-
-  updateMorph() {
-    this.morphers.forEach((m, i) => {
-      m.morph = this.morphs[i]
-    })
   }
 
   resize() {
@@ -90,6 +101,12 @@ export default class AppMorph {
 
     this.camera.updateProjectionMatrix()
     this.renderer.setSize(width, height)
+
+    if (width / height < config.aspect) {
+      this.morpher.scale.set(height * config.aspect, height, 1)
+    } else {
+      this.morpher.scale.set(width, width / config.aspect, 1)
+    }
   }
 
   /**
@@ -99,16 +116,14 @@ export default class AppMorph {
    */
   addGui(gui) {
     const morphs = gui.addFolder('morphs')
-    morphs.add(this.morpher, 'fade', 0.0, 1.0).onChange((value) => {
-      this.mixer.fade = value
-    })
+    morphs.add(this, 'fade', 0.0, 1.0)
     morphs.add(this.morpher, 'wireframe')
     morphs.add(this.morpher, 'fadeMap', { TypeA: 0, TypeB: 1, TypeC: 2 } )
     morphs.add(this.morpher, 'lookX', -1.0, 1.0)
     morphs.add(this.morpher, 'lookY', -1.0, 1.0)
     morphs.add(this.morpher, 'parallax', 0.0, 0.1)
 
-    const effects = gui.addFolder('other')
+    const effects = gui.addFolder('effects')
     effects.add(this.composite, 'blend', 0, 1)
   }
 }

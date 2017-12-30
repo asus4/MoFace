@@ -66,11 +66,13 @@ export default function() {
       // Events
       store.keyboard.on('key', (input, pan) => {
         if (store.speakMode) {
-          // console.log('on key:', input, pan)
-          store.morph.mixer.play(input, pan)
+          store.morph.say(input, pan)
         } else {
           // todo
         }
+      })
+      store.keyboard.on('fade', (x, y) => {
+        store.morph.setPosition(x, y)
       })
       update()
     },
@@ -113,6 +115,10 @@ export default function() {
       makeFaceClick() {
         this.detect.scene = 'select'
         this.pause = true
+      },
+      makeFaceCancel() {
+        this.detect.scene = ''
+        this.pause = false
       },
       startWebcamFaceDetect() {
         this.detect.file = null

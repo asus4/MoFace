@@ -53,6 +53,8 @@ export default class VirtualKeyboard extends EventEmitter {
       this.addX = 0
       window.addEventListener('devicemotion', (e) => {
         this.accX = remapTrim(e.accelerationIncludingGravity.x, -7, 7, 0, 1)
+        const accY = remapTrim(e.accelerationIncludingGravity.y, -7, 7, 0, 1)
+        this.emit('fade', this.accX, accY)
       }, false)
     }
     this.lastVoice = ''
@@ -67,6 +69,8 @@ export default class VirtualKeyboard extends EventEmitter {
     let mouseX = 0
     window.addEventListener('mousemove', (e) => {
       mouseX = e.pageX / window.innerWidth
+      const mouseY = e.pageY / window.innerHeight
+      this.emit('fade', mouseX, 1 - mouseY)
     })
 
     const checkKey = (keyCode) => {

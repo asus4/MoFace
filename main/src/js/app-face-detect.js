@@ -1,5 +1,7 @@
-const EventEmitter = require('events').EventEmitter
-import clm from 'clmtrackr'
+// this cause error when compressed
+// import clm from 'clmtrackr'
+import {EventEmitter} from 'events'
+
 import math from 'mathjs'
 
 import config from './config'

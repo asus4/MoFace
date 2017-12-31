@@ -11,6 +11,9 @@ class LoadingBar {
 
     this.finished = false
     this.update()
+
+    // hide overlay
+    this.background.querySelector('.overlay').style.opacity = 0
   }
 
   update() {
@@ -49,7 +52,7 @@ class LoadingBar {
     this.background.style.opacity = 0
     setTimeout(() => {
       this.background.style.display = 'none'
-    }, 1000)
+    }, 2000)
   }
 
   _setProgress(value) {

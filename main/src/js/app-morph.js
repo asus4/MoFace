@@ -32,8 +32,8 @@ export default class AppMorph {
 
     this.resize()
 
-    this._channelA = 0
-    this._channelB = 1
+    this.channelA = 2
+    this.channelB = 3
   }
 
   initScene() {
@@ -51,6 +51,9 @@ export default class AppMorph {
     this.composite = new CompositePass()
     this.composer.addPass(this.composite)
     this.composer.passes[this.composer.passes.length - 1].renderToScreen = true
+
+    this.position = new THREE.Vector2(0.5, 0.5)
+    this.smoothPosition = new THREE.Vector2(0.5, 0.5)
   }
 
   addFace(img, data) {
@@ -64,15 +67,21 @@ export default class AppMorph {
   }
 
   setPosition(x, y) {
-    this.mixer.fade = this.morpher.fade = x
+    this.position.x = x
+    this.position.y = y
 
-    // invert look angle on mobile
-    const direction = config.mobile ? -1 : 1
-    this.morpher.lookX = remap(x, 0, 1, -1, 1) * direction
-    this.morpher.lookY = remap(y, 0, 1, -1, 1) * direction
+
   }
 
   update() {
+    // position
+    this.smoothPosition.lerp(this.position, 0.3)
+    this.mixer.fade = this.morpher.fade = this.smoothPosition.x
+    const direction = config.mobile ? -1 : 1 // invert look angle on mobile
+    this.morpher.lookX = remap(this.smoothPosition.x, 0, 1, -1, 1) * direction
+    this.morpher.lookY = remap(this.smoothPosition.y, 0, 1, -1, 1) * direction
+
+    // 
     this.composer.render()
     if (this.stats) {
       this.stats.update()
@@ -114,8 +123,6 @@ export default class AppMorph {
     const morphs = gui.addFolder('morphs')
     morphs.add(this.morpher, 'wireframe')
     morphs.add(this.morpher, 'fadeMap', { TypeA: 0, TypeB: 1, TypeC: 2 } )
-    morphs.add(this.morpher, 'lookX', -1.0, 1.0)
-    morphs.add(this.morpher, 'lookY', -1.0, 1.0)
     morphs.add(this.morpher, 'parallax', 0.0, 0.1)
 
     const members = {}
@@ -134,13 +141,13 @@ export default class AppMorph {
 
   get channelA() {return this._channelA}
   set channelA(value) {
-    this.morpher.channelA = value
+    this.morpher.channelA = this.mixer.channelA = value
     this._channelA = value
     console.log('Chan A:', value)
   }
   get channelB() {return this._channelB}
   set channelB(value) {
-    this.morpher.channelB = value
+    this.morpher.channelB = this.mixer.channelB = value
     this._channelB = value
     console.log('Chan B:', value)
   }

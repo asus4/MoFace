@@ -15,13 +15,16 @@ export default class VoiceMixer {
 
     this.crossFade = new Tone.CrossFade()
     this.crossFade.toMaster()
+
+    this.channelA = 0
+    this.channelB = 1
   }
 
   play(key, mix) {
     // error check
     const playDatas = [
-      this.getPlayData(0, key),
-      this.getPlayData(1, key)
+      this.getPlayData(this.channelA, key),
+      this.getPlayData(this.channelB, key)
     ]
     if (playDatas.some((i) => {return i === null})) {
       return
@@ -51,4 +54,5 @@ export default class VoiceMixer {
       buffer: this.buffers[index]
     }
   }
+
 }

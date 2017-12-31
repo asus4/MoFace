@@ -33,8 +33,21 @@ export default class AppMorph {
 
     this.resize()
 
-    this.channelA = 2
-    this.channelB = 3
+
+    this.position = new THREE.Vector2(0.5, 0.5)
+    this.smoothPosition = new THREE.Vector2(0.5, 0.5)
+
+    this.autoSwicher = new AutoSwicher(11)
+    this.autoSwicher.on('switch', (channel, index) => {
+      if (channel === 0) {
+        this.channelA = index
+      } else {
+        this.channelB = index
+      }
+    })
+
+    this.channelA = this.autoSwicher.nextChannel()
+    this.channelB = this.autoSwicher.nextChannel()
   }
 
   initScene() {
@@ -52,18 +65,6 @@ export default class AppMorph {
     this.composite = new CompositePass()
     this.composer.addPass(this.composite)
     this.composer.passes[this.composer.passes.length - 1].renderToScreen = true
-
-    this.position = new THREE.Vector2(0.5, 0.5)
-    this.smoothPosition = new THREE.Vector2(0.5, 0.5)
-
-    this.autoSwicher = new AutoSwicher(11)
-    this.autoSwicher.on('switch', (channel, index) => {
-      if (channel === 0) {
-        this.channelA = index
-      } else {
-        this.channelB = index
-      }
-    })
   }
 
   addFace(img, data) {
@@ -144,7 +145,6 @@ export default class AppMorph {
 
     morphs.add(this, 'channelA', members)
     morphs.add(this, 'channelB', members)
-
 
     const effects = gui.addFolder('effects')
     effects.add(this.composite, 'blend', 0, 1)

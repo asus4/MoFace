@@ -56,7 +56,7 @@ export default class Morpher extends THREE.Mesh {
         ramp: {type: 't', value: fadeMaps[2]},
         fade: {type: 'f', value: 0.5},
         look: {type: 'v2', value: new THREE.Vector2(0, 0)},
-        parallax: {type: 'f', value: 0.05},
+        parallax: {type: 'f', value: 0.03},
       },
       vertexShader: require('../shaders/morph.vert'),
       fragmentShader: require('../shaders/morph.frag'),

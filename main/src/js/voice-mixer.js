@@ -16,8 +16,8 @@ export default class VoiceMixer {
     this.crossFade = new Tone.CrossFade()
     this.crossFade.toMaster()
 
-    this.channelA = 0
-    this.channelB = 1
+    this._channelA = 0
+    this._channelB = 0
   }
 
   play(key, mix) {
@@ -52,6 +52,23 @@ export default class VoiceMixer {
     return {
       info: this.infos[index][key],
       buffer: this.buffers[index]
+    }
+  }
+
+  get channelA() {return this._channelA}
+  set channelA(value) {
+    if (value < this.infos.length) {
+      this._channelA = value
+    } else {
+      console.warn(`channelA: ${value} is out of range`)
+    }
+  }
+  get channelB() {return this._channelB}
+  set channelB(value) {
+    if (value < this.infos.length) {
+      this._channelB = value
+    } else {
+      console.warn(`channelB: ${value} is out of range`)
     }
   }
 

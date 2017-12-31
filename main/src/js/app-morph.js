@@ -14,6 +14,7 @@ import Morpher from './morpher'
 import VoiceMixer from './voice-mixer'
 import config from './config'
 import {remap} from './math'
+import AutoSwicher from './auto-switcher'
 
 export default class AppMorph {
   /**
@@ -54,6 +55,15 @@ export default class AppMorph {
 
     this.position = new THREE.Vector2(0.5, 0.5)
     this.smoothPosition = new THREE.Vector2(0.5, 0.5)
+
+    this.autoSwicher = new AutoSwicher(11)
+    this.autoSwicher.on('switch', (channel, index) => {
+      if (channel === 0) {
+        this.channelA = index
+      } else {
+        this.channelB = index
+      }
+    })
   }
 
   addFace(img, data) {
@@ -69,17 +79,18 @@ export default class AppMorph {
   setPosition(x, y) {
     this.position.x = x
     this.position.y = y
-
-
+    this.autoSwicher.update(x)
   }
 
   update() {
-    // position
+    // position update
     this.smoothPosition.lerp(this.position, 0.3)
     this.mixer.fade = this.morpher.fade = this.smoothPosition.x
     const direction = config.mobile ? -1 : 1 // invert look angle on mobile
     this.morpher.lookX = remap(this.smoothPosition.x, 0, 1, -1, 1) * direction
     this.morpher.lookY = remap(this.smoothPosition.y, 0, 1, -1, 1) * direction
+
+    // 
 
     // 
     this.composer.render()

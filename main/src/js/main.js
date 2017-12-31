@@ -41,12 +41,12 @@ export default function() {
     }
   }
 
-  const update = () => {
+  const update = (now) => {
     if (store.pause) {
       return
     }
     requestAnimationFrame(update)
-    store.morph.update()
+    store.morph.update(now)
   }
 
   new Vue({
@@ -74,13 +74,13 @@ export default function() {
       store.keyboard.on('fade', (x, y) => {
         store.morph.setPosition(x, y)
       })
-      update()
+      requestAnimationFrame(update)
     },
     watch: {
       pause(value) {
         console.log('pause changed', value)
         if (!value) {
-          update()
+          requestAnimationFrame(update)
         }
       }
     },

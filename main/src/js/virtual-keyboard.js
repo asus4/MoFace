@@ -1,4 +1,4 @@
-const EventEmitter = require('events').EventEmitter
+import {EventEmitter} from 'events'
 
 import Modernizr from 'exports-loader?Modernizr!modernizr-custom'
 import KEYMAP from './roma-ji'

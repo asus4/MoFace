@@ -31,6 +31,9 @@ export default class AppMorph {
     this.scene.add(this.morpher)
 
     this.resize()
+
+    this._channelA = 0
+    this._channelB = 1
   }
 
   initScene() {
@@ -58,14 +61,6 @@ export default class AppMorph {
   say(word, pan) {
     this.morpher.fade = pan
     this.mixer.play(word, pan)
-  }
-
-  get fade() {
-    return this.morpher.fade
-  }
-  set fade(value) {
-    this.mixer.fade = this.morpher.fade = value
-    this.morpher.lookX = remap(value, 0, 1, -1, 1)
   }
 
   setPosition(x, y) {
@@ -117,14 +112,40 @@ export default class AppMorph {
    */
   addGui(gui) {
     const morphs = gui.addFolder('morphs')
-    morphs.add(this, 'fade', 0.0, 1.0)
     morphs.add(this.morpher, 'wireframe')
     morphs.add(this.morpher, 'fadeMap', { TypeA: 0, TypeB: 1, TypeC: 2 } )
     morphs.add(this.morpher, 'lookX', -1.0, 1.0)
     morphs.add(this.morpher, 'lookY', -1.0, 1.0)
     morphs.add(this.morpher, 'parallax', 0.0, 0.1)
 
+    const members = {}
+    const names = ['iwata', 'kikuchi', 'kiyokawa', 'kogawa', 'matsuo', 'nakamura', 'noda', 'onodera', 'otabe', 'takaki', 'user']
+    names.forEach((member, index) => {
+      members[member] = index
+    })
+
+    morphs.add(this, 'channelA', members)
+    morphs.add(this, 'channelB', members)
+
+
     const effects = gui.addFolder('effects')
     effects.add(this.composite, 'blend', 0, 1)
   }
+
+  get channelA() {return this._channelA}
+  set channelA(value) {
+    this.morpher.channelA = value
+    this._channelA = value
+    console.log('Chan A:', value)
+  }
+  get channelB() {return this._channelB}
+  set channelB(value) {
+    this.morpher.channelB = value
+    this._channelB = value
+    console.log('Chan B:', value)
+  }
+
+
 }
+
+

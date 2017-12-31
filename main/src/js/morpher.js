@@ -29,15 +29,12 @@ export default class Morpher extends THREE.Mesh {
     // const tris = Delaunay.triangulate(points[0])
     const triangles = require('../data/triangles.json')
     const geometry = new THREE.BufferGeometry()
+    const channels = assets.featurepoints.map((points) => {return makePosUv(points, triangles)})
     {
-      // Setup geometry
-      assets.featurepoints.forEach((points, i) => {
-        const attrs = makePosUv(points, triangles)
-        // Need position attribute at least
-        const append = (i == 0) ? '' : `${i}`
-        geometry.addAttribute(`position${append}`, attrs.vertices)
-        geometry.addAttribute(`uv${append}`, attrs.uvs)
-      })
+      geometry.addAttribute('position', channels[0].vertices)
+      geometry.addAttribute('uv', channels[0].uvs)
+      geometry.addAttribute('position1', channels[1].vertices)
+      geometry.addAttribute('uv1', channels[1].uvs)
 
       // Setup
       {
@@ -47,7 +44,6 @@ export default class Morpher extends THREE.Mesh {
         geometry.addAttribute('weightUv', attrs.uvs)
       }
     }
-    // console.log(geometry.toJSON())
 
     // Material
     const faceTexes = assets.faces.map(toTexture)
@@ -57,10 +53,10 @@ export default class Morpher extends THREE.Mesh {
         map0: {type: 't', value: faceTexes[0]},
         map1: {type: 't', value: faceTexes[1]},
         depthMap: {type: 't', value: toTexture(assets.textures.depth)},
-        ramp: {type: 't', value: fadeMaps[0]},
+        ramp: {type: 't', value: fadeMaps[2]},
         fade: {type: 'f', value: 0.5},
         look: {type: 'v2', value: new THREE.Vector2(0, 0)},
-        parallax: {type: 'f', value: 0.03},
+        parallax: {type: 'f', value: 0.05},
       },
       vertexShader: require('../shaders/morph.vert'),
       fragmentShader: require('../shaders/morph.frag'),
@@ -71,8 +67,10 @@ export default class Morpher extends THREE.Mesh {
 
     // this.weight = new Weight(geometry.getAttribute('weight'), triangles)
 
-    this._fadeMap = 0
+    this._fadeMap = 2
+    this.channels = channels
     this.fadeMaps = fadeMaps
+    this.faceTextures = faceTexes
   }
 
   get fade() {
@@ -111,4 +109,25 @@ export default class Morpher extends THREE.Mesh {
 
   get parallax() {return this.material.uniforms.parallax.value}
   set parallax(value) {this.material.uniforms.parallax.value = value}
+
+  set channelA(index) {
+    const channel = this.channels[index]
+    if (channel) {
+      this.geometry.addAttribute('position', channel.vertices)
+      this.geometry.addAttribute('uv', channel.uvs)
+      this.material.uniforms.map0.value = this.faceTextures[index]
+    } else {
+      console.warn(`chan A: ${index} not found`)
+    }
+  }
+  set channelB(index) {
+    const channel = this.channels[index]
+    if (channel) {
+      this.geometry.addAttribute('position1', channel.vertices)
+      this.geometry.addAttribute('uv1', channel.uvs)
+      this.material.uniforms.map1.value = this.faceTextures[index]
+    } else {
+      console.warn(`chan B: ${index} not found`)
+    }
+  }
 }

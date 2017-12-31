@@ -88,18 +88,33 @@ nav.pc
 
 footer
   position: absolute
-  width: 100%
   bottom: 0
+  &.mobile
+    width: 100%
+  &.pc
+    margin: 0 210px
+    height: 90px
+    width: calc(100% - 420px)
+    .mode
+      display: flex
+  
   .button.keyboard
     width: (98/2)px
     height: (74/2)px
     background: url(images/sp/key.svg) no-repeat center/50%
     margin: auto
+    text-align: center
   .share
     position: absolute
     display: flex
-    right: 0px
-    bottom: 0
+    
+    align-items: center
+    &.mobile
+      bottom: 0
+      right: 0
+    &.pc
+      top: -8px
+      right: -8px
     .facebook
       width: 32px
       height: 32px
@@ -108,9 +123,51 @@ footer
       width: 32px
       height: 32px
       background: url(images/sp/twitter.svg) no-repeat center/50%
+    .vline
+      width: 0px
+      height: 15px
+      border: 1px _keyColor
+      border-style: none solid none none
     span
       display: block
       margin: 10px 0 0 0
+  .copyright
+    position: absolute
+    margin: auto
+    left: 0
+    right: 0
+    bottom: 47px
+    text-align: center
+    font-size: 10px
+  .round-button
+    width: 127px
+    height: 20px
+    margin-right: 8px
+    
+    line-height: 20px
+    text-align: center
+    font-size:9px
+    letter-spacing: 0.5em
+    font-family: 'Futura-Medium', 'Futura'
+    
+    border-radius: 6px
+    border: 1px solid
+    
+    &:hover
+      opacity: 1 // disable global
+    &.red
+      border-color: _keyColor
+      color: _keyCollor
+      &:hover
+        background-color: _keyColor
+        color: #FFF
+    &.green
+      border-color: _greenColor
+      color: _greenColor
+      &:hover
+        background-color: _greenColor
+        color: #FFF
+    
 /.speak-mode footer
   display: none
 

@@ -77,11 +77,11 @@ body
       .right.futura.button(v-on:click='infoShowClick(true)') HOW TO PLAY
       .left.button(v-on:click='makeFaceClick')
     //- Footer
-    footer(v-if='!speakMode || !isMobile')
-      .mode.pc-only
-        .button Edit Text
-        .button Play Text
-      .mode.mobile-only
+    footer(v-if='!speakMode || !isMobile' v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }")
+      .mode(v-if='!isMobile')
+        .button.round-button.red Edit Text
+        .button.round-button.green Play Text
+      .mode.mode(v-if='isMobile')
         .hbox
           .input-log
           input#kana-input.input-log(
@@ -91,12 +91,12 @@ body
             v-on:change='ime.onChange'
           )
         .button.keyboard(v-on:click='$refs.kanaInput.focus()')
-      .share
-        span.pc-only share
-        a.icon.facebook(v-on:click='shareFacebookClick')
-        span |
-        a.icon.twitter(v-on:click='shareTwitterClick')
-      .copyright.pc-only Copyright © 2018 invisible designs lab, All rights reserved.
+      .share(v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }")
+        span(v-if='!isMobile') share :
+        a.icon.facebook.button(v-on:click='shareFacebookClick')
+        .vline
+        a.icon.twitter.button(v-on:click='shareTwitterClick')
+      .copyright(v-if='!isMobile') Copyright © 2018 invisible designs lab, All rights reserved.
 
     //- Info Page
     include pages/info

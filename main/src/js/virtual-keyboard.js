@@ -52,8 +52,8 @@ export default class VirtualKeyboard extends EventEmitter {
     if (Modernizr.touchevents) {
       this.addX = 0
       window.addEventListener('devicemotion', (e) => {
-        this.accX = remapTrim(e.accelerationIncludingGravity.x, -7, 7, 0, 1)
-        const accY = remapTrim(e.accelerationIncludingGravity.y, -7, 7, 0, 1)
+        this.accX = remapTrim(e.accelerationIncludingGravity.x, -6, 6, 0, 1)
+        const accY = remapTrim(e.accelerationIncludingGravity.y, -6, 6, 0, 1)
         this.emit('fade', this.accX, accY)
       }, false)
     }

@@ -6,36 +6,64 @@ _imagesPc = pathjoin(_images, 'pc')
 #info
   position: fixed
   width: 100%
-  background: #fff
   top: 0
   bottom: 0
   overflow: scroll
+  &.mobile
+    background: #fff
+    .content
+      margin: _infoMenuHeight 15px 15px 15px
+    h2
+      font-size: 30px
+      letter-spacing: 0.1em
+    hr.mini
+      display: block
+      width: 10px
+      height: 1px
+      margin: 20px 0 20px 0
+      background-color: _keyColor
+      border: 0
+  &.pc
+    background: #3c3c3c
+    color: #FFF
+    border: 2px solid #FFF
+    text-align: center
+    .content
+      width: 568px
+      margin: 80px auto
+    h2
+      margin: auto
+      white-space: nowrap
+      font-size: 24px
+      letter-spacing: 0.2em
+      border-bottom: 1px solid #FFF
+      &.howtoplay
+        width: 208px
+        margin-bottom: 60px
+      &.credit
+        width: 108px
+        
+      
+    hr.mini
+      display: none
 
-  .content
-    margin: _infoMenuHeight 15px 15px 15px
-
-  h2
-    font-size: 30px
-    letter-spacing: 0.1em
-
-  hr.mini
-    display: block
-    width: 10px
-    height: 1px
-    margin: 20px 0 20px 0
-    background-color: _keyColor
-    border: 0
+  
   
   .menu
     position: fixed
-    width: 100%
-    height: _infoMenuHeight
-    padding: 15px    
     top: 0
-    left: 0
-    background: #fff
     display: flex
     align-items: flex-end
+    &.mobile
+      width: 100%
+      height: _infoMenuHeight
+      left: 0
+      padding: 15px
+      background: #fff
+    &.pc
+      top: 40px
+      right: 36px
+        
     ul
       display: flex
       margin: 0 0 0 18px
@@ -61,6 +89,11 @@ _imagesPc = pathjoin(_images, 'pc')
       width: (img[0]/2)
       height: (img[1]/2)
       background: url(images/sp/howto_speakmode.jpg) no-repeat center/100%
+    &.typeinfo
+      width: 215px
+      height: 144px
+      margin: 44px auto 70px auto
+      background: url(images/pc/how_to_type_info.svg) no-repeat center/100%
 
   .icon.makeface
     width: 66px
@@ -70,8 +103,10 @@ _imagesPc = pathjoin(_images, 'pc')
     
   .columns
     display: flex
+    justify-content: center
     text-align: center
 
+.mobile
   .column
     width: 160px
     margin: 0 10px
@@ -93,18 +128,46 @@ _imagesPc = pathjoin(_images, 'pc')
     .icon-webcam
       background: url(images/sp/from_incam_orange.svg) no-repeat center/100%
     .icon-photo
-      background: url(images/sp/from_photo_orange.svg) no-repeat center/100%
-  
+      background: url(images/sp/from_photo_orange.svg) no-repeat center/100%  
   .vline
     width: 1px
     height: 34px
     background-color: _keyColor
     margin: 14px auto
+
+.pc
+  .column
+    width: 166px
+    margin: 60px 25px
+
+    .description
+      font-size: 12px
+      margin: 10px 0 0 0
+
+    .screenshot      
+      width: 166px
+      height: 115px
+      margin: auto
+      background: url(images/dummy.png) no-repeat center
+
+    .icon
+      width: 124px
+      height: 124px
+      margin: auto
+    .icon-webcam
+      background: url(images/pc/from_camera_icon.png) no-repeat center/100%
+    .icon-photo
+      background: url(images/pc/from_file_icon.png) no-repeat center/100%  
+  .vline
+    width: 1px
+    height: 52px
+    background-color: #fff
+    margin: 25px auto
   
   //----------------------
   // Credit
   //----------------------
-
+.mobile
   .profile
     display: flex
     margin: 50px 10px
@@ -122,13 +185,48 @@ _imagesPc = pathjoin(_images, 'pc')
         margin: 4px 0 0 0
       .name
         font-size: 22px
-    
+.pc
+  .profile
+    width: 360px
+    display: flex
+    margin: 50px auto
+    text-align: left
+    img
+      width: 178px
+      height: 178px
+      background: url(images/dummy.png) no-repeat center
+    .right
+      margin: 0 0 0 15px
+      display: flex
+      flex-flow: column nowrap
+      justify-content: flex-end
+      font-size: 11px
+      div
+        margin: 4px 0 0 0
+      .name
+        font-size: 22px
+.mobile    
   .invisi
     margin: 100px 10px
     .logo
       width: 266px
       height: 67px
-      background: url(images/invisi-logo.svg) no-repeat center/100%
+      background: url(images/sp/invisi_logo.svg) no-repeat center/100%
       
-
+.pc
+  .invisi
+    width: 360px
+    margin: 100px auto
+    font-size: 10px
+    text-align: left
+    .logo
+      width: 266px
+      height: 67px
+      background: url(images/pc/invisi_logo.svg) no-repeat center/100%
+    a
+      display: block
+      margin: 60px 0 0 0
+      text-decoration: none
+      &:visited
+        color: #fff
     

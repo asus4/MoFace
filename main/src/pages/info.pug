@@ -1,20 +1,32 @@
 
-#info(v-if='showInfo')
+#info(v-if='showInfo' v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }")
   .content
     section#howtoplay
-      h2 HOW TO PLAY
+      h2.howtoplay HOW TO PLAY
       hr.mini
-      p タップでひらがなを発音し、
-        br
-        | 端末を傾けることで顔をモーフィングさせることができます。
-        | 下記2つのモードで遊ぶことができます。
+      div(v-if='isMobile')
+        p タップでひらがなを発音し、
+          br
+          | 端末を傾けることで顔をモーフィングさせることができます。
+          | 下記2つのモードで遊ぶことができます。
+        .figure.textmode
+        .figure.speakmode
+  
+        .icon.makeface
+        p.description 上記アイコンから、自分の顔を読み込ませて遊ぶことができます。
+
+      div(v-if='!isMobile')
+        p 画面内でマウスを移動させると、別の顔へモーフィング。
+          br
+          | 顔のパーツをドラッグしたりすると、エフェクトが使用できます。
+          br
+          | 下記のように50音を発音させたり、
+          br
+          | テキストを入力・再生することも可能です。
+        .figure.typeinfo
+        p.description また、自分の顔を読み込ませて遊ぶことができます。
+
       
-      .figure.textmode
-      .figure.speakmode
-
-      .icon.makeface
-      p.description 上記アイコンから、自分の顔を読み込ませて体験することができます。
-
       .columns
         .column.webcam
           .icon.icon-webcam
@@ -66,7 +78,7 @@
     
     hr.mini
     section#credit
-      h2 CREDIT
+      h2.credit CREDIT
       hr.mini
       .profile
         img
@@ -87,17 +99,19 @@
           .name Koki Ibukuro
           .company dot by dot inc.
       .invisi
+        span(v-if="!isMobile") presented by
         .logo
         .description 大切なものは見えない。見えないものには大きな価値があります。
           br
           | アイディアやイマジネーション、インスピレーション。
           br
           | それらを見える形や新しい形で表現していく、音を軸としたクリエイティブチーム。
+        a(v-if="!isMobile" href='https://invisi.jp/') https://invisi.jp/
       
-  .menu
+  .menu(v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }")
     .button.close-button(v-on:click='infoShowClick(false)')
       include parts/button-close
-    ul
+    ul(v-if='isMobile')
       li
         a(href='#howtoplay') HOW TO PLAY
       li /

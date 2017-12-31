@@ -60,7 +60,7 @@ export default class VoiceMixer {
     if (value < this.infos.length) {
       this._channelA = value
     } else {
-      console.warn(`channelA: ${value} is out of range`)
+      // console.warn(`channelA: ${value} is out of range`)
     }
   }
   get channelB() {return this._channelB}
@@ -68,7 +68,7 @@ export default class VoiceMixer {
     if (value < this.infos.length) {
       this._channelB = value
     } else {
-      console.warn(`channelB: ${value} is out of range`)
+      // console.warn(`channelB: ${value} is out of range`)
     }
   }
 

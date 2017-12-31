@@ -4,6 +4,7 @@ import math from 'mathjs'
 
 import config from './config'
 import {loadImageAsync, loadFileAsync} from './async'
+import headPoints from './head-points'
 
 const STD_THRETHOLD = 0.2
 // const STD_THRETHOLD = 0.02
@@ -17,7 +18,6 @@ export default class AppFaceDetect extends EventEmitter {
    */
   constructor(stats) {
     super()
-
 
     if (stats) {
       this.stats = stats
@@ -164,7 +164,7 @@ export default class AppFaceDetect extends EventEmitter {
           console.log(std, noseX)
         }
         if (std < STD_THRETHOLD) {
-          this.capture()
+          this.capture(positions)
         }
         this.histories.shift()
       }
@@ -172,11 +172,24 @@ export default class AppFaceDetect extends EventEmitter {
     }
   }
 
-  capture() {
+  capture(points) {
     cancelAnimationFrame(this.requestID)
     this.processing = true
+
+    // Generate extra head points
+    const head = headPoints(points)
+    points.push(...head)
+    // Convert to relative scale
+    const width = this.canvas.width
+    const height = this.canvas.height
+    const relativePoints = points.map((p) => {
+      return [p[0] / width, p[1] / height]
+    })
+    // Add corner points
+    relativePoints.push([0, 0], [1, 0], [1, 1], [0, 1])
+
     loadImageAsync(this.canvas.toDataURL()).then((img) => {
-      this.emit('capture', img)
+      this.emit('capture', img, relativePoints)
     })
   }
 

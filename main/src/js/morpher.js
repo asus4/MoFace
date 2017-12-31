@@ -2,7 +2,9 @@ import 'three'
 
 import assets from './assets'
 
-const makePosUv = (points, triangles) => {
+const triangles = require('../data/triangles.json')
+
+const makePosUv = (points) => {
   const vertices = []
   const uvs = []
   triangles.forEach((index) => {
@@ -27,9 +29,9 @@ export default class Morpher extends THREE.Mesh {
   constructor() {
     // Use Delaunay cache 
     // const tris = Delaunay.triangulate(points[0])
-    const triangles = require('../data/triangles.json')
+
     const geometry = new THREE.BufferGeometry()
-    const channels = assets.featurepoints.map((points) => {return makePosUv(points, triangles)})
+    const channels = assets.featurepoints.map((points) => {return makePosUv(points)})
     {
       geometry.addAttribute('position', channels[0].vertices)
       geometry.addAttribute('uv', channels[0].uvs)
@@ -66,11 +68,16 @@ export default class Morpher extends THREE.Mesh {
     super(geometry, material)
 
     // this.weight = new Weight(geometry.getAttribute('weight'), triangles)
-
     this._fadeMap = 2
     this.channels = channels
     this.fadeMaps = fadeMaps
     this.faceTextures = faceTexes
+  }
+
+  addFace(img, points) {
+    console.log(img, points)
+    this.faceTextures.push(toTexture(img))
+    this.channels.push(makePosUv(points))
   }
 
   get fade() {

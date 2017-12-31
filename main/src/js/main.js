@@ -36,8 +36,9 @@ export default function() {
     detect: {
       scene: '',
       detector: null,
-      result: null,
-      file: null
+      resultImage: null,
+      resultPoints: null,
+      file: null,
     }
   }
 
@@ -69,6 +70,7 @@ export default function() {
           store.morph.say(input, pan)
         } else {
           // todo
+          console.warn('todo text mode implemnt')
         }
       })
       store.keyboard.on('fade', (x, y) => {
@@ -121,36 +123,32 @@ export default function() {
         this.pause = false
       },
       startWebcamFaceDetect() {
-        this.detect.file = null
-        this.detect.result = null
+        this.startFaceDetect(null)
+      },
+      startPhotoFaceDetect() {
+        openPhotoLibrary().then((file) => {
+          this.startFaceDetect(file)
+        })
+      },
+      startFaceDetect(file) {
+        this.detect.file = file
+        this.detect.resultImage = null
+        this.detect.resultPoints = null
         this.detect.detector = new AppFaceDetect(stats)
         this.detect.scene = 'capture'
-        this.detect.detector.on('capture', (result) => {
-          this.detect.result = result
+        this.detect.detector.on('capture', (img, points) => {
+          this.detect.resultImage = img
+          this.detect.resultPoints = points
           this.detect.scene = 'confirm'
           this.detect.detector.dispose()
           this.detect.detector = null
         })
       },
-      startPhotoFaceDetect() {
-        openPhotoLibrary().then((file) => {
-          this.detect.file = file
-          this.detect.result = null
-          this.detect.detector = new AppFaceDetect(stats)
-          this.detect.scene = 'capture'
-          this.detect.detector.on('capture', (result) => {
-            this.detect.result = result
-            this.detect.scene = 'confirm'
-            this.detect.detector.dispose()
-            this.detect.detector = null
-          })
-        })
-      },
       addNewFace() {
-        this.morph.addFace(this.detect.result)
+        this.morph.addFace(this.detect.resultImage, this.detect.resultPoints)
         this.detect.scene = ''
         this.detect.file = null
-        this.detect.result = null
+        this.detect.resultImage = null
         if (this.detect.detector) {
           this.detect.detector.dispose()
           this.detect.detector = null

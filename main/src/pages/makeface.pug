@@ -31,7 +31,7 @@ transition(v-on:enter='detect.detector.start(detect.file, $refs.detectFaceCanvas
 
 section#makeface-confirm.modal(v-if="detect.scene == 'confirm'")
   .preview
-    img(v-bind:src='detect.result.src')
+    img(v-bind:src='detect.resultImage.src')
   .overlay
     .makeface-icon
     .vcenter

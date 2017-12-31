@@ -67,9 +67,8 @@ export default class AppMorph {
     this.composer.passes[this.composer.passes.length - 1].renderToScreen = true
   }
 
-  addFace(img, data) {
-    // TODO
-    console.warn('TODO implement addFace')
+  addFace(img, points) {
+    this.morpher.addFace(img, points)
   }
 
   say(word, pan) {
@@ -90,8 +89,6 @@ export default class AppMorph {
     const direction = config.mobile ? -1 : 1 // invert look angle on mobile
     this.morpher.lookX = remap(this.smoothPosition.x, 0, 1, -1, 1) * direction
     this.morpher.lookY = remap(this.smoothPosition.y, 0, 1, -1, 1) * direction
-
-    // 
 
     // 
     this.composer.render()

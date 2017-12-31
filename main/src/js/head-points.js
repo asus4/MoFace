@@ -1,11 +1,17 @@
 import {getCurvePoints} from 'cardinal-spline-js'
-import {vec2} from 'gl-matrix'
 
 const vectorExtension = (a, b, scale) => {
-  const out = []
-  vec2.sub(out, a, b)
-  vec2.scale(out, out, scale)
-  return vec2.add(out, a, out)
+  const out = [0, 0]
+  const indices = [0, 1]
+  indices.forEach((index) => {
+    // out = a - b
+    out[index] = a[index] - b[index]
+    // out = out * scale
+    out[index] *= scale
+    // out =  out + a
+    out[index] += a[index]
+  })
+  return out
 }
 
 const flatten = (points) => {

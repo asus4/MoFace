@@ -106,7 +106,7 @@ export default function() {
         ShareUtil.twitter({
           text: '新年のあいさつ',
           url: 'https://invisi.jp/',
-          hashtags: 'moface'
+          hashtags: 'MoFace'
         })
       },
       //

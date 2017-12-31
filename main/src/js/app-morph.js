@@ -98,11 +98,10 @@ export default class AppMorph {
   }
 
   resize() {
-    const width = window.innerWidth
-    const height = window.innerHeight
+    const main = document.getElementById('main')
+    const width = main.clientWidth
+    const height = main.clientHeight
 
-    this.canvas.style.width = `${width}px`
-    this.canvas.style.height = `${height}px`
     this.canvas.width = width
     this.canvas.height = height
 
@@ -151,13 +150,11 @@ export default class AppMorph {
   set channelA(value) {
     this.morpher.channelA = this.mixer.channelA = value
     this._channelA = value
-    console.log('Chan A:', value)
   }
   get channelB() {return this._channelB}
   set channelB(value) {
     this.morpher.channelB = this.mixer.channelB = value
     this._channelB = value
-    console.log('Chan B:', value)
   }
 
 

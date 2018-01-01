@@ -1,14 +1,25 @@
 section.modal
   position: fixed
-  width: 100%
-  height: 100%
   top: 0
-  background-color: rgba(0,0,0,70%)
   text-align: center
   color #FFF
-  h3
-    font-size: 12px
-    letter-spacing: 0.2em
+  &.mobile
+    background-color: rgba(0,0,0,70%)
+    h3
+      font-size: 12px
+      letter-spacing: 0.2em  
+  &.pc
+    width: 100%
+    height: 100%
+    margin: 118px 210px
+    width: calc(100% - 420px)
+    height: calc(100% - 236px)
+    background-color: _keyColor
+    h3
+      font-size: 24px
+      letter-spacing: 0.2em  
+      margin: 74px 0 20px 0
+      
   
   .close-button
     position: fixed
@@ -45,35 +56,51 @@ section.modal
   align-items: center
 
 
-#makeface  
-    .button
-      margin: 23px 0
-      span
-        display: block
-        margin: 12px 0 0 0
-        font-size: 10px
-        letter-spacing: 0.2em
-  .icon
-    width: 106px
-    height: 106px
-    margin: auto
-  #capture-button
+#makeface
+  p
+    letter-spacing: 0.2em
+  .button
+    margin: 23px 0
+    span
+      display: block
+      margin: 12px 0 0 0
+      font-size: 10px
+      letter-spacing: 0.2em
+  &.mobile
     .icon
+      width: 106px
+      height: 106px
+      margin: auto  
+    #capture-button .icon
       background: url(images/sp/from_incam_white.svg) no-repeat center/100%
-  #cameraroll-button
-    .icon
+    #cameraroll-button .icon
       background: url(images/sp/from_photo_white.svg) no-repeat center/100%
-  
+  &.pc
+    .icon
+      width: 124px
+      height: 124px
+      margin: 18px  
+    #capture-button .icon
+      background: url(images/pc/from_camera_icon.png) no-repeat center/100%
+    #cameraroll-button .icon
+      background: url(images/pc/from_file_icon.png) no-repeat center/100%
+    .vcenter
+      flex-direction: row
+    
   .legal
     position: absolute
     width: 188px
     height: 20px
     bottom: 54px
     left: 50%
+    font-size: 10px
+    letter-spacing: 0.1em
     transform: translate(-50%, 0)
     border-radius: 6px
     border: 1px solid #fff
     line-height: 20px
+    /.pc .legal
+      bottom: 74px
 
 //----------------------
 // Capture

@@ -1,11 +1,15 @@
-
-section#makeface.modal(v-if="detect.scene == 'select'")
-  .makeface-icon
+//- Select webcam / file upload
+section#makeface.modal(
+  v-if="detect.scene == 'select'"
+  v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }"
+)
+  .makeface-icon(v-if="isMobile")
   h3 ADD YOUR SELF
+  p(v-if="!isMobile") 自分の顔で遊ぶ
   .vcenter
     #capture-button.button.big-button(v-on:click="startWebcamFaceDetect")
       .icon
-      span From in-Camera
+      span {{ isMobile ? 'From in-Camera' : 'From Web Camera' }}
     #cameraroll-button.button.big-button(v-on:click="startPhotoFaceDetect")
       .icon
       span From Photo
@@ -14,6 +18,7 @@ section#makeface.modal(v-if="detect.scene == 'select'")
   .button.close-button(v-on:click="makeFaceCancel")
     include parts/button-close
 
+//- Capture from webcam
 transition(v-on:enter='detect.detector.start(detect.file, $refs.detectFaceCanvas, $refs.detectFaceOverlay)')
   section#makeface-capture.modal(v-if="detect.scene == 'capture'")
     .preview
@@ -29,6 +34,7 @@ transition(v-on:enter='detect.detector.start(detect.file, $refs.detectFaceCanvas
     .button.close-button(v-on:click="detect.scene = 'select'")
       include parts/button-close
 
+//- Confirm
 section#makeface-confirm.modal(v-if="detect.scene == 'confirm'")
   .preview
     img(v-bind:src='detect.resultImage.src')
@@ -41,7 +47,7 @@ section#makeface-confirm.modal(v-if="detect.scene == 'confirm'")
       .retake-button.button(v-on:click="detect.scene = 'select'")
         | RETRY
   
-
+//- Failure Retry 
 section#makeface-retry.modal(v-if="detect.scene == 'retry'")
   .preview
   .overlay
@@ -51,6 +57,7 @@ section#makeface-retry.modal(v-if="detect.scene == 'retry'")
       #retake-button.button(v-on:click="detect.scene = 'select'")
         | RETRY
 
+//- Privacy policy
 section#makeface-legal.modal(v-if="detect.scene == 'legal'")
   .content
     .makeface-icon

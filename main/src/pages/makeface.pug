@@ -1,23 +1,25 @@
 //- Select webcam / file upload
 section#makeface.modal(
-  v-if="detect.scene == 'select'"
+  v-if="detect.scene !== ''"
   v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }"
 )
-  .makeface-icon(v-if="isMobile")
-  h3 ADD YOUR SELF
-  p(v-if="!isMobile") 自分の顔で遊ぶ
-  .vcenter
-    #capture-button.button.big-button(v-on:click="startWebcamFaceDetect")
-      .icon
-      span {{ isMobile ? 'From in-Camera' : 'From Web Camera' }}
-    #cameraroll-button.button.big-button(v-on:click="startPhotoFaceDetect")
-      .icon
-      span From Photo
-  .legal.button.round-button(v-on:click="detect.scene = 'legal'")
-    | > 画像使用に関する免責事項 <
-  .button.close-button(v-if="isMobile" v-on:click="makeFaceCancel")
-    include parts/button-close
-  .button.back-to-top-button(v-if="!isMobile" v-on:click="makeFaceCancel")
+  include parts/cross-frame
+  .container
+    .makeface-icon(v-if="isMobile")
+    h3 ADD YOUR SELF
+    p(v-if="!isMobile") 自分の顔で遊ぶ
+    .vcenter
+      #capture-button.button.big-button(v-on:click="startWebcamFaceDetect")
+        .icon
+        span {{ isMobile ? 'From in-Camera' : 'From Web Camera' }}
+      #cameraroll-button.button.big-button(v-on:click="startPhotoFaceDetect")
+        .icon
+        span From Photo
+    .legal.button.round-button(v-on:click="detect.scene = 'legal'")
+      | > 画像使用に関する免責事項 <
+    .button.close-button(v-if="isMobile" v-on:click="makeFaceCancel")
+      include parts/button-close
+    .button.back-to-top-button(v-if="!isMobile" v-on:click="makeFaceCancel")
 
 //- Capture from webcam
 transition(v-on:enter='detect.detector.start(detect.file, $refs.detectFaceCanvas, $refs.detectFaceOverlay)')
@@ -26,7 +28,7 @@ transition(v-on:enter='detect.detector.start(detect.file, $refs.detectFaceCanvas
       canvas#makeface-canvas(ref='detectFaceCanvas')
       canvas#makeface-overlay(ref='detectFaceOverlay')
     .overlay
-      .makeface-icon
+      .makeface-icon(v-if="isMobile")
       svg.guide(viewBox='0 0 512 512')
         ellipse(cx='256' cy='256' rx='120' ry='160')
       p.guide 顔を正面に向け、
@@ -40,7 +42,7 @@ section#makeface-confirm.modal(v-if="detect.scene == 'confirm'")
   .preview
     img(v-bind:src='detect.resultImage.src')
   .overlay
-    .makeface-icon
+    .makeface-icon(v-if="isMobile")
     .vcenter
       p これで良いですか？
       .ok-button.button(v-on:click="addNewFace")
@@ -52,16 +54,19 @@ section#makeface-confirm.modal(v-if="detect.scene == 'confirm'")
 section#makeface-retry.modal(v-if="detect.scene == 'retry'")
   .preview
   .overlay
-    .makeface-icon
+    .makeface-icon(v-if="isMobile")
     .vcenter
       p 顔認識に失敗しました。他の写真をお試し下さい。
       #retake-button.button(v-on:click="detect.scene = 'select'")
         | RETRY
 
 //- Privacy policy
-section#makeface-legal.modal(v-if="detect.scene == 'legal'")
-  .content
-    .makeface-icon
+section#makeface-legal.modal(
+  v-if="detect.scene == 'legal'"
+  v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }"
+)
+  .container
+    .makeface-icon(v-if="isMobile")
     h3 > 画像使用に関する免責事項 <
     p MoFace（以下、「当サイト」）は、Invisible Design Lab（以下、「当社」）が企画運営するwebサイトです。当サイトを利用される方（以下、「利用者」）は、当サイトから写真をアップロード、又はwebカメラを用いて撮影して頂いた時点で、この免責事項に同意されたものとして扱わせていただきます。
     p webカメラを用いて撮影された画像、アップロード画像および生成画像にかかる著作権・肖像権（パブリシティ権を含み、以下「肖像権等」といいます）は、利用者に帰属するものとします。また、当サイトを利用した事により作られる生成動画の著作権は当社および当社が使用をみとめた権利者に帰属します。

@@ -3,18 +3,22 @@ section.modal
   top: 0
   text-align: center
   color #FFF
+  width: 100%
+  height: 100%  
   &.mobile
     background-color: rgba(0,0,0,70%)
     h3
       font-size: 12px
       letter-spacing: 0.2em  
   &.pc
-    width: 100%
-    height: 100%
-    margin: 118px 210px
-    width: calc(100% - 420px)
-    height: calc(100% - 236px)
-    background-color: _keyColor
+    background-color: #fff
+    .container
+      position: absolute
+      top: 118px
+      bottom: 118px
+      left: 210px
+      right: 210px
+      background-color: _keyColor
     h3
       font-size: 24px
       letter-spacing: 0.2em  
@@ -34,7 +38,7 @@ section.modal
     height: 32px
     bottom: 0
     left: 50%
-    transform: translate(-55px, 56px)
+    transform: translate(-55px, 60px)
     background: url(images/pc/back_to_top.svg) no-repeat center/100%
     
 
@@ -114,7 +118,7 @@ section.modal
 
 //----------------------
 // Capture
-//----------------------  
+//----------------------
 
 #makeface-capture
   .overlay
@@ -161,7 +165,9 @@ section.modal
 #makeface-legal
   overflow: scroll
   padding: 16px 37px 65px 37px
-  .content
+  background: rgba(0,0,0,0.7)
+
+  /#makeface-legal.mobile .container
     margin: 40px 0
     h3
       font-size: 10px
@@ -170,3 +176,16 @@ section.modal
     p
       text-align: left
       margin: 0 0 16px 0
+  /#makeface-legal.pc .container
+    background: none
+    h3
+      font-size: 13px
+      line-height: 2em
+      margin: -44px 0 14px 0
+    p
+      text-align: left
+  /#makeface-legal.pc .close-button
+    left: 100%
+    transform: translate(-45px, 0)
+
+  

@@ -15,8 +15,9 @@ section#makeface.modal(
       span From Photo
   .legal.button.round-button(v-on:click="detect.scene = 'legal'")
     | > 画像使用に関する免責事項 <
-  .button.close-button(v-on:click="makeFaceCancel")
+  .button.close-button(v-if="isMobile" v-on:click="makeFaceCancel")
     include parts/button-close
+  .button.back-to-top-button(v-if="!isMobile" v-on:click="makeFaceCancel")
 
 //- Capture from webcam
 transition(v-on:enter='detect.detector.start(detect.file, $refs.detectFaceCanvas, $refs.detectFaceOverlay)')

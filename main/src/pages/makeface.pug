@@ -29,7 +29,7 @@ transition(v-on:enter='detect.detector.start(detect.file, $refs.detectFaceCanvas
   )
     include parts/cross-frame
     .container
-      .preview
+      .preview(ref='preview')
         canvas#makeface-canvas(ref='detectFaceCanvas')
         canvas#makeface-overlay(ref='detectFaceOverlay')
       .overlay
@@ -44,22 +44,24 @@ transition(v-on:enter='detect.detector.start(detect.file, $refs.detectFaceCanvas
     .button.back-to-top-button(v-if="!isMobile" v-on:click="makeFaceCancel")
 
 //- Confirm
-section#makeface-confirm.modal(
-  v-if="detect.scene == 'confirm'"
-  v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }"
-)
-  include parts/cross-frame
-  .container
-    .preview
-      img(v-bind:src='detect.resultImage.src')
-    .overlay
-      .makeface-icon(v-if="isMobile")
-      .vcenter
-        p これで良いですか？
-        .ok-button.button(v-on:click="addNewFace")
-          | OK
-        .retake-button.button(v-on:click="detect.scene = 'select'")
-          | RETRY
+transition(v-on:enter="resizePreview($refs.preview)")
+  section#makeface-confirm.modal(
+    v-if="detect.scene == 'confirm'"
+    v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }"
+  )
+    include parts/cross-frame
+    .container
+      .preview(ref='preview')
+        img.result-img(ref='resultImgElement'
+          v-bind:src='detect.resultImage.src')
+      .overlay
+        .makeface-icon(v-if="isMobile")
+        .vcenter
+          p これで良いですか？
+          .ok-button.button(v-on:click="addNewFace")
+            | OK
+          .retake-button.button(v-on:click="detect.scene = 'select'")
+            | RETRY
   
 //- Failure Retry 
 section#makeface-retry.modal(
@@ -67,7 +69,7 @@ section#makeface-retry.modal(
   v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }"
 )
   .container
-    .preview
+    .preview(is="face-preview")
     .overlay
       .makeface-icon(v-if="isMobile")
       .vcenter

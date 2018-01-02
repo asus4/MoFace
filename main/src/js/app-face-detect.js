@@ -16,8 +16,9 @@ const STD_THRETHOLD = 0.2
  * Draw image into canvas 
  * @param {HTMLVideoElement|HTMLImageElement} element
  * @param {HTMLCanvasElement} canvas
+ * @param {Number} targetAspect
  */
-function drawElement(element, canvas) {
+function drawElement(element, canvas, targetAspect = 0) {
   const ctx = canvas.getContext('2d')
 
   // destination size
@@ -32,14 +33,16 @@ function drawElement(element, canvas) {
     sw = element.videoWidth
     sh = element.videoHeight
   }
-  const sa = sw / sh // souce aspect
-  const da = dw / dh // destination aspect
+  const sourceAspect = sw / sh // souce aspect
+  if (targetAspect === 0) {
+    targetAspect = dw / dh
+  }
 
-  if (sa > da) {
-    const cropW = sh * da
+  if (sourceAspect > targetAspect) {
+    const cropW = sh * targetAspect
     ctx.drawImage(element, (sw - cropW) / 2, 0, cropW, sh, 0, 0, dw, dh)
   } else {
-    const cropH = sw / da
+    const cropH = sw / targetAspect
     ctx.drawImage(element, 0, (sh - cropH) / 2, sw, cropH, 0, 0, dw, dh)
   }
 }
@@ -123,16 +126,7 @@ export default class AppFaceDetect extends EventEmitter {
   }
 
   _start() {
-    // Fit resize canvas
-    const parent = this.canvas.parentNode
-    if (parent.clientWidth / parent.clientHeight > config.aspect) {
-      this.canvas.style.width = this.overlay.style.width = '100%'
-      this.canvas.style.height = this.overlay.style.height = 'auto'
-    } else {
-      this.canvas.style.width = this.overlay.style.width = 'auto'
-      this.canvas.style.height = this.overlay.style.height = '100%'
-    }
-
+    this.resizeFill(this.canvas.parentNode)
     this.canvas.width = this.overlay.width = 1920 / 4
     this.canvas.height = this.overlay.height = 1280 / 4
 
@@ -143,6 +137,26 @@ export default class AppFaceDetect extends EventEmitter {
     this.tracker.start(this.canvas)
 
     this.update()
+  }
+
+  /**
+   * 
+   * @param {Element} container
+   * @memberof AppFaceDetect
+   */
+  resizeFill(container) {
+    const fitWidth = container.clientWidth / container.clientHeight > config.aspect
+    const children = [ ...container.children]
+    children.forEach((element) => {
+      if (fitWidth) {
+        element.style.width = '100%'
+        element.style.height = 'auto'
+      } else {
+        element.style.width = 'auto'
+        element.style.height = '100%'
+      }
+    })
+
   }
 
   dispose() {
@@ -228,7 +242,7 @@ export default class AppFaceDetect extends EventEmitter {
     // Draw big image into 1024x1024 canvas
     const canvas = document.createElement('canvas')
     canvas.width = canvas.height = 1024
-    drawElement(this.input, canvas)
+    drawElement(this.input, canvas, config.aspect)
 
     loadImageAsync(canvas.toDataURL()).then((img) => {
       this.emit('capture', img, relativePoints)

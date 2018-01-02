@@ -11,6 +11,7 @@ import VirtualKeyboard from './virtual-keyboard'
 import KanaIME from './kana-ime'
 import ShareUtil from './share-util'
 
+import MixInFaceDetect from './main-face-detect'
 
 // Stats
 const stats = config.DEV ? new Stats() : null
@@ -53,6 +54,7 @@ export default function() {
   new Vue({
     el: '#app-morph',
     data: store,
+    mixins: [MixInFaceDetect],
     //-------------------
     // Life cycle
     //-------------------

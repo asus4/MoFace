@@ -3,9 +3,8 @@ import Stats from 'stats.js'
 import dat from 'dat-gui'
 import Vue from 'vue'
 
-import {openPhotoLibrary} from './async'
+
 import AppMorph from './app-morph'
-import AppFaceDetect from './app-face-detect'
 import config from './config'
 import VirtualKeyboard from './virtual-keyboard'
 import KanaIME from './kana-ime'
@@ -34,13 +33,7 @@ export default function() {
     morph: null,
     ime: new KanaIME(),
     keyboard: new VirtualKeyboard(),
-    detect: {
-      scene: '',
-      detector: null,
-      resultImage: null,
-      resultPoints: null,
-      file: null,
-    }
+    stats,
   }
 
   const update = (now) => {
@@ -115,52 +108,7 @@ export default function() {
       onKeyboardTouch(event) {
         this.keyboard.onTouch(event)
       },
-      // Face detect
-      makeFaceClick() {
-        this.detect.scene = 'select'
-        this.pause = true
-      },
-      makeFaceCancel() {
-        if (this.detect.detector) {
-          this.detect.detector.dispose()
-          this.detect.detector = null
-        }
-        this.detect.scene = ''
-        this.pause = false
-      },
-      startWebcamFaceDetect() {
-        this.startFaceDetect(null)
-      },
-      startPhotoFaceDetect() {
-        openPhotoLibrary().then((file) => {
-          this.startFaceDetect(file)
-        })
-      },
-      startFaceDetect(file) {
-        this.detect.file = file
-        this.detect.resultImage = null
-        this.detect.resultPoints = null
-        this.detect.detector = new AppFaceDetect(stats)
-        this.detect.scene = 'capture'
-        this.detect.detector.on('capture', (img, points) => {
-          this.detect.resultImage = img
-          this.detect.resultPoints = points
-          this.detect.scene = 'confirm'
-          this.detect.detector.dispose()
-          this.detect.detector = null
-        })
-      },
-      addNewFace() {
-        this.morph.addFace(this.detect.resultImage, this.detect.resultPoints)
-        this.detect.scene = ''
-        this.detect.file = null
-        this.detect.resultImage = null
-        if (this.detect.detector) {
-          this.detect.detector.dispose()
-          this.detect.detector = null
-        }
-        this.pause = false
-      },
+
     }
   })
 

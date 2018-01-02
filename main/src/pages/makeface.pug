@@ -22,7 +22,7 @@ section#makeface.modal(
   .button.back-to-top-button(v-if="!isMobile" v-on:click="makeFaceCancel")
 
 //- Capture from webcam
-transition(v-on:enter='detect.detector.start(detect.file, $refs.detectFaceCanvas, $refs.detectFaceOverlay)')
+transition(v-on:enter='enterFaceDetect')
   section#makeface-capture.modal(
     v-if="detect.scene == 'capture'"
     v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }"

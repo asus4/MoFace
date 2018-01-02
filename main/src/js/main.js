@@ -3,7 +3,6 @@ import Stats from 'stats.js'
 import dat from 'dat-gui'
 import Vue from 'vue'
 
-
 import AppMorph from './app-morph'
 import config from './config'
 import VirtualKeyboard from './virtual-keyboard'

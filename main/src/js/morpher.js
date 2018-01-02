@@ -24,6 +24,7 @@ const toTexture = (img) => {
   return tex
 }
 
+const MAX_CHANNELS = 11
 
 export default class Morpher extends THREE.Mesh {
   constructor() {
@@ -75,7 +76,10 @@ export default class Morpher extends THREE.Mesh {
   }
 
   addFace(img, points) {
-    console.log(img, points)
+    if (this.channels.length >= MAX_CHANNELS) {
+      this.faceTextures.pop()
+      this.channels.pop()
+    }
     this.faceTextures.push(toTexture(img))
     this.channels.push(makePosUv(points))
   }

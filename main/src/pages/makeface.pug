@@ -19,46 +19,61 @@ section#makeface.modal(
       | > 画像使用に関する免責事項 <
     .button.close-button(v-if="isMobile" v-on:click="makeFaceCancel")
       include parts/button-close
-    .button.back-to-top-button(v-if="!isMobile" v-on:click="makeFaceCancel")
+  .button.back-to-top-button(v-if="!isMobile" v-on:click="makeFaceCancel")
 
 //- Capture from webcam
 transition(v-on:enter='detect.detector.start(detect.file, $refs.detectFaceCanvas, $refs.detectFaceOverlay)')
-  section#makeface-capture.modal(v-if="detect.scene == 'capture'")
-    .preview
-      canvas#makeface-canvas(ref='detectFaceCanvas')
-      canvas#makeface-overlay(ref='detectFaceOverlay')
-    .overlay
-      .makeface-icon(v-if="isMobile")
-      svg.guide(viewBox='0 0 512 512')
-        ellipse(cx='256' cy='256' rx='120' ry='160')
-      p.guide 顔を正面に向け、
-        br
-        | 枠内に合わせてください
-    .button.close-button(v-on:click="detect.scene = 'select'")
-      include parts/button-close
+  section#makeface-capture.modal(
+    v-if="detect.scene == 'capture'"
+    v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }"
+  )
+    include parts/cross-frame
+    .container
+      .preview
+        canvas#makeface-canvas(ref='detectFaceCanvas')
+        canvas#makeface-overlay(ref='detectFaceOverlay')
+      .overlay
+        .makeface-icon(v-if="isMobile")
+        svg.guide(viewBox='0 0 512 512')
+          ellipse(cx='256' cy='256' rx='120' ry='160')
+        p.guide 顔を正面に向け、
+          br
+          | 枠内に合わせてください
+      .button.close-button(v-on:click="detect.scene = 'select'")
+        include parts/button-close
+    .button.back-to-top-button(v-if="!isMobile" v-on:click="makeFaceCancel")
 
 //- Confirm
-section#makeface-confirm.modal(v-if="detect.scene == 'confirm'")
-  .preview
-    img(v-bind:src='detect.resultImage.src')
-  .overlay
-    .makeface-icon(v-if="isMobile")
-    .vcenter
-      p これで良いですか？
-      .ok-button.button(v-on:click="addNewFace")
-        | OK
-      .retake-button.button(v-on:click="detect.scene = 'select'")
-        | RETRY
+section#makeface-confirm.modal(
+  v-if="detect.scene == 'confirm'"
+  v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }"
+)
+  include parts/cross-frame
+  .container
+    .preview
+      img(v-bind:src='detect.resultImage.src')
+    .overlay
+      .makeface-icon(v-if="isMobile")
+      .vcenter
+        p これで良いですか？
+        .ok-button.button(v-on:click="addNewFace")
+          | OK
+        .retake-button.button(v-on:click="detect.scene = 'select'")
+          | RETRY
   
 //- Failure Retry 
-section#makeface-retry.modal(v-if="detect.scene == 'retry'")
-  .preview
-  .overlay
-    .makeface-icon(v-if="isMobile")
-    .vcenter
-      p 顔認識に失敗しました。他の写真をお試し下さい。
-      #retake-button.button(v-on:click="detect.scene = 'select'")
-        | RETRY
+section#makeface-retry.modal(
+  v-if="detect.scene == 'retry'"
+  v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }"
+)
+  .container
+    .preview
+    .overlay
+      .makeface-icon(v-if="isMobile")
+      .vcenter
+        p 顔認識に失敗しました。他の写真をお試し下さい。
+        #retake-button.button(v-on:click="detect.scene = 'select'")
+          | RETRY
 
 //- Privacy policy
 section#makeface-legal.modal(

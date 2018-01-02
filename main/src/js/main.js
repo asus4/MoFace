@@ -119,6 +119,10 @@ export default function() {
         this.pause = true
       },
       makeFaceCancel() {
+        if (this.detect.detector) {
+          this.detect.detector.dispose()
+          this.detect.detector = null
+        }
         this.detect.scene = ''
         this.pause = false
       },

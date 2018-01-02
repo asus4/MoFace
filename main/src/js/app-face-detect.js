@@ -1,5 +1,6 @@
-// this cause error when compressed
+// Import into Global namespace since the error on compile time. It works dev build though....
 // import clm from 'clmtrackr'
+
 import {EventEmitter} from 'events'
 
 import math from 'mathjs'
@@ -11,6 +12,38 @@ import headPoints from './head-points'
 const STD_THRETHOLD = 0.2
 // const STD_THRETHOLD = 0.02
 
+/**
+ * Draw image into canvas 
+ * @param {HTMLVideoElement|HTMLImageElement} element
+ * @param {HTMLCanvasElement} canvas
+ */
+function drawElement(element, canvas) {
+  const ctx = canvas.getContext('2d')
+
+  // destination size
+  const dw = canvas.width
+  const dh = canvas.height
+  // source size
+  let sw, sh
+  if (element instanceof HTMLImageElement) {
+    sw = element.width
+    sh = element.height
+  } else if (element instanceof HTMLVideoElement) {
+    sw = element.videoWidth
+    sh = element.videoHeight
+  }
+  const sa = sw / sh // souce aspect
+  const da = dw / dh // destination aspect
+
+  if (sa > da) {
+    const cropW = sh * da
+    ctx.drawImage(element, (sw - cropW) / 2, 0, cropW, sh, 0, 0, dw, dh)
+  } else {
+    const cropH = sw / da
+    ctx.drawImage(element, 0, (sh - cropH) / 2, sw, cropH, 0, 0, dw, dh)
+  }
+}
+
 export default class AppFaceDetect extends EventEmitter {
   /**
    * Creates an instance of AppFaceDetect.
@@ -20,7 +53,6 @@ export default class AppFaceDetect extends EventEmitter {
    */
   constructor(stats) {
     super()
-
     if (stats) {
       this.stats = stats
       document.removeEventListener('clmtrackrIteration', this.onTrackerInteration, false)
@@ -33,23 +65,26 @@ export default class AppFaceDetect extends EventEmitter {
     this.tracker.init()
 
     this.histories = []
+    this.input = null
   }
 
   start(file, detectFaceCanvas, detecgtFaceOverlay) {
-
     this.canvas = detectFaceCanvas
+    this.ctx = this.canvas.getContext('2d')
     this.overlay = detecgtFaceOverlay
-
-    console.log(file, detectFaceCanvas, detecgtFaceOverlay)
-
     if (file) {
-      this.startImage(file)
+      this._startImage(file)
     } else {
-      this.startCamera()
+      this._startCamera()
     }
   }
 
-  startCamera() {
+  /**
+   * Start from web camera
+   * 
+   * @memberof AppFaceDetect
+   */
+  _startCamera() {
     this.useCamera = true
     const option = {
       audio: false,
@@ -59,55 +94,55 @@ export default class AppFaceDetect extends EventEmitter {
         // height: { min: 480, ideal: 640, max: 1280 }
       }
     }
-    navigator.getUserMedia(option, this.setupCamera.bind(this), (err) => {
+    const onSuccess = (stream) => {
+      this.input = document.createElement('video')
+      this.input.srcObject = stream
+      this.input.onloadedmetadata = this.input.onresize = this._start.bind(this)
+      this.input.play()
+    }
+    const onError = (err) => {
       console.warn(err)
-    })
+    }
+    navigator.getUserMedia(option, onSuccess, onError)
   }
 
-  startImage(file) {
+  /**
+   * Start from Image file
+   * 
+   * @param {any} file 
+   * @memberof AppFaceDetect
+   */
+  _startImage(file) {
     this.useCamera = false
-
     loadFileAsync(file).then((dataURL) => {
       return loadImageAsync(dataURL)
     }).then((img) => {
-      const w = img.width
-      const h = img.height
-
-      this.canvas.width = this.overlay.width = w
-      this.canvas.height = this.overlay.height = h
-
-      const ctx = this.canvas.getContext('2d')
-      ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-      ctx.drawImage(img, 0, 0)
-
-      this.tracker.stop()
-      this.tracker.reset()
-      this.tracker.start(this.canvas)
-
-      this.update()
+      this.input = img
+      this._start()
     })
   }
 
-  setupCamera(stream) {
-    this.video = document.createElement('video')
-
-    const onVideoResize = () => {
-      const w = this.video.videoWidth
-      const h = this.video.videoHeight
-
-      this.video.width = this.canvas.width = this.overlay.width = w
-      this.video.height = this.canvas.height = this.overlay.height = h
-
-      this.tracker.stop()
-      this.tracker.reset()
-      this.tracker.start(this.video)
-
-      this.update()
+  _start() {
+    // Fit resize canvas
+    const parent = this.canvas.parentNode
+    if (parent.clientWidth / parent.clientHeight > config.aspect) {
+      this.canvas.style.width = this.overlay.style.width = '100%'
+      this.canvas.style.height = this.overlay.style.height = 'auto'
+    } else {
+      this.canvas.style.width = this.overlay.style.width = 'auto'
+      this.canvas.style.height = this.overlay.style.height = '100%'
     }
-    this.video.srcObject = stream
-    this.video.onloadedmetadata = onVideoResize
-    this.video.onresize = onVideoResize
-    this.video.play()
+
+    this.canvas.width = this.overlay.width = 1920 / 4
+    this.canvas.height = this.overlay.height = 1280 / 4
+
+    drawElement(this.input, this.canvas)
+
+    this.tracker.stop()
+    this.tracker.reset()
+    this.tracker.start(this.canvas)
+
+    this.update()
   }
 
   dispose() {
@@ -119,12 +154,14 @@ export default class AppFaceDetect extends EventEmitter {
     document.removeEventListener('clmtrackrNotFound', this.onTrackerFailue.bind(this), false)
     document.removeEventListener('clmtrackrLost', this.onTrackerFailue.bind(this), false)
 
-    if (this.video) {
-      this.video.srcObject.getTracks().forEach((track) => {
-        track.stop()
-      })
-      this.video.srcObject = null
-      this.video = null
+    if (this.input) {
+      if (this.input instanceof HTMLVideoElement) {
+        this.input.srcObject.getTracks().forEach((track) => {
+          track.stop()
+        })
+        this.input.srcObject = null
+      }
+      this.input = null
     }
 
     if (this.tracker) {
@@ -144,9 +181,7 @@ export default class AppFaceDetect extends EventEmitter {
 
     //
     if (this.useCamera) {
-      const ctx = this.canvas.getContext('2d')
-      ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-      ctx.drawImage(this.video, 0, 0)
+      drawElement(this.input, this.canvas)
     }
     {
       this.overlay.getContext('2d').clearRect(0, 0, this.overlay.width, this.overlay.height)
@@ -160,7 +195,7 @@ export default class AppFaceDetect extends EventEmitter {
       const noseX = positions[31][0]
       this.histories.push(noseX)
 
-      if (this.histories.length > 20) {
+      if (this.histories.length > 60) {
         const std = math.std(this.histories)
         if (config.DEV) {
           console.log(std, noseX)
@@ -190,7 +225,12 @@ export default class AppFaceDetect extends EventEmitter {
     // Add corner points
     relativePoints.push([0, 0], [1, 0], [1, 1], [0, 1])
 
-    loadImageAsync(this.canvas.toDataURL()).then((img) => {
+    // Draw big image into 1024x1024 canvas
+    const canvas = document.createElement('canvas')
+    canvas.width = canvas.height = 1024
+    drawElement(this.input, canvas)
+
+    loadImageAsync(canvas.toDataURL()).then((img) => {
       this.emit('capture', img, relativePoints)
     })
   }

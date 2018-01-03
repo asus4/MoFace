@@ -84,6 +84,10 @@ export default class KanaIME  extends EventEmitter {
 
   onChange(event) {
     const t = event.target
-    t.value = shrink(convert(t.value))
+    const text = shrink(convert(t.value))
+    if (text.length > 0) {
+      this.emit('change', text)
+    }
+    t.value = ''
   }
 }

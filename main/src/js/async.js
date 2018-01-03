@@ -52,3 +52,10 @@ export function openPhotoLibrary() {
     input.click()
   })
 }
+
+
+export function setTimeoutAsync(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+}

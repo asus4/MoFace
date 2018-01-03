@@ -1,3 +1,5 @@
+import 'babel-polyfill'
+
 import Tone from 'tone'
 import Stats from 'stats.js'
 import dat from 'dat-gui'
@@ -33,6 +35,7 @@ export default function() {
     ime: new KanaIME(),
     keyboard: new VirtualKeyboard(),
     stats,
+    inputLogs: ['あけまして', 'おめでとう', 'ございます'],
   }
 
   const update = (now) => {
@@ -62,15 +65,22 @@ export default function() {
       store.keyboard.on('key', (input, pan) => {
         if (store.speakMode) {
           store.morph.say(input, pan)
-        } else {
-          // todo
-          console.warn('todo text mode implemnt')
         }
       })
       store.keyboard.on('fade', (x, y) => {
         store.morph.setPosition(x, y)
       })
+      store.ime.on('change', (text) => {
+        store.inputLogs.push(text)
+        if (store.inputLogs.length > config.maxLogCount) {
+          store.inputLogs.shift()
+        }
+        store.morph.conversation([text])
+      })
       requestAnimationFrame(update)
+
+      // Start speak
+      store.morph.conversation(store.inputLogs, 1000)
     },
     watch: {
       pause(value) {
@@ -107,7 +117,6 @@ export default function() {
       onKeyboardTouch(event) {
         this.keyboard.onTouch(event)
       },
-
     }
   })
 

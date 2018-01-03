@@ -8,13 +8,18 @@ import 'three/examples/js/postprocessing/EffectComposer'
 import 'three/examples/js/postprocessing/ShaderPass'
 import 'three/examples/js/postprocessing/RenderPass'
 
+import SimplexNoise from 'simplex-noise'
+
 import assets from './assets'
+import {setTimeoutAsync} from './async'
 import CompositePass from './composite-pass'
 import Morpher from './morpher'
 import VoiceMixer from './voice-mixer'
 import config from './config'
 import {remap} from './math'
 import AutoSwicher from './auto-switcher'
+
+const simplex = new SimplexNoise()
 
 export default class AppMorph {
   /**
@@ -48,6 +53,8 @@ export default class AppMorph {
 
     this.channelA = this.autoSwicher.nextChannel()
     this.channelB = this.autoSwicher.nextChannel()
+
+    this.autoPan = false
   }
 
   initScene() {
@@ -71,18 +78,52 @@ export default class AppMorph {
     this.morpher.addFace(img, points)
   }
 
-  say(word, pan) {
-    this.morpher.fade = pan
-    this.mixer.play(word, pan)
+  /**
+   * @param {String} character 
+   * @param {Number} pan 
+   * @memberof AppMorph
+   */
+  say(character, pan) {
+    this.mixer.play(character, pan)
   }
 
+  /**
+   * @param {[String]} words 
+   * @memberof AppMorph
+   */
+  async conversation(words, delay = 0) {
+    await setTimeoutAsync(delay)
+    this.autoPan = true
+    let count = Math.round(Math.random())
+    for (const word of words) {
+      for (const character of word) {
+        await setTimeoutAsync(200)
+        this.setPosition(count % 2, Math.random())
+        this.say(character, count % 2)
+        count++
+      }
+      await setTimeoutAsync(500)
+    }
+    this.autoPan = false
+  }
+
+  /**
+   * @param {Number} x 
+   * @param {Number} y 
+   * @memberof AppMorph
+   */
   setPosition(x, y) {
+    // console.log(x, y)
     this.position.x = x
     this.position.y = y
     this.autoSwicher.update(x)
   }
 
-  update() {
+  update(now) {
+    if (this.autoPan) {
+      this.position.x = simplex.noise2D(now * 0.0014, 0.15) + 0.5
+      this.position.y = simplex.noise2D(now * 0.001, 0.7) + 0.5
+    }
     // position update
     this.smoothPosition.lerp(this.position, 0.3)
     this.mixer.fade = this.morpher.fade = this.smoothPosition.x

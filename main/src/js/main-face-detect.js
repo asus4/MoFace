@@ -56,6 +56,7 @@ export default {
         this.detect.file,
         this.$refs.detectFaceCanvas,
         this.$refs.detectFaceOverlay)
+      this.resizePreview(this.$refs.detectFaceCanvas.parentNode)
     },
     addNewFace() {
       this.morph.addFace(this.detect.resultImage, this.detect.resultPoints)
@@ -68,6 +69,9 @@ export default {
       }
       this.pause = false
     },
+    /**
+     * @param {HTMLElement} container 
+     */
     resizePreview(container) {
       const fitWidth = container.clientWidth / container.clientHeight > config.aspect
       const children = [ ...container.children]

@@ -46,6 +46,18 @@ body
           v-on:touchstart='keyboard.onTouch($event, true)'
           v-on:touchmove='keyboard.onTouch($event, false)'
         )
+      #text-log(
+        v-if='!speakMode || !isMobile'
+        v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }"
+      )  
+        .input-log(v-for="log of inputLogs") > {{log}}
+        span.input-log > 
+        input#kana-input.input-log(
+          type='text' name='message'
+          ref='kanaInput'
+          v-on:input="ime.onInput($event)"
+          v-on:change="ime.onChange($event)"
+        )
     //- Navi mobile
     nav.mobile(v-if='isMobile' v-bind:class="{ 'text-mode':!speakMode }")
       a#info-button.button(v-on:click='infoShowClick(true)')
@@ -61,25 +73,15 @@ body
     //- Footer
     footer(v-if='!speakMode || !isMobile' v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }")
       .mode(v-if='!isMobile')
-        .button.round-button.red Edit Text
-        .button.round-button.green Play Text
-      .mode.mode(v-if='isMobile')
-        .hbox
-          .input-log
-          input#kana-input.input-log(
-            type='text' name='message'
-            ref='kanaInput'
-            v-on:input='ime.onInput'
-            v-on:change='ime.onChange'
-          )
-        .button.keyboard(v-on:click='$refs.kanaInput.focus()')
+        .button.round-button.red(v-on:click="speakMode = false; $refs.kanaInput.focus()") Edit Text
+        .button.round-button.green(v-on:click="speakMode = true; $refs.kanaInput.blur()") Play Text
+      .button.keyboard(v-if='isMobile' v-on:click='$refs.kanaInput.focus()')
       .share(v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }")
         span(v-if='!isMobile') share :
         a.icon.facebook.button(v-on:click='shareFacebookClick')
         .vline
         a.icon.twitter.button(v-on:click='shareTwitterClick')
       .copyright(v-if='!isMobile') Copyright © 2018 invisible designs lab, All rights reserved.
-
     //- Info Page
     include pages/info
     include pages/makeface

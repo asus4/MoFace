@@ -107,31 +107,31 @@ footer
   .button.keyboard
     width: (98/2)px
     height: (74/2)px
-    background: url(images/sp/key.svg) no-repeat center/50%
-    margin: auto
+    background: url(images/sp/key.svg) no-repeat center/100%
+    margin: 16px auto
     text-align: center
   .share
     position: absolute
     display: flex
-    
     align-items: center
     &.mobile
-      bottom: 0
-      right: 0
+      bottom: 14px
+      right: 10px
     &.pc
       top: -26px
       right: -8px
     .facebook
-      width: 32px
-      height: 32px
-      background: url(images/sp/facebook.svg) no-repeat center/23%
+      width: 25px
+      height: 25px
+      background: url(images/sp/facebook.svg) no-repeat center/40%
     .twitter
-      width: 32px
-      height: 32px
-      background: url(images/sp/twitter.svg) no-repeat center/50%
+      width: 25px
+      height: 25px
+      background: url(images/sp/twitter.svg) no-repeat center/90%
     .vline
       width: 0px
-      height: 15px
+      height: 20px
+      margin: 0 5px 0 5px
       border: 1px _keyColor
       border-style: none solid none none
     span
@@ -209,23 +209,24 @@ footer
       top: 50px
       bottom: 0
       height: calc(100% - 50px)
-  /.text-mode canvas.ui
-    display: none
 
-.input-log
-  color: _keyColor
-  font-family: 'PixelMplus12'
-  // remove background
-  background-color: rgba(0,0,0,0)
-  outline: none
-  border-style: none
-  &::before
-    display: inline-block
-    content: '>'
+
+#text-log
+  position: absolute
+  &.mobile
+    left: 15px
+    bottom: 80px
+  &.pc
+    left: 15px
+    bottom: 80px
+  .input-log
+    margin: 10px 0 0 0
     color: _keyColor
     font-family: 'PixelMplus12'
-input.input-log
-  margin: 0 0 2px 5px
+    // remove background
+    background-color: rgba(0,0,0,0)
+    outline: none
+    border-style: none
 
 @require 'pages/info'
 @require 'pages/makeface'

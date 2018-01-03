@@ -18,4 +18,5 @@ export default {
   // DEV: false,
   mobile: md.mobile(),
   aspect: 1920 / 1280,
+  maxLogCount: 20,
 }

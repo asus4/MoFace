@@ -126,7 +126,6 @@ export default class AppFaceDetect extends EventEmitter {
   }
 
   _start() {
-    this.resizeFill(this.canvas.parentNode)
     this.canvas.width = this.overlay.width = 1920 / 4
     this.canvas.height = this.overlay.height = 1280 / 4
 
@@ -137,26 +136,6 @@ export default class AppFaceDetect extends EventEmitter {
     this.tracker.start(this.canvas)
 
     this.update()
-  }
-
-  /**
-   * 
-   * @param {Element} container
-   * @memberof AppFaceDetect
-   */
-  resizeFill(container) {
-    const fitWidth = container.clientWidth / container.clientHeight > config.aspect
-    const children = [ ...container.children]
-    children.forEach((element) => {
-      if (fitWidth) {
-        element.style.width = '100%'
-        element.style.height = 'auto'
-      } else {
-        element.style.width = 'auto'
-        element.style.height = '100%'
-      }
-    })
-
   }
 
   dispose() {

@@ -42,7 +42,7 @@ export default class AppMorph {
     this.position = new THREE.Vector2(0.5, 0.5)
     this.smoothPosition = new THREE.Vector2(0.5, 0.5)
 
-    this.autoSwicher = new AutoSwicher(11)
+    this.autoSwicher = new AutoSwicher(assets.voices.length + 1)
     this.autoSwicher.on('switch', (channel, index) => {
       if (channel === 0) {
         this.channelA = index

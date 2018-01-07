@@ -7,8 +7,12 @@
 
 const fs = require('fs')
 const exec = require('child_process').exec
-const audiosprite = require('audiosprite')
+// Customized version
+const wavAudioSprite = require('./lib/wav-audio-sprite')
 const co = require('co')
+
+
+const trimDB = -30 // in decibels
 
 function execAsync(cmd) {
   return new Promise((resolve, reject) => {
@@ -17,7 +21,7 @@ function execAsync(cmd) {
         reject(error)
       }
       else if (stderr.trim().length > 0) {
-        reject(stderr)
+        resolve(stderr)
       }
       else {
         resolve(stdout)
@@ -46,22 +50,23 @@ co(function *() {
     const fIn = in_paths[i]
     const fOut = tmp_files[i]
     yield execAsync(`sox ${fIn} ${fOut} norm -1 channels 1`)
-    yield execAsync(`ffmpeg -y -loglevel quiet -i ${fOut} -af silenceremove=0:0:0:-1:0.05:-45dB ${fOut}`)
-    console.log(`trim: ${fOut}`)
+    yield execAsync(`ffmpeg -y -loglevel quiet -i ${fOut} -af silenceremove=0:0:0:-1:0.05:${trimDB}dB ${fOut}`)
+    // console.log(`trim: ${fOut}`)
   }
 
-  const options = {
-    output: out_path,
-    export: 'wav',
-    gap: 0.05
-  }
-  audiosprite(tmp_files, options, (err, obj) => {
-    if (err) {
-      console.error(err)
-    }
-    else {
-      const result = JSON.stringify(obj, null, 2)
-      fs.writeFile(`${out_path}.json`, result)
-    }
-  })
+  wavAudioSprite(tmp_files, {padding: 0.05})
+    .then((result) => {
+      // console.log(result.timings)
+      const info = {}
+      for (const key in result.timings) {
+        const t = result.timings[key]
+        info[key] = {
+          start: t.start / result.sampleRate,
+          end: t.end / result.sampleRate,
+        }
+      }
+      fs.writeFileSync(`${out_path}.wav`, result.encoded)
+      fs.writeFileSync(`${out_path}.json`, JSON.stringify(info, null, 2))
+    })
+    .catch((e) => console.error(e))
 })

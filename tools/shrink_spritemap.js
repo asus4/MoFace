@@ -21,11 +21,6 @@ for (const path of pathes) {
       end: o.end
     }
   }
-  //   console.log(mini)
   const json = JSON.stringify(mini)
   fs.writeFileSync(path, json)
 }
-
-
-
-// cnosole.log()

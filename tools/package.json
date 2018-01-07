@@ -6,7 +6,9 @@
     "sprite": "src/make_sprite.js"
   },
   "devDependencies": {
-    "audiosprite": "^0.7.0",
-    "co": "^4.6.0"
+    "co": "^4.6.0",
+    "minimist": "^1.2.0",
+    "mkpath": "^1.0.0",
+    "node-wav": "0.0.2"
   }
 }

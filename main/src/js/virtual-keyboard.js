@@ -67,9 +67,12 @@ export default class VirtualKeyboard extends EventEmitter {
   keyboard() {
     let inputs = ''
     let mouseX = 0
+    let mouseY = 0
+    const marginY = 118
+    const marginX = 210
     window.addEventListener('mousemove', (e) => {
-      mouseX = e.pageX / window.innerWidth
-      const mouseY = e.pageY / window.innerHeight
+      mouseX = remapTrim(e.pageX, marginX, window.innerWidth - marginX, 0, 1)
+      mouseY = remapTrim( e.pageY, marginY, window.innerHeight - marginY, 0, 1)
       this.emit('fade', mouseX, 1 - mouseY)
     })
 

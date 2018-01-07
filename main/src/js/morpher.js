@@ -2,7 +2,7 @@ import 'three'
 
 import assets from './assets'
 
-const triangles = require('../data/triangles.json')
+
 
 const makePosUv = (points) => {
   const vertices = []
@@ -36,21 +36,20 @@ export default class Morpher extends THREE.Mesh {
     // const tris = Delaunay.triangulate(points[0])
 
     const geometry = new THREE.BufferGeometry()
+    geometry.setIndex(require('../data/triangles.json'))
+    // Make A/B channels
     const channels = assets.featurepoints.map((points) => {return makePosUv(points)})
     {
-      geometry.setIndex(triangles)
       geometry.addAttribute('position', channels[0].vertices)
       geometry.addAttribute('uv', channels[0].uvs)
       geometry.addAttribute('position1', channels[1].vertices)
       geometry.addAttribute('uv1', channels[1].uvs)
-
-      // Setup
-      {
-        const points = require('../data/depthpoints.json')
-        const attrs = makePosUv(points, triangles)
-        geometry.addAttribute('weightPosition', attrs.vertices)
-        geometry.addAttribute('weightUv', attrs.uvs)
-      }
+    }
+    // Make Depth map
+    {
+      const attrs = makePosUv(require('../data/depthpoints.json'))
+      geometry.addAttribute('weightPosition', attrs.vertices)
+      geometry.addAttribute('weightUv', attrs.uvs)
     }
 
     // Material
@@ -73,7 +72,7 @@ export default class Morpher extends THREE.Mesh {
     })
     super(geometry, material)
 
-    // this.weight = new Weight(geometry.getAttribute('weight'), triangles)
+
     this._fadeMap = 2
     this.channels = channels
     this.fadeMaps = fadeMaps

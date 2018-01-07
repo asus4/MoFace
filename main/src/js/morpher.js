@@ -7,8 +7,7 @@ const triangles = require('../data/triangles.json')
 const makePosUv = (points) => {
   const vertices = []
   const uvs = []
-  triangles.forEach((index) => {
-    const p = points[index]
+  points.forEach((p) => {
     vertices.push(p[0] - 0.5, -p[1] + 0.5, 0)
     uvs.push(p[0], 1 - p[1])
   })
@@ -39,6 +38,7 @@ export default class Morpher extends THREE.Mesh {
     const geometry = new THREE.BufferGeometry()
     const channels = assets.featurepoints.map((points) => {return makePosUv(points)})
     {
+      geometry.setIndex(triangles)
       geometry.addAttribute('position', channels[0].vertices)
       geometry.addAttribute('uv', channels[0].uvs)
       geometry.addAttribute('position1', channels[1].vertices)

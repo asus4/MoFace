@@ -1,5 +1,4 @@
 
-
 export default {
   voices: [], // sound buffers
   faces: [], // face images
@@ -30,6 +29,7 @@ export default {
   textures: {
     lut: null,
     depth: null,
-    morphs: []
+    circle: null,
+    morphs: [],
   }
 }

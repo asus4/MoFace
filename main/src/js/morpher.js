@@ -27,7 +27,12 @@ const toTexture = (img) => {
 const MAX_CHANNELS = 11
 
 export default class Morpher extends THREE.Mesh {
-  constructor() {
+  /**
+   * Creates an instance of Morpher.
+   * @param {THREE.WebGLRenderTarget} fadeMap 
+   * @memberof Morpher
+   */
+  constructor(fadeMap) {
     // Use Delaunay cache 
     // const tris = Delaunay.triangulate(points[0])
 
@@ -56,7 +61,7 @@ export default class Morpher extends THREE.Mesh {
         map0: {type: 't', value: faceTexes[0]},
         map1: {type: 't', value: faceTexes[1]},
         depthMap: {type: 't', value: toTexture(assets.textures.depth)},
-        ramp: {type: 't', value: fadeMaps[2]},
+        ramp: {type: 't', value: fadeMap},
         fade: {type: 'f', value: 0.5},
         look: {type: 'v2', value: new THREE.Vector2(0, 0)},
         parallax: {type: 'f', value: 0.03},
@@ -98,16 +103,6 @@ export default class Morpher extends THREE.Mesh {
 
   set wireframe(value) {
     this.material.wireframe = value
-  }
-
-  get fadeMap() {
-    return this._fadeMap
-  }
-
-  set fadeMap(value) {
-    this._fadeMap = value
-    this.material.uniforms.ramp.value = this.fadeMaps[value]
-    this.fadeMaps[value].needsUpdate = true
   }
 
   get lookX() {return this.material.uniforms.look.value.x}

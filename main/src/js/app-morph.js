@@ -18,6 +18,7 @@ import VoiceMixer from './voice-mixer'
 import config from './config'
 import {remap} from './math'
 import AutoSwicher from './auto-switcher'
+import DisplacementTexture from './displacement-texture'
 
 const simplex = new SimplexNoise()
 
@@ -33,8 +34,14 @@ export default class AppMorph {
 
     this.mixer = new VoiceMixer(assets.voices, assets.spritemaps)
 
-    this.morpher = new Morpher()
+    this.displacementTex = new DisplacementTexture(this.renderer)
+    if (config.DEV) {
+      this.scene.add(this.displacementTex.createDebugMesh())
+    }
+
+    this.morpher = new Morpher(this.displacementTex)
     this.scene.add(this.morpher)
+
 
     this.resize()
 
@@ -42,7 +49,7 @@ export default class AppMorph {
     this.position = new THREE.Vector2(0.5, 0.5)
     this.smoothPosition = new THREE.Vector2(0.5, 0.5)
 
-    this.autoSwicher = new AutoSwicher(assets.voices.length + 1)
+    this.autoSwicher = new AutoSwicher(assets.voices.length)
     this.autoSwicher.on('switch', (channel, index) => {
       if (channel === 0) {
         this.channelA = index
@@ -61,7 +68,10 @@ export default class AppMorph {
     // Scene
     const width = window.innerWidth
     const height = window.innerHeight
-    this.renderer = new THREE.WebGLRenderer({canvas: this.canvas})
+    this.renderer = new THREE.WebGLRenderer({
+      canvas: this.canvas,
+      preserveDrawingBuffer: true,
+    })
     this.renderer.setSize(width, height)
     this.camera = new THREE.OrthographicCamera(-width / 2, width / 2, height / 2, -height / 2, -10, 10)
     this.scene = new THREE.Scene()
@@ -76,6 +86,7 @@ export default class AppMorph {
 
   addFace(img, points) {
     this.morpher.addFace(img, points)
+    this.autoSwicher.channelLength = this.morpher.channels.length
   }
 
   /**
@@ -117,6 +128,7 @@ export default class AppMorph {
     this.position.x = x
     this.position.y = y
     this.autoSwicher.update(x)
+    this.displacementTex.setPosition(x, y)
   }
 
   update(now) {
@@ -131,7 +143,9 @@ export default class AppMorph {
     this.morpher.lookX = remap(this.smoothPosition.x, 0, 1, -1, 1) * direction
     this.morpher.lookY = remap(this.smoothPosition.y, 0, 1, -1, 1) * direction
 
-    // 
+
+    this.displacementTex.render()
+
     this.composer.render()
     if (this.stats) {
       this.stats.update()
@@ -171,7 +185,7 @@ export default class AppMorph {
   addGui(gui) {
     const morphs = gui.addFolder('morphs')
     morphs.add(this.morpher, 'wireframe')
-    morphs.add(this.morpher, 'fadeMap', { TypeA: 0, TypeB: 1, TypeC: 2 } )
+    morphs.add(this.displacementTex, 'fadeMap', { TypeA: 0, TypeB: 1, TypeC: 2 } )
     morphs.add(this.morpher, 'parallax', 0.0, 0.1)
 
     const members = {}
@@ -183,7 +197,7 @@ export default class AppMorph {
     morphs.add(this, 'channelA', members)
     morphs.add(this, 'channelB', members)
 
-    const effects = gui.addFolder('effects')
+    const effects = gui.addFolder('post effects')
     effects.add(this.composite, 'blend', 0, 1)
   }
 
@@ -198,7 +212,5 @@ export default class AppMorph {
     this._channelB = value
   }
 
-
 }
-
 

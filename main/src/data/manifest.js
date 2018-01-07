@@ -32,6 +32,7 @@ const manifest = [
   {id: 'morph0', src: './textures/morph0.png', weight: 1},
   {id: 'morph1', src: './textures/morph1.png', weight: 1},
   {id: 'morph2', src: './textures/morph2.png', weight: 1},
+  {id: 'circle', src: './textures/circle.png', weight: 1},
 
   // JS
   {src: 'clmtrackr.min.js', weight: 1},

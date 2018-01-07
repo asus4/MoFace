@@ -21,10 +21,7 @@ const config = {
         exclude: /node_modules|web_modules/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: ['env'],
-            plugins: ['dynamic-import-webpack']
-          }
+          options: {presets: ['env']}
         }
       },
       {test: /\.json$/, loader: 'json-loader'},

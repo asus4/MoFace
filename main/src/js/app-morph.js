@@ -70,7 +70,6 @@ export default class AppMorph {
     const height = window.innerHeight
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
-      preserveDrawingBuffer: true,
     })
     this.renderer.setSize(width, height)
     this.camera = new THREE.OrthographicCamera(-width / 2, width / 2, height / 2, -height / 2, -10, 10)

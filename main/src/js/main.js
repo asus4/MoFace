@@ -102,14 +102,14 @@ export default function() {
       // SNS
       shareFacebookClick() {
         ShareUtil.facebook({
-          app_id: '12345678',
-          href: 'https://invisi.jp/'
+          app_id: '143390209704075',
+          href: 'https://invisi.jp/moface/'
         })
       },
       shareTwitterClick() {
         ShareUtil.twitter({
-          text: '新年のあいさつ',
-          url: 'https://invisi.jp/',
+          text: 'なにかメッセージ',
+          url: 'https://invisi.jp/moface/',
           hashtags: 'MoFace'
         })
       },

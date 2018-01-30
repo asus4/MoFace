@@ -34,17 +34,11 @@ export default class AppMorph {
 
     this.mixer = new VoiceMixer(assets.voices, assets.spritemaps)
 
-    this.displacementTex = new DisplacementTexture(this.renderer)
-    if (config.DEV) {
-      this.scene.add(this.displacementTex.createDebugMesh())
-    }
 
     this.morpher = new Morpher(this.displacementTex)
     this.scene.add(this.morpher)
 
-
     this.resize()
-
 
     this.position = new THREE.Vector2(0.5, 0.5)
     this.smoothPosition = new THREE.Vector2(0.5, 0.5)
@@ -75,10 +69,19 @@ export default class AppMorph {
     this.camera = new THREE.OrthographicCamera(-width / 2, width / 2, height / 2, -height / 2, -10, 10)
     this.scene = new THREE.Scene()
 
+    // Displacement texture
+    this.displacementTex = new DisplacementTexture(this.renderer)
+    if (config.DEV && false) {
+      const devMesh = this.displacementTex.createDebugMesh()
+      devMesh.scale.set(256, 128, 1)
+      devMesh.position.set(0, 0, 10)
+      this.scene.add(devMesh)
+    }
+
     // Post effects
     this.composer = new THREE.EffectComposer(this.renderer)
     this.composer.addPass(new THREE.RenderPass(this.scene, this.camera))
-    this.composite = new CompositePass()
+    this.composite = new CompositePass(this.displacementTex)
     this.composer.addPass(this.composite)
     this.composer.passes[this.composer.passes.length - 1].renderToScreen = true
   }
@@ -127,7 +130,7 @@ export default class AppMorph {
     this.position.x = x
     this.position.y = y
     this.autoSwicher.update(x)
-    this.displacementTex.setPosition(x, y)
+    this.displacementTex.updatePosition(x, y)
   }
 
   update(now) {
@@ -135,14 +138,14 @@ export default class AppMorph {
       this.position.x = simplex.noise2D(now * 0.0014, 0.15) + 0.5
       this.position.y = simplex.noise2D(now * 0.001, 0.7) + 0.5
     }
-    // position update
+    // Update position
     this.smoothPosition.lerp(this.position, 0.3)
     this.mixer.fade = this.morpher.fade = this.smoothPosition.x
     const direction = config.mobile ? -1 : 1 // invert look angle on mobile
     this.morpher.lookX = remap(this.smoothPosition.x, 0, 1, -1, 1) * direction
     this.morpher.lookY = remap(this.smoothPosition.y, 0, 1, -1, 1) * direction
 
-
+    // Render displacement texture
     this.displacementTex.render()
 
     this.composer.render()
@@ -174,6 +177,8 @@ export default class AppMorph {
     } else {
       this.morpher.scale.set(width, width / config.aspect, 1)
     }
+
+    this.composite.resolution = new THREE.Vector2(width, height)
   }
 
   /**
@@ -182,22 +187,30 @@ export default class AppMorph {
    * @memberof View
    */
   addGui(gui) {
-    const morphs = gui.addFolder('morphs')
-    morphs.add(this.morpher, 'wireframe')
-    morphs.add(this.displacementTex, 'fadeMap', { TypeA: 0, TypeB: 1, TypeC: 2 } )
-    morphs.add(this.morpher, 'parallax', 0.0, 0.1)
+    // Folder Morphs    
+    {
+      const folder = gui.addFolder('Morphs')
+      folder.add(this.morpher, 'wireframe')
+      folder.add(this.morpher, 'parallax', 0.0, 0.1)
 
-    const members = {}
-    const names = ['iwata', 'kikuchi', 'kiyokawa', 'kogawa', 'matsuo', 'nakamura', 'noda', 'onodera', 'otabe', 'takaki', 'user']
-    names.forEach((member, index) => {
-      members[member] = index
-    })
+      const members = {}
+      const names = ['iwata', 'kikuchi', 'kiyokawa', 'kogawa', 'matsuo', 'nakamura', 'noda', 'onodera', 'otabe', 'takaki', 'user']
+      names.forEach((member, index) => {
+        members[member] = index
+      })
 
-    morphs.add(this, 'channelA', members)
-    morphs.add(this, 'channelB', members)
+      folder.add(this, 'channelA', members)
+      folder.add(this, 'channelB', members)
+    }
 
-    const effects = gui.addFolder('post effects')
-    effects.add(this.composite, 'blend', 0, 1)
+    // Folder Post Effect
+    {
+      const folder = gui.addFolder('Post Effects')
+      folder.add(this.composite, 'blend', 0, 1)
+      folder.add(this.displacementTex, 'learningRate', 0, 1)
+      folder.add(this.displacementTex, 'maskSize', 0, 1)
+      folder.add(this.displacementTex, 'fillRate', 0, 1)
+    }
   }
 
   get channelA() {return this._channelA}

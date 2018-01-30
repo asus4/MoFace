@@ -35,10 +35,7 @@ if (!Modernizr.webaudio && !Modernizr.webgl) {
         .map((m) => {return queue.getResult(m.src)})
       assets.textures.lut = queue.getResult('lut')
       assets.textures.depth = queue.getResult('depth')
-      assets.textures.circle = queue.getResult('circle')
-      assets.textures.morphs = manifest
-        .filter((m) => {return m.id.startsWith('morph')})
-        .map((m) => {return queue.getResult(m.src)})
+      // assets.textures.circle = queue.getResult('circle')
 
       main()
 

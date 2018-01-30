@@ -30,6 +30,5 @@ export default {
     lut: null,
     depth: null,
     circle: null,
-    morphs: [],
   }
 }

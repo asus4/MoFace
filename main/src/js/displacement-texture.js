@@ -1,10 +1,3 @@
-import assets from './assets'
-
-const toTexture = (img) => {
-  const tex = new THREE.Texture(img, THREE.UVMapping, THREE.RepeatWrapping, THREE.RepeatWrapping)
-  tex.needsUpdate = true
-  return tex
-}
 
 export default class DisplacementTexture extends THREE.WebGLRenderTarget {
   /**
@@ -13,75 +6,90 @@ export default class DisplacementTexture extends THREE.WebGLRenderTarget {
    * @memberof DisplacementTexture
    */
   constructor(renderer) {
-    super(512, 512, {depthBuffer: false, stencilBuffer: false})
-
-    this.prev = new THREE.WebGLRenderTarget(512, 512, {depthBuffer: false, stencilBuffer: false})
+    super(512, 512, { depthBuffer: false, stencilBuffer: false })
 
     this.scene = new THREE.Scene()
     this.camera = new THREE.OrthographicCamera(0, 1, 1, 0, -10, 10)
     this.renderer = renderer
 
-    this._fadeMap = 2
-    this.fadeMaps = assets.textures.morphs.map(toTexture)
+    // Background
+    {
+      const geometry = new THREE.PlaneGeometry(1, 1, 1, 1)
+      this.bgMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+          alpha: { type: 'f', value: 0.085 },
+        },
+        vertexShader: require('../shaders/basic-transform.vert'),
+        fragmentShader: require('../shaders/displacement-background.frag'),
+        transparent: true,
+      })
+      const background = new THREE.Mesh(geometry, this.bgMaterial)
+      background.position.set(0.5, 0.5, 0)
+      this.scene.add(background)
+    }
+    // Foreground
+    {
+      const geometry = new THREE.PlaneGeometry(1, 1, 1, 1)
+      this.material = new THREE.ShaderMaterial({
+        uniforms: {
+          learningRate: { type: 'f', value: 0.05 },
+        },
+        vertexShader: require('../shaders/basic-transform.vert'),
+        fragmentShader: require('../shaders/displacement.frag'),
+        transparent: true,
+      })
+      this.foreground = new THREE.Mesh(geometry, this.material)
+      this.foreground.position.set(0.5, 0.5, 0)
+      this.foreground.scale.set(0.4, 0.4, 1)
+      this.scene.add(this.foreground)
+    }
 
-    const geometry = new THREE.PlaneGeometry(1, 1, 1, 1)
-    this.material = new THREE.ShaderMaterial({
-      uniforms: {
-        map: {type: 't', value: this.fadeMaps[this._fadeMap]},
-        // map: {type: 't', value: this.prev.texture},
-      },
-      vertexShader: require('../shaders/basic-transform.vert'),
-      fragmentShader: require('../shaders/displacement.frag'),
-      transparent: true,
-    })
-    const background = new THREE.Mesh(geometry, this.material)
-    background.position.set(0.5, 0.5, 0)
-    this.scene.add(background)
-    //
-
-    // circle
-    // this.circle = new THREE.Mesh(geometry,
-    //   new THREE.MeshBasicMaterial({
-    //     map: toTexture(assets.textures.circle),
-    //     transparent: true,
-    //   })
-    // )
-    // this.circle.position.set(0.5, 0.5, 1.0)
-    // this.scene.add(this.circle)
-  }
-
-  setPosition(x, y) {
-    // this.circle.position.set(x, y, 0)
   }
 
   render() {
-    this.render.autoClear = false
-    this.renderer.render(this.scene, this.camera, this, true)
-    this.render.autoClear = true
+    this.renderer.autoClear = false
+    this.renderer.render(this.scene, this.camera, this, false)
+    this.renderer.autoClear = true
   }
 
   createDebugMesh() {
     const geometry = new THREE.PlaneGeometry(1, 1, 1, 1)
     const material = new THREE.ShaderMaterial({
       uniforms: {
-        map: {tyep: 't', value: this.texture},
+        map: { tyep: 't', value: this.texture },
       },
       vertexShader: require('../shaders/basic-transform.vert'),
       fragmentShader: require('../shaders/displacement-debug.frag'),
     })
     const mesh = new THREE.Mesh(geometry, material)
-    mesh.position.set(0, 0, 1)
-    mesh.scale.set(200, 100, 1)
     return mesh
   }
 
-  get fadeMap() {
-    return this._fadeMap
+  updatePosition(x, y) {
+    this.foreground.position.set(x, y, 0)
   }
 
-  set fadeMap(value) {
-    this._fadeMap = value
-    this.material.uniforms.map.value = this.fadeMaps[value]
-    this.fadeMaps[value].needsUpdate = true
+  get learningRate() {
+    return this.material.uniforms.learningRate.value
+  }
+
+  set learningRate(value) {
+    this.material.uniforms.learningRate.value = value
+  }
+
+  get maskSize() {
+    return this.foreground.scale.x
+  }
+
+  set maskSize(value) {
+    this.foreground.scale.set(value, value, 1.0)
+  }
+
+  get fillRate() {
+    return this.bgMaterial.uniforms.alpha.value
+  }
+
+  set fillRate(value) {
+    this.bgMaterial.uniforms.alpha.value = value
   }
 }

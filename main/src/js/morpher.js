@@ -3,7 +3,6 @@ import 'three'
 import assets from './assets'
 
 
-
 const makePosUv = (points) => {
   const vertices = []
   const uvs = []
@@ -33,8 +32,6 @@ export default class Morpher extends THREE.Mesh {
    */
   constructor(fadeMap) {
     // Use Delaunay cache 
-    // const tris = Delaunay.triangulate(points[0])
-
     const geometry = new THREE.BufferGeometry()
     geometry.setIndex(require('../data/triangles.json'))
     // Make A/B channels
@@ -54,7 +51,7 @@ export default class Morpher extends THREE.Mesh {
 
     // Material
     const faceTexes = assets.faces.map(toTexture)
-    const fadeMaps = assets.textures.morphs.map(toTexture)
+    // const fadeMaps = assets.textures.morphs.map(toTexture)
     const material = new THREE.ShaderMaterial({
       uniforms: {
         map0: {type: 't', value: faceTexes[0]},
@@ -72,10 +69,7 @@ export default class Morpher extends THREE.Mesh {
     })
     super(geometry, material)
 
-
-    this._fadeMap = 2
     this.channels = channels
-    this.fadeMaps = fadeMaps
     this.faceTextures = faceTexes
   }
 

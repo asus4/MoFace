@@ -3,12 +3,14 @@ import Stats from 'stats.js'
 import 'three'
 import DisplacementTexture from './displacement-texture'
 
+//#region Variables
 const stats = new Stats()
 const renderer = new THREE.WebGLRenderer({canvas: document.querySelector('#main .webgl')})
 const camera = new THREE.OrthographicCamera(0, 1, 1, 0, -10, 10)
 const scene = new THREE.Scene()
 const displacementTexture = new DisplacementTexture(renderer)
 let background = null
+//#endregion Variables
 
 const setup = () => {
   const loader = new THREE.TextureLoader()
@@ -49,6 +51,8 @@ const setup = () => {
   const gui = new dat.GUI()
   gui.add(displacementTexture, 'fadeMap', {A: 0, B: 1, C: 2})
   gui.add(displacementTexture, 'learningRate', 0.0, 1.0)
+  gui.add(displacementTexture, 'maskSize', 0.0, 1.0)
+  gui.add(displacementTexture, 'fillRate', 0.0, 1.0)
 
   requestAnimationFrame(update)
 }

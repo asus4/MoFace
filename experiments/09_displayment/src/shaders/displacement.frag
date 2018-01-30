@@ -1,11 +1,24 @@
+precision mediump float;
+
+const float PI = 3.1415926535897932384626433832795;
+const float PI_2 = 1.57079632679489661923;
+
+
 uniform sampler2D map;
 uniform float learningRate;
 
 varying vec2 vUv;
 
+float sqrMagnitude(vec2 a, vec2 b) {
+  vec2 v = vec2(a.x - b.x, a.y - b.y);
+  return (v.x * v.x + v.y * v.y) * 4.0;
+}
+
 void main() {
-  vec4 c0 = texture2D(map, vUv);
-  c0.a = learningRate;
-  vec4 c1 = vec4(vUv.x, vUv.y, 0.5, 1.0);
-  gl_FragColor = mix(c0, c1, learningRate);
+  float d = 1.0 - sqrMagnitude(vec2(0.5, 0.5), vUv);
+  gl_FragColor = vec4(
+    vUv.x,
+    vUv.y,
+    0.5 - sin(d * PI) * 0.5,
+    d * learningRate);
 }

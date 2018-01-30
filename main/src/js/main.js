@@ -35,6 +35,7 @@ export default function() {
     ime: new KanaIME(),
     keyboard: new VirtualKeyboard(),
     stats,
+    // TODO load from url encoding
     inputLogs: ['あけまして', 'おめでとう', 'ございます'],
   }
 

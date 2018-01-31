@@ -1,5 +1,6 @@
 const EventEmitter = require('events').EventEmitter
 import KEYMAP from './roma-ji'
+import config from './config'
 
 const KANA = new RegExp(/[\u30a1-\u30f6]/, 'g')
 const HIRA = new RegExp(/[\u3041-\u3096]/, 'g')
@@ -78,8 +79,10 @@ export default class KanaIME  extends EventEmitter {
   }
 
   onInput(event) {
-    const t = event.target
-    t.value = convert(t.value)
+    if (!config.mobile) {
+      const t = event.target
+      t.value = convert(t.value)
+    }
   }
 
   onChange(event) {

@@ -14,7 +14,6 @@ const manifest = [
   {id: 'voice-takaki', src: './members/takaki.mp3', type: TYPE_AUDIO, weight: 3},
 
   // Images
-  // TODO: Might be better to use smaller image on mobile
   {id: 'face-iwata', src: './members/iwata.jpg', weight: 1},
   {id: 'face-kikuchi', src: './members/kikuchi.jpg', weight: 1},
   {id: 'face-kiyokawa', src: './members/kiyokawa.jpg', weight: 1},

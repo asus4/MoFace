@@ -22,6 +22,10 @@ if (!Modernizr.webaudio && !Modernizr.webgl) {
   // import('./main').then((res) => {
   require.ensure([], () => {
     const main = require('./js/main').default
+    const Tone = require('tone')
+    const StartAudioContext = require('startaudiocontext')
+    const config = require('./js/config')
+
 
     const start = () => {
       // set assets
@@ -37,7 +41,15 @@ if (!Modernizr.webaudio && !Modernizr.webgl) {
       assets.textures.depth = queue.getResult('depth')
       // assets.textures.circle = queue.getResult('circle')
 
-      main()
+      console.log(config.mobile)
+      if (config.mobile !== undefined) {
+        // Unlock Web Audio security on iOS 
+        StartAudioContext(Tone.context, loadingBar.background).then(() => {
+          main()
+        })
+      } else {
+        main()
+      }
 
       loadingBar.finish()
       preloader.dispose()

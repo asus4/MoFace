@@ -54,7 +54,7 @@ export default class VirtualKeyboard extends EventEmitter {
       window.addEventListener('devicemotion', (e) => {
         this.accX = remapTrim(e.accelerationIncludingGravity.x, -6, 6, 0, 1)
         const accY = remapTrim(e.accelerationIncludingGravity.y, -6, 6, 0, 1)
-        this.emit('fade', this.accX, accY)
+        this.emit('fade', this.accX, accY, false)
       }, false)
     }
     this.lastVoice = ''
@@ -73,7 +73,7 @@ export default class VirtualKeyboard extends EventEmitter {
     window.addEventListener('mousemove', (e) => {
       mouseX = remapTrim(e.pageX, marginX, window.innerWidth - marginX, 0, 1)
       mouseY = remapTrim( e.pageY, marginY, window.innerHeight - marginY, 0, 1)
-      this.emit('fade', mouseX, 1 - mouseY)
+      this.emit('fade', mouseX, 1 - mouseY, true)
     })
 
     const checkKey = (keyCode) => {
@@ -114,6 +114,8 @@ export default class VirtualKeyboard extends EventEmitter {
     const p = [(touch.clientX - rect.left) / rect.width, (touch.clientY - rect.top) / rect.height]
     const y = Math.floor(p[1] * SCREENMAP.length)
     const x = Math.floor(p[0] * SCREENMAP[y].length)
+
+    this.emit('fade', p[0], 1 - p[1], true)
 
     const voice = SCREENMAP[y][x]
     if (force || this.lastVoice != voice) {

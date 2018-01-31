@@ -125,12 +125,14 @@ export default class AppMorph {
    * @param {Number} y 
    * @memberof AppMorph
    */
-  setPosition(x, y) {
+  setPosition(x, y, needTextureUpdate) {
     // console.log(x, y)
     this.position.x = x
     this.position.y = y
     this.autoSwicher.update(x)
-    this.displacementTex.updatePosition(x, y)
+    if (needTextureUpdate) {
+      this.displacementTex.updatePosition(x, y)
+    }
   }
 
   update(now) {

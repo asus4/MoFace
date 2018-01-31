@@ -68,8 +68,8 @@ export default function() {
           store.morph.say(input, pan)
         }
       })
-      store.keyboard.on('fade', (x, y) => {
-        store.morph.setPosition(x, y)
+      store.keyboard.on('fade', (x, y, needTextureUpdate) => {
+        store.morph.setPosition(x, y, needTextureUpdate)
       })
       store.ime.on('change', (text) => {
         store.inputLogs.push(text)
@@ -109,7 +109,7 @@ export default function() {
       },
       shareTwitterClick() {
         ShareUtil.twitter({
-          text: 'なにかメッセージ',
+          text: 'MoFace',
           url: 'https://invisi.jp/moface/',
           hashtags: 'MoFace'
         })

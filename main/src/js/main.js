@@ -36,7 +36,7 @@ export default function() {
     keyboard: new VirtualKeyboard(),
     stats,
     // TODO load from url encoding
-    inputLogs: ['あけまして', 'おめでとう', 'ございます'],
+    inputLogs: ['われわれは', 'どこからきて', 'どこへむかうのか'],
   }
 
   const update = (now) => {

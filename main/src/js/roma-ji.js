@@ -149,8 +149,8 @@ export default {
   ryu: 'りゅ',
   ryo: 'りょ',
 
+  // https://ja.wikipedia.org/wiki/%E6%8B%97%E9%9F%B3
   isYoon: (c) => {
-    // if(c === 'ゃ' || c === 'ゅ' || c )
     switch (c) {
       case 'ゃ':
       case 'ゅ':

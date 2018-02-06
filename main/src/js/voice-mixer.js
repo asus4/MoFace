@@ -33,9 +33,13 @@ export default class VoiceMixer {
     this.crossFade.fade.value = mix
     playDatas.forEach((data, index) => {
       const playbackRate = data.info.duration / targetDuration
-      const source = new Tone.BufferSource({
+      let source = new Tone.BufferSource({
         buffer: data.buffer,
-        playbackRate
+        playbackRate,
+        onended: () => {
+          source.dispose()
+          source = null
+        }
       })
       source.connect(this.crossFade, 0, index)
       source.start(Tone.context.currentTime + 0.01, data.info.start, data.info.duration / playbackRate)

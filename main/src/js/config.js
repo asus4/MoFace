@@ -15,7 +15,7 @@ const md = new MobileDetect(navigator.userAgent)
 
 export default {
   DEV: process.env.NODE_ENV === 'development',
-  // DEV: false,
+  // DEV: true,
   mobile: md.mobile(),
   aspect: 1920 / 1280,
   maxLogCount: 20,

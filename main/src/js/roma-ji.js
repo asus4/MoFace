@@ -148,5 +148,16 @@ export default {
   rya: 'りゃ',
   ryu: 'りゅ',
   ryo: 'りょ',
+
+  isYoon: (c) => {
+    // if(c === 'ゃ' || c === 'ゅ' || c )
+    switch (c) {
+      case 'ゃ':
+      case 'ゅ':
+      case 'ょ':
+        return true
+    }
+    return false
+  },
 }
 

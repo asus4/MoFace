@@ -19,8 +19,12 @@ import config from './config'
 import {remap} from './math'
 import AutoSwicher from './auto-switcher'
 import DisplacementTexture from './displacement-texture'
+import RomaJi from './roma-ji'
 
 const simplex = new SimplexNoise()
+
+
+
 
 export default class AppMorph {
   /**
@@ -100,22 +104,39 @@ export default class AppMorph {
     this.mixer.play(character, pan)
   }
 
-  /**
+  /** Speak words
    * @param {[String]} words 
    * @memberof AppMorph
    */
   async conversation(words, delay = 0) {
     await setTimeoutAsync(delay)
     this.autoPan = true
+
     let count = Math.round(Math.random())
     for (const word of words) {
+      let c = ''
       for (const character of word) {
-        await setTimeoutAsync(200)
+        if (c.length === 0) {
+          c = character
+          continue
+        }
+        if (RomaJi.isYoon(character)) {
+          this.say(c + character, count % 2)
+          c = ''
+        } else {
+          this.say(c, count % 2)
+          c = character
+        }
         this.setPosition(count % 2, Math.random())
-        this.say(character, count % 2)
         count++
+        await setTimeoutAsync(200)
       }
-      await setTimeoutAsync(500)
+      if (c.length > 0) {
+        this.setPosition(count % 2, Math.random())
+        this.say(c, count % 2)
+      }
+      // Wait a little in word
+      await setTimeoutAsync(300)
     }
     this.autoPan = false
   }

@@ -41,7 +41,6 @@ if (!Modernizr.webaudio && !Modernizr.webgl) {
       assets.textures.depth = queue.getResult('depth')
       // assets.textures.circle = queue.getResult('circle')
 
-      console.log(config.mobile)
       if (config.mobile !== undefined) {
         // Unlock Web Audio security on iOS 
         StartAudioContext(Tone.context, loadingBar.background).then(() => {

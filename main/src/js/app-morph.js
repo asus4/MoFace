@@ -38,7 +38,6 @@ export default class AppMorph {
 
     this.mixer = new VoiceMixer(assets.voices, assets.spritemaps)
 
-
     this.morpher = new Morpher(this.displacementTex)
     this.scene.add(this.morpher)
 
@@ -131,6 +130,7 @@ export default class AppMorph {
         count++
         await setTimeoutAsync(200)
       }
+      // Say the final character
       if (c.length > 0) {
         this.setPosition(count % 2, Math.random())
         this.say(c, count % 2)
@@ -228,23 +228,23 @@ export default class AppMorph {
 
     // Folder Post Effect
     {
-      const folder = gui.addFolder('Post Effects')
+      const folder = gui.addFolder('Visual Effects')
       folder.add(this.composite, 'blend', 0, 1)
       folder.add(this.displacementTex, 'learningRate', 0, 1)
       folder.add(this.displacementTex, 'maskSize', 0, 1)
       folder.add(this.displacementTex, 'fillRate', 0, 1)
     }
+
+    this.mixer.addGui(gui.addFolder('Sound Effects'))
   }
 
-  get channelA() {return this._channelA}
+  get channelA() {return this.mixer.channelA}
   set channelA(value) {
     this.morpher.channelA = this.mixer.channelA = value
-    this._channelA = value
   }
-  get channelB() {return this._channelB}
+  get channelB() {return this.mixer.channelB}
   set channelB(value) {
     this.morpher.channelB = this.mixer.channelB = value
-    this._channelB = value
   }
 
 }

@@ -13,8 +13,17 @@ export default class VoiceMixer {
     this.infos = infos
     this.buffers = buffers
 
+    // Effect chain
+    this.delay = new Tone.FeedbackDelay('8n', 0.6)
+    this.reverb = new Tone.Freeverb(0.76, 1000)
+    // A-B track
     this.crossFade = new Tone.CrossFade()
-    this.crossFade.toMaster()
+
+    // Connect 
+    this.crossFade.connect(this.delay)
+    this.delay.connect(this.reverb)
+    this.reverb.toMaster()
+
 
     this._channelA = 0
     this._channelB = 0
@@ -75,5 +84,23 @@ export default class VoiceMixer {
       // console.warn(`channelB: ${value} is out of range`)
     }
   }
+
+  // Effects
+  get reverbWet () {return this.reverb.wet.value}
+  set reverbWet(value) {this.reverb.wet.value = value}
+
+  get delayWet () {return this.delay.wet.value}
+  set delayWet(value) {this.delay.wet.value = value}
+
+
+  // Effects
+  addGui(gui) {
+    gui.add(this, 'reverbWet', 0, 1).name('reverb wet')
+    gui.add(this.reverb.roomSize, 'value', 0, 1).name('reverb room-size')
+
+    gui.add(this, 'delayWet', 0, 1).name('delay wet')
+    gui.add(this.delay.feedback, 'value', 0, 1).name('delay feedback')
+  }
+
 
 }

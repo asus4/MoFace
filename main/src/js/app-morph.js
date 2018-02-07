@@ -10,13 +10,15 @@ import 'three/examples/js/postprocessing/RenderPass'
 
 import SimplexNoise from 'simplex-noise'
 
+import easeQuadOut from 'eases/quad-out'
+
 import assets from './assets'
 import {setTimeoutAsync} from './async'
 import CompositePass from './composite-pass'
 import Morpher from './morpher'
 import VoiceMixer from './voice-mixer'
 import config from './config'
-import {remap} from './math'
+import {remap, lerp} from './math'
 import AutoSwicher from './auto-switcher'
 import DisplacementTexture from './displacement-texture'
 import RomaJi from './roma-ji'
@@ -57,8 +59,10 @@ export default class AppMorph {
 
     this.channelA = this.autoSwicher.nextChannel()
     this.channelB = this.autoSwicher.nextChannel()
-
     this.autoPan = false
+
+    this._effectAmount = 1
+    this._effectDecay = 1.5
   }
 
   initScene() {
@@ -100,6 +104,7 @@ export default class AppMorph {
    * @memberof AppMorph
    */
   say(character, pan) {
+    this.effectAmount = 1
     this.mixer.play(character, pan)
   }
 
@@ -156,10 +161,15 @@ export default class AppMorph {
     }
   }
 
-  update(now) {
+  /**
+   * @param {number} time from start in seconds
+   * @param {number} frame delta time in seconds
+   * @memberof AppMorph
+   */
+  update(time, deltaTime) {
     if (this.autoPan) {
-      this.position.x = simplex.noise2D(now * 0.0014, 0.15) + 0.5
-      this.position.y = simplex.noise2D(now * 0.001, 0.7) + 0.5
+      this.position.x = simplex.noise2D(time * 1.4, 0.15) + 0.5
+      this.position.y = simplex.noise2D(time * 1, 0.7) + 0.5
     }
     // Update position
     this.smoothPosition.lerp(this.position, 0.3)
@@ -167,6 +177,11 @@ export default class AppMorph {
     const direction = config.mobile ? -1 : 1 // invert look angle on mobile
     this.morpher.lookX = remap(this.smoothPosition.x, 0, 1, -1, 1) * direction
     this.morpher.lookY = remap(this.smoothPosition.y, 0, 1, -1, 1) * direction
+
+    // Update effect amount
+    if (this.effectAmount > 0.05) {
+      this.effectAmount = lerp(this.effectAmount, 0,  deltaTime / this._effectDecay)
+    }
 
     // Render displacement texture
     this.displacementTex.render()
@@ -210,7 +225,7 @@ export default class AppMorph {
    * @memberof View
    */
   addGui(gui) {
-    // Folder Morphs    
+    // Folder Morphs
     {
       const folder = gui.addFolder('Morphs')
       folder.add(this.morpher, 'wireframe')
@@ -225,6 +240,8 @@ export default class AppMorph {
       folder.add(this, 'channelA', members)
       folder.add(this, 'channelB', members)
     }
+
+    gui.add(this, '_effectDecay', 0, 4).name('effect decay time')
 
     // Folder Post Effect
     {
@@ -245,6 +262,14 @@ export default class AppMorph {
   get channelB() {return this.mixer.channelB}
   set channelB(value) {
     this.morpher.channelB = this.mixer.channelB = value
+  }
+  get effectAmount() {return this._effectAmount}
+  set effectAmount(value) {
+    this._effectAmount = value
+    const value2 = easeQuadOut(value) // get eased value
+    this.mixer.effectAmount = lerp(0, 1, value)
+    this.displacementTex.learningRate = lerp(0, 0.04, value2)
+    this.displacementTex.fillRate = lerp(0.5, 0.085, value2)
   }
 
 }

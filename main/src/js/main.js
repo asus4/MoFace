@@ -39,12 +39,15 @@ export default function() {
     inputLogs: ['われわれは', 'どこからきて', 'どこへむかうのか'],
   }
 
+  let lastTime = 0
   const update = (now) => {
     if (store.pause) {
+      lastTime = now
       return
     }
     requestAnimationFrame(update)
-    store.morph.update(now)
+    store.morph.update(now / 1000, (now - lastTime) / 1000)
+    lastTime = now
   }
 
   new Vue({

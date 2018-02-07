@@ -14,7 +14,7 @@ export default class VoiceMixer {
     this.buffers = buffers
 
     // Effect chain
-    this.delay = new Tone.FeedbackDelay('8n', 0.6)
+    this.delay = new Tone.FeedbackDelay('8n', 0.5)
     this.reverb = new Tone.Freeverb(0.76, 1000)
     // A-B track
     this.crossFade = new Tone.CrossFade()
@@ -27,9 +27,14 @@ export default class VoiceMixer {
 
     this._channelA = 0
     this._channelB = 0
+    this._effectAmount = 1.0
   }
 
   play(key, mix) {
+    this.reverbWet = mix
+    this.delayWet = 1.0 - mix
+
+
     // error check
     const playDatas = [
       this.getPlayData(this.channelA, key),
@@ -86,15 +91,24 @@ export default class VoiceMixer {
   }
 
   // Effects
+  get effectAmount() {return this._effectAmount}
+  set effectAmount(value) {this._effectAmount = value}
+
   get reverbWet () {return this.reverb.wet.value}
-  set reverbWet(value) {this.reverb.wet.value = value}
+  set reverbWet(value) {
+    this.reverb.wet.value = value * this._effectAmount
+  }
 
   get delayWet () {return this.delay.wet.value}
-  set delayWet(value) {this.delay.wet.value = value}
+  set delayWet(value) {
+    this.delay.wet.value = value * this._effectAmount
+  }
 
 
   // Effects
   addGui(gui) {
+    gui.add(this, 'effectAmount', 0, 1).name('effect amount')
+
     gui.add(this, 'reverbWet', 0, 1).name('reverb wet')
     gui.add(this.reverb.roomSize, 'value', 0, 1).name('reverb room-size')
 

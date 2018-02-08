@@ -1,0 +1,8 @@
+# netlify configuration
+# See following link for more information
+# https://www.netlify.com/docs/continuous-deployment/#deploy-contexts
+
+[build]
+base = "main"
+publish = "public"
+command = "./build.sh"

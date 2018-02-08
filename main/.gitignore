@@ -7,3 +7,4 @@ public/*.map
 public/*.gz
 MoFace.zip
 
+!public/clmtrackr.min.js

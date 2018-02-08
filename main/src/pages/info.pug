@@ -28,17 +28,20 @@
 
       
       .columns
+        //- webカメラでの体験方法
         .column.webcam
           .icon.icon-webcam
           p.description webカメラでの体験方法
           .vline
           .screenshot
+            img(v-bind:src="'images/' + (isMobile ? 'sp' : 'pc') + '/howto/1.svg'")
           p.description TOPページで 
             br
             | ADD YOURSELFを選択
           .vline
           .screenshot
-          p.description From in-cam
+            img(v-bind:src="'images/' + (isMobile ? 'sp' : 'pc') + '/howto/c2.svg'")
+          p.description {{isMobile ? 'From in-cam' : 'From WebCam'}}
             br
             | を選択
           .vline
@@ -46,35 +49,39 @@
           p.description カメラの使用を許可
           .vline
           .screenshot
+            img(v-bind:src="'images/' + (isMobile ? 'sp' : 'pc') + '/howto/c4.svg'")
           p.description 表示されたガイドに顔を合わせる
           .vline
-          .screenshot
           p.description 認識されると体験開始
 
+        //- 既存の画像での体験方法
         .column.cameraroll
           .icon.icon-photo
           p.description 既存の画像での体験方法
           .vline
           .screenshot
+            img(v-bind:src="'images/' + (isMobile ? 'sp' : 'pc') + '/howto/1.svg'")
           p.description TOPページで 
             br
             | ADD YOURSELFを選択
           .vline
           .screenshot
+            img(v-bind:src="'images/' + (isMobile ? 'sp' : 'pc') + '/howto/p2.svg'")
           p.description From Photo
             br
             | を選択
           .vline
           .screenshot
+            img(v-bind:src="'images/' + (isMobile ? 'sp' : 'pc') + '/howto/p3.svg'")
           p.description 画像の準備
           .vline
           .screenshot
+            img(v-bind:src="'images/' + (isMobile ? 'sp' : 'pc') + '/howto/p4.svg'")
           p.description 画像ファイルを
             br
             | クリックして選択
           .vline
-          .screenshot
-          p.description 顔認識位置を確認して、OKをクリック体験開始
+          p.description 顔認識されると体験開始
     
     hr.mini
     section#credit

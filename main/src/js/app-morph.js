@@ -8,9 +8,9 @@ import 'three/examples/js/postprocessing/EffectComposer'
 import 'three/examples/js/postprocessing/ShaderPass'
 import 'three/examples/js/postprocessing/RenderPass'
 
-import SimplexNoise from 'simplex-noise'
-
 import easeQuadOut from 'eases/quad-out'
+import SimplexNoise from 'simplex-noise'
+import BezierEasing from 'bezier-easing'
 
 import assets from './assets'
 import {setTimeoutAsync} from './async'
@@ -24,9 +24,8 @@ import DisplacementTexture from './displacement-texture'
 import RomaJi from './roma-ji'
 
 const simplex = new SimplexNoise()
-
-
-
+// const fadeEase = BezierEasing(0.1, 0.5, 0.9, 0.5)
+const fadeEase = BezierEasing(0.2, 0.7, 0.8, 0.3)
 
 export default class AppMorph {
   /**
@@ -161,7 +160,7 @@ export default class AppMorph {
     }
   }
 
-  /**
+  /** Update every frame
    * @param {number} time from start in seconds
    * @param {number} frame delta time in seconds
    * @memberof AppMorph
@@ -171,9 +170,10 @@ export default class AppMorph {
       this.position.x = simplex.noise2D(time * 1.4, 0.15) + 0.5
       this.position.y = simplex.noise2D(time * 1, 0.7) + 0.5
     }
+
     // Update position
     this.smoothPosition.lerp(this.position, 0.3)
-    this.mixer.fade = this.morpher.fade = this.smoothPosition.x
+    this.mixer.fade = this.morpher.fade = fadeEase(this.smoothPosition.x)
     const direction = config.mobile ? -1 : 1 // invert look angle on mobile
     this.morpher.lookX = remap(this.smoothPosition.x, 0, 1, -1, 1) * direction
     this.morpher.lookY = remap(this.smoothPosition.y, 0, 1, -1, 1) * direction
@@ -219,8 +219,7 @@ export default class AppMorph {
     this.composite.resolution = new THREE.Vector2(width, height)
   }
 
-  /**
-   * Add GUI
+  /** Add GUI
    * @param {dat.GUI} gui 
    * @memberof View
    */

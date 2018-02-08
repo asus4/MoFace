@@ -20,6 +20,7 @@
     "babel-plugin-dynamic-import-webpack": "^1.0.2",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "bezier-easing": "^2.0.3",
     "browser-sync": "^2.18.13",
     "browser-sync-webpack-plugin": "^1.2.0",
     "cardinal-spline-js": "^2.3.6",

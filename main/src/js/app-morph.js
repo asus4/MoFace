@@ -132,7 +132,7 @@ export default class AppMorph {
         }
         this.setPosition(count % 2, Math.random())
         count++
-        await setTimeoutAsync(200)
+        await setTimeoutAsync(300)
       }
       // Say the final character
       if (c.length > 0) {
@@ -140,7 +140,7 @@ export default class AppMorph {
         this.say(c, count % 2)
       }
       // Wait a little in word
-      await setTimeoutAsync(300)
+      await setTimeoutAsync(400)
     }
     this.autoPan = false
   }

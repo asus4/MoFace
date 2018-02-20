@@ -27,11 +27,11 @@ const MAX_CHANNELS = 11
 export default class Morpher extends THREE.Mesh {
   /**
    * Creates an instance of Morpher.
-   * @param {THREE.WebGLRenderTarget} fadeMap 
+   * @param {THREE.WebGLRenderTarget} fadeMap
    * @memberof Morpher
    */
   constructor(fadeMap) {
-    // Use Delaunay cache 
+    // Use Delaunay cache
     const geometry = new THREE.BufferGeometry()
     geometry.setIndex(require('../data/triangles.json'))
     // Make A/B channels

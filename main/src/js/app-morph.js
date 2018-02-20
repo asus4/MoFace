@@ -30,7 +30,7 @@ const fadeEase = BezierEasing(0.2, 0.7, 0.8, 0.3)
 export default class AppMorph {
   /**
    * Creates an instance of AppMorph.
-   * @param {element} container 
+   * @param {element} container
    * @memberof AppMorph
    */
   constructor() {
@@ -98,8 +98,8 @@ export default class AppMorph {
   }
 
   /**
-   * @param {String} character 
-   * @param {Number} pan 
+   * @param {String} character
+   * @param {Number} pan
    * @memberof AppMorph
    */
   say(character, pan) {
@@ -108,7 +108,7 @@ export default class AppMorph {
   }
 
   /** Speak words
-   * @param {[String]} words 
+   * @param {[String]} words
    * @memberof AppMorph
    */
   async conversation(words, delay = 0) {
@@ -146,8 +146,8 @@ export default class AppMorph {
   }
 
   /**
-   * @param {Number} x 
-   * @param {Number} y 
+   * @param {Number} x
+   * @param {Number} y
    * @memberof AppMorph
    */
   setPosition(x, y, needTextureUpdate) {
@@ -220,7 +220,7 @@ export default class AppMorph {
   }
 
   /** Add GUI
-   * @param {dat.GUI} gui 
+   * @param {dat.GUI} gui
    * @memberof View
    */
   addGui(gui) {

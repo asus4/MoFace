@@ -113,7 +113,8 @@
           | アイディアやイマジネーション、インスピレーション。
           br
           | それらを見える形や新しい形で表現していく、音を軸としたクリエイティブチーム。
-        a(v-if="!isMobile" href='https://invisi.jp/' target='_blank') https://invisi.jp/
+          br
+        a(href='https://invisi.jp/' target='_blank') https://invisi.jp/
       
   .menu(v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }")
     .button.close-button(v-on:click='infoShowClick(false)')

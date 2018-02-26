@@ -8,11 +8,12 @@ const store = {
     detector: null,
     resultImage: null,
     resultPoints: null,
+    useVideo: false,
     file: null,
   }
 }
 
-// Vue Mix-in Face Detect 
+// Vue Mix-in Face Detect
 export default {
   data: store,
   methods: {
@@ -27,21 +28,24 @@ export default {
         this.detect.detector = null
       }
       this.detect.scene = ''
+      this.detect.file = null
       this.pause = false
     },
     startWebcamFaceDetect() {
-      this.startFaceDetect(null)
+      this.useVideo = true
+      this.initFaceDetect(null)
     },
     startPhotoFaceDetect() {
+      this.useVideo = false
       openPhotoLibrary().then((file) => {
-        this.startFaceDetect(file)
+        this.initFaceDetect(file)
       })
     },
-    startFaceDetect(file) {
-      this.detect.file = file
+    initFaceDetect(file) {
       this.detect.resultImage = null
       this.detect.resultPoints = null
       this.detect.detector = new AppFaceDetect(this.stats)
+      this.detect.file = file
       this.detect.scene = 'capture'
       this.detect.detector.on('capture', (img, points) => {
         this.detect.resultImage = img
@@ -51,12 +55,21 @@ export default {
         this.detect.detector = null
       })
     },
-    enterFaceDetect() {
-      this.detect.detector.start(
-        this.detect.file,
-        this.$refs.detectFaceCanvas,
-        this.$refs.detectFaceOverlay)
-      this.resizePreview(this.$refs.detectFaceCanvas.parentNode)
+    onEnterFaceDetect() {
+      // Set canvas refs
+      const detector = this.detect.detector
+      detector.overlay = this.$refs.detectFaceOverlay
+      detector.canvas = this.$refs.detectFaceCanvas
+      detector.ctx = detector.canvas.getContext('2d')
+
+      this.resizePreview(detector.overlay.parentNode)
+
+      if (this.useVideo) {
+        detector.startCamera(this.$refs.detectFaceVideo)
+      } else {
+        detector.startImage(this.detect.file)
+      }
+
     },
     addNewFace() {
       this.morph.addFace(this.detect.resultImage, this.detect.resultPoints)
@@ -70,7 +83,7 @@ export default {
       this.pause = false
     },
     /**
-     * @param {HTMLElement} container 
+     * @param {HTMLElement} container
      */
     resizePreview(container) {
       const fitWidth = container.clientWidth / container.clientHeight > config.aspect

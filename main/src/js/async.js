@@ -2,7 +2,7 @@
 
 /**
  * @export
- * @param {any} src 
+ * @param {any} src
  */
 export function loadImageAsync(src) {
   return new Promise((resolve, reject) => {
@@ -20,7 +20,7 @@ export function loadImageAsync(src) {
 
 /**
  * @export
- * @param {File} file 
+ * @param {File} file
  */
 export function loadFileAsync(file) {
   return new Promise((resolve, reject) => {

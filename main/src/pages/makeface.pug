@@ -22,7 +22,7 @@ section#makeface.modal(
   .button.back-to-top-button(v-if="!isMobile" v-on:click="makeFaceCancel")
 
 //- Capture from webcam
-transition(v-on:enter='enterFaceDetect')
+transition(v-on:enter='onEnterFaceDetect')
   section#makeface-capture.modal(
     v-if="detect.scene == 'capture'"
     v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }"
@@ -30,8 +30,9 @@ transition(v-on:enter='enterFaceDetect')
     include parts/cross-frame
     .container
       .preview(ref='preview')
-        canvas#makeface-canvas(ref='detectFaceCanvas')
-        canvas#makeface-overlay(ref='detectFaceOverlay')
+        video(v-if='useVideo' ref='detectFaceVideo' loop playsinline autoplay muted)
+        canvas(ref='detectFaceCanvas')
+        canvas(ref='detectFaceOverlay')
       .overlay
         .makeface-icon(v-if="isMobile")
         svg.guide(viewBox='0 0 512 512')

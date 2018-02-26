@@ -13,7 +13,7 @@ const STD_THRETHOLD = 0.2
 // const STD_THRETHOLD = 0.02
 
 /**
- * Draw image into canvas 
+ * Draw image into canvas
  * @param {HTMLVideoElement|HTMLImageElement} element
  * @param {HTMLCanvasElement} canvas
  * @param {Number} targetAspect
@@ -50,8 +50,8 @@ function drawElement(element, canvas, targetAspect = 0) {
 export default class AppFaceDetect extends EventEmitter {
   /**
    * Creates an instance of AppFaceDetect.
-   * @param {Canvas} target 
-   * @param {stats.js} stats 
+   * @param {Canvas} target
+   * @param {stats.js} stats
    * @memberof AppFaceDetect
    */
   constructor(stats) {
@@ -69,28 +69,17 @@ export default class AppFaceDetect extends EventEmitter {
 
     this.histories = []
     this.input = null
+    this.useCamera = false
   }
 
-  start(file, detectFaceCanvas, detecgtFaceOverlay) {
-    this.canvas = detectFaceCanvas
-    this.ctx = this.canvas.getContext('2d')
-    this.overlay = detecgtFaceOverlay
-    if (file) {
-      this._startImage(file)
-    } else {
-      this._startCamera()
-    }
-  }
-
-  /**
-   * Start from web camera
-   * 
+  /**  Start from web camera
+   * @param {HTMLVideoElement} video
    * @memberof AppFaceDetect
    */
-  _startCamera() {
+  startCamera(video) {
     this.useCamera = true
     const option = {
-      audio: false,
+      audio: true,
       video: {
         facingMode: 'user', // use facing camera
         // width: { min: 480, ideal: 640, max: 1280 },
@@ -98,24 +87,23 @@ export default class AppFaceDetect extends EventEmitter {
       }
     }
     const onSuccess = (stream) => {
-      this.input = document.createElement('video')
-      this.input.srcObject = stream
-      this.input.onloadedmetadata = this.input.onresize = this._start.bind(this)
-      this.input.play()
+      this.input = video
+      video.muted = true
+      video.srcObject = stream
+      video.onloadedmetadata = video.onresize = this._start.bind(this)
     }
     const onError = (err) => {
-      console.warn(err)
+      console.error(err)
     }
     navigator.getUserMedia(option, onSuccess, onError)
   }
 
   /**
    * Start from Image file
-   * 
-   * @param {any} file 
+   * @param {any} file
    * @memberof AppFaceDetect
    */
-  _startImage(file) {
+  startImage(file) {
     this.useCamera = false
     loadFileAsync(file).then((dataURL) => {
       return loadImageAsync(dataURL)
@@ -126,15 +114,18 @@ export default class AppFaceDetect extends EventEmitter {
   }
 
   _start() {
+
     this.canvas.width = this.overlay.width = 1920 / 4
     this.canvas.height = this.overlay.height = 1280 / 4
-
     drawElement(this.input, this.canvas)
+    if (this.useCamera) {
+      this.input.play()
+    }
 
     this.tracker.stop()
     this.tracker.reset()
-    this.tracker.start(this.canvas)
 
+    this.tracker.start(this.canvas)
     this.update()
   }
 
@@ -148,7 +139,7 @@ export default class AppFaceDetect extends EventEmitter {
     document.removeEventListener('clmtrackrLost', this.onTrackerFailue.bind(this), false)
 
     if (this.input) {
-      if (this.input instanceof HTMLVideoElement) {
+      if (this.inputIsVideo) {
         this.input.srcObject.getTracks().forEach((track) => {
           track.stop()
         })
@@ -190,9 +181,9 @@ export default class AppFaceDetect extends EventEmitter {
 
       if (this.histories.length > 60) {
         const std = math.std(this.histories)
-        if (config.DEV) {
-          console.log(std, noseX)
-        }
+        // if (config.DEV) {
+        //   console.log(std, noseX)
+        // }
         if (std < STD_THRETHOLD) {
           this.capture(positions)
         }
@@ -240,6 +231,10 @@ export default class AppFaceDetect extends EventEmitter {
   onTrackrConverged() {
     console.log('onTrackrConverged')
     // this.tracker.stop()
+  }
+
+  get inputIsVideo() {
+    return (this.input instanceof HTMLVideoElement)
   }
 
 }

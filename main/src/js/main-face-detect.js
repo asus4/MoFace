@@ -69,7 +69,6 @@ export default {
       } else {
         detector.startImage(this.detect.file)
       }
-
     },
     addNewFace() {
       this.morph.addFace(this.detect.resultImage, this.detect.resultPoints)

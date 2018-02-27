@@ -5,34 +5,52 @@ export default class AutoSwitcher extends EventEmitter {
   constructor(channelLength) {
     super()
 
-    this.channelLength = channelLength
-    this.lastChannel = -1
-    this.channels = this.makeChannels()
+    this._channelLength = channelLength
+    this._lastChannel = -1
+    this.hasPriorityChannel = false
+    this.resetChannels()
   }
 
   update(fade) {
-    if (fade < 0.1 && this.lastChannel != 1) {
+    if (fade < 0.1 && this._lastChannel != 1) {
       this.emit('switch', 1, this.nextChannel())
-      this.lastChannel = 1
-    } else if (fade > 0.9 && this.lastChannel != 0) {
+      this._lastChannel = 1
+    } else if (fade > 0.9 && this._lastChannel != 0) {
       this.emit('switch', 0, this.nextChannel())
-      this.lastChannel = 0
+      this._lastChannel = 0
     }
   }
 
-  makeChannels() {
-    const arr = []
-    for (let i = 0; i < this.channelLength; ++i) {
+  resetChannels() {
+    let arr = []
+    for (let i = 0; i < this._channelLength; ++i) {
       arr.push(i)
     }
-    return shuffle(arr)
+    arr = shuffle(arr)
+
+    if (this.hasPriorityChannel) {
+      const priorityChannel = this._channelLength
+      const tmp = []
+      arr.forEach((n, i) => {
+        if (i % 2 == 0) {
+          tmp.push(n, priorityChannel)
+        } else {
+          tmp.push(n)
+        }
+      })
+      arr = tmp
+    }
+    // if (this.hasPriorityChannel) {
+    //   const priorityChannel = this._channelLength
+    //   arr.unshift(priorityChannel)
+    // }
+    this.channels = arr
   }
 
   nextChannel() {
     if (this.channels.length == 0) {
-      this.channels = this.makeChannels()
+      this.resetChannels()
     }
     return this.channels.shift()
   }
-
 }

@@ -94,7 +94,8 @@ export default class AppMorph {
 
   addFace(img, points) {
     this.morpher.addFace(img, points)
-    this.autoSwicher.channelLength = this.morpher.channels.length
+    this.autoSwicher.hasPriorityChannel = true
+    this.autoSwicher.resetChannels()
   }
 
   /**

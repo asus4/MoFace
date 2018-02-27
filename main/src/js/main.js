@@ -105,6 +105,7 @@ export default function() {
       },
       // SNS
       shareFacebookClick() {
+        // TODO: share with custom message
         ShareUtil.facebook({
           app_id: '143390209704075',
           href: 'https://invisi.jp/moface/'

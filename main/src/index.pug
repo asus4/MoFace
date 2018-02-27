@@ -2,6 +2,8 @@
 - var title = 'MoFace'
 - var description = 'An experiment of WebGL / Web Audio by invisible designs lab'
 - var keyColor = '#ed3a24'
+- var ogUrl = 'https://invisi.jp/moface/'
+- var ogImage = 'https://invisi.jp/moface/images/ogp.jpg'
 
 //- HTML
 doctype html
@@ -23,11 +25,21 @@ html(lang='ja')
   title #{title}
   meta(name='description' content=description)
   //- og
+  meta(property='og:type' content='website')
   meta(property='og:title' content=title)
-  meta(property='og:description' content=description)
-  meta(property='og:image' content='https://invisi.jp/moface/images/ogp.jpg')
   meta(property='og:site_name' content=title)
+  meta(property='og:url' content=ogUrl)
+  meta(property='og:description' content=description)
+  meta(property='og:image' content=ogImage)
+  //- facebook
   meta(property='fb:app_id' content='143390209704075')
+  //- twitter
+  meta(property='twitter:card' content='summarylargeimage')
+  meta(name='twitter:site' content='@invisi_dl')
+  meta(name='twitter:creator' content='@asus4')
+  meta(name='twitter:title' content=title)
+  meta(name='twitter:description' content=description)
+  meta(name='twitter:image' content=ogImage)
   //- css
   link(href='https://fonts.googleapis.com/earlyaccess/roundedmplus1c.css' rel='stylesheet')
   link(href='https://fonts.googleapis.com/css?family=Questrial' rel='stylesheet')

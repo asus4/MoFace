@@ -10,7 +10,7 @@ html(lang='ja')
   //- Meta for compatibility
   meta(name='viewport', content='initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no')
   meta(http-equiv='X-UA-Compatible', content='IE=edge')
-  meta(name='description' content='A director and film maker with the Tokyo visual design studio Tangram.')
+  meta(name='description' content=description)
   //- icons
   link(rel='apple-touch-icon', sizes='180x180', href='https://invisiresouce.s3.amazonaws.com/cms/asset/img/f/apple-touch-icon.png')
   link(rel='icon', type='image/png', href='https://invisiresouce.s3.amazonaws.com/cms/asset/img/f/favicon-32x32.png', sizes='32x32')
@@ -21,16 +21,17 @@ html(lang='ja')
   //- keywords
   meta(name='keywords' content='MoFace, invisible designs lab, インビジブル・デザインズ・ラボ, インビジブルデザインズラボ, invisi, インビジ, Z-MACHINES x SQUAREPUSHER, TOUCH WOOD, 森の木琴, WATER ROCK, 松尾謙二郎')
   title #{title}
-  meta(name='description' content='#{description}')
+  meta(name='description' content=description)
   //- og
-  meta(property='og:title' content='#{title}')
-  meta(property='og:description' content='#{description}')
-  meta(property='og:image' content='https://invisi.jp/cms/wp-content/themes/idl/asset/img/fb.png')
-  meta(property='og:site_name' content='#{title}')
+  meta(property='og:title' content=title)
+  meta(property='og:description' content=description)
+  meta(property='og:image' content='https://invisi.jp/moface/images/ogp.jpg')
+  meta(property='og:site_name' content=title)
   //- css
   link(href='https://fonts.googleapis.com/earlyaccess/roundedmplus1c.css' rel='stylesheet')
   link(href='https://fonts.googleapis.com/css?family=Questrial' rel='stylesheet')
   link(rel='stylesheet', href='main.css')
+  script(src='bundle.js' async)
 body
   #app-morph
     include pages/parts/cross-frame
@@ -87,4 +88,3 @@ body
     include pages/makeface
   include pages/loading
 
-  script(src='bundle.js')

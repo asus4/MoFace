@@ -18,7 +18,7 @@ const STD_THRETHOLD = 0.2
  * @param {HTMLCanvasElement} canvas
  * @param {Number} targetAspect
  */
-function drawElement(element, canvas, targetAspect = 0) {
+function drawElement(element, canvas, overrideAspect = 0) {
   const ctx = canvas.getContext('2d')
 
   // destination size
@@ -33,18 +33,36 @@ function drawElement(element, canvas, targetAspect = 0) {
     sw = element.videoWidth
     sh = element.videoHeight
   }
+
   const sourceAspect = sw / sh // souce aspect
-  if (targetAspect === 0) {
-    targetAspect = dw / dh
+  let targetAspect = dw / dh
+  if (overrideAspect !== 0) {
+    targetAspect = overrideAspect
   }
 
-  if (sourceAspect > targetAspect) {
-    const cropW = sh * targetAspect
-    ctx.drawImage(element, (sw - cropW) / 2, 0, cropW, sh, 0, 0, dw, dh)
+  // If sW > sH : Use aspect fill
+  if (sw > sh) {
+    if (sourceAspect > targetAspect) {
+      const cropW = sh * targetAspect
+      ctx.drawImage(element, (sw - cropW) / 2, 0, cropW, sh, 0, 0, dw, dh)
+    } else {
+      const cropH = sw / targetAspect
+      ctx.drawImage(element, 0, (sh - cropH) / 2, sw, cropH, 0, 0, dw, dh)
+    }
   } else {
-    const cropH = sw / targetAspect
-    ctx.drawImage(element, 0, (sh - cropH) / 2, sw, cropH, 0, 0, dw, dh)
+    // If sW < sH : Use aspect fit
+    if (sourceAspect > targetAspect) {
+      // Considering in case of override target aspect retio
+      // const fitH = dw / sw * sh
+      const fitH = targetAspect / sourceAspect * dh
+      ctx.drawImage(element, 0, 0, sw, sh, 0, (dh - fitH) / 2, dw, fitH)
+    } else {
+      // const fitW = dh / sh * sw
+      const fitW = sourceAspect / targetAspect * dw
+      ctx.drawImage(element, 0, 0, sw, sh, (dw - fitW) / 2, 0, fitW, dh)
+    }
   }
+
 }
 
 export default class AppFaceDetect extends EventEmitter {
@@ -163,15 +181,12 @@ export default class AppFaceDetect extends EventEmitter {
     }
     this.requestID = requestAnimationFrame(this.update.bind(this))
 
-    //
     if (this.useCamera) {
       drawElement(this.input, this.canvas)
     }
-    {
-      this.overlay.getContext('2d').clearRect(0, 0, this.overlay.width, this.overlay.height)
-    }
+    this.overlay.getContext('2d').clearRect(0, 0, this.overlay.width, this.overlay.height)
 
-    //
+    // Tracker
     const positions = this.tracker.getCurrentPosition()
     if (positions) {
       this.tracker.draw(this.overlay)
@@ -212,6 +227,7 @@ export default class AppFaceDetect extends EventEmitter {
     // Draw big image into 1024x1024 canvas
     const canvas = document.createElement('canvas')
     canvas.width = canvas.height = 1024
+    // drawElement(this.input, canvas, config.aspect)
     drawElement(this.input, canvas, config.aspect)
 
     loadImageAsync(canvas.toDataURL()).then((img) => {

@@ -88,22 +88,21 @@
       h2.credit CREDIT
       hr.mini
 
-      video(v-bind:src="'images/' + 'credit.mp4'" width='325' height='325' playsinline muted autoplay loop)
-      .profile
-        .right
+      .center
+        video(v-bind:src="'images/' + 'credit.mp4'" width='325' height='325' playsinline muted autoplay loop)
+        .profile
           .job Planner
           .name Yudai Kogawa
           .company invisible designs lab
-      .profile
-        .right
+        .profile
           .job Designer
           .name Tsuyoshi Otabe 
           .company invisible designs lab
-      .profile
-        .right
+        .profile
           .job Engineer
           .name Koki Ibukuro
           .company dot by dot inc.
+      
       .invisi
         span(v-if="!isMobile") presented by
         .logo

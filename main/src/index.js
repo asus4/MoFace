@@ -24,7 +24,7 @@ if (!Modernizr.webaudio && !Modernizr.webgl) {
     const main = require('./js/main').default
     const Tone = require('tone')
     const StartAudioContext = require('startaudiocontext')
-    const config = require('./js/config')
+    const config = require('./js/config').default
 
 
     const start = () => {
@@ -41,8 +41,8 @@ if (!Modernizr.webaudio && !Modernizr.webgl) {
       assets.textures.depth = queue.getResult('depth')
       // assets.textures.circle = queue.getResult('circle')
 
-      if (config.mobile !== undefined) {
-        // Unlock Web Audio security on iOS 
+      if (config.mobile) {
+        // Unlock Web Audio security on iOS
         StartAudioContext(Tone.context, loadingBar.background).then(() => {
           main()
         })

@@ -60,7 +60,7 @@ export default class AppMorph {
     this._effectAmount = 1
     this._effectDecay = 1.5
 
-    this._speakMode = true
+    this._speakMode = false
   }
 
   initScene() {
@@ -103,7 +103,6 @@ export default class AppMorph {
    * @memberof AppMorph
    */
   say(character, pan) {
-    console.log('say:', character, pan)
     this.effectAmount = this.speakMode ? 0.5 : 1.0
     this.mixer.play(character, pan)
   }

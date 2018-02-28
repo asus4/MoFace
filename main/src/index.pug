@@ -59,6 +59,11 @@ body
           v-on:touchstart='keyboard.onTouch($event, true)'
           v-on:touchmove='keyboard.onTouch($event, false)'
         )
+      canvas.ui(
+          v-if='!speakMode && isMobile'
+          v-on:touchstart='keyboard.onTouch($event, true)'
+          v-on:touchmove='keyboard.onTouch($event, false)'
+        )
       #text-log(
         v-if='!speakMode || !isMobile'
         v-bind:class="{ 'mobile':isMobile, 'pc':!isMobile }"

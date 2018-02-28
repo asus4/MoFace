@@ -106,7 +106,8 @@ export default class AppMorph {
    * @memberof AppMorph
    */
   say(character, pan) {
-    this.effectAmount = 1
+    console.log('say:', character, pan)
+    this.effectAmount = this.speakMode ? 0.5 : 1.0
     this.mixer.play(character, pan)
   }
 
@@ -271,9 +272,6 @@ export default class AppMorph {
   }
   get effectAmount() {return this._effectAmount}
   set effectAmount(value) {
-    if (!this.speakMode) {
-      value *= 0.5
-    }
     if (this._effectAmount === value) {
       return
     }

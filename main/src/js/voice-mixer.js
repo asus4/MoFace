@@ -15,9 +15,9 @@ export default class VoiceMixer {
     this.buffers = buffers
 
     // Effect chain
-    this.delay = new Tone.FeedbackDelay('8n', 0.5)
+    this.delay = new Tone.FeedbackDelay('8n', 0.7)
     // this.reverb = new Tone.Freeverb(0.9, 4000)
-    this.reverb = new Tone.JCReverb(0.9)
+    this.reverb = new Tone.JCReverb(0.97)
     // A-B track
     this.crossFade = new Tone.CrossFade()
 

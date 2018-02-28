@@ -157,8 +157,8 @@ export default class AppMorph {
     // console.log(x, y)
     this.position.x = x
     this.position.y = y
-    this.autoSwicher.update(x)
     if (needTextureUpdate) {
+      this.autoSwicher.update(x)
       this.displacementTex.updatePosition(x, y)
     }
   }
@@ -205,7 +205,9 @@ export default class AppMorph {
     this.canvas.width = width
     this.canvas.height = height
 
-    // this.camera.aspect = width / height // In case of  PerspectiveCamera
+    // In case of  PerspectiveCamera
+    // this.camera.aspect = width / height
+
     // In case of OrthographicCamera
     this.camera.left = width / - 2
     this.camera.right = width / 2
@@ -269,13 +271,15 @@ export default class AppMorph {
   }
   get effectAmount() {return this._effectAmount}
   set effectAmount(value) {
+    if (!this.speakMode) {
+      value *= 0.5
+    }
     if (this._effectAmount === value) {
       return
     }
-    // console.log(value)
     this._effectAmount = value
+    this.mixer.effectAmount = value
     const value2 = easeQuadOut(value) // get eased value
-    this.mixer.effectAmount = lerp(0, 1, value)
     this.displacementTex.learningRate = lerp(0, 0.04, value2)
     this.displacementTex.fillRate = lerp(0.5, 0.085, value2)
   }

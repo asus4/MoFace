@@ -1,5 +1,6 @@
 import Tone from 'tone'
 import {lerp} from './math'
+import easeExpoIn from 'eases/expo-in'
 
 export default class VoiceMixer {
   constructor(buffers, infos) {
@@ -15,11 +16,12 @@ export default class VoiceMixer {
 
     // Effect chain
     this.delay = new Tone.FeedbackDelay('8n', 0.5)
-    this.reverb = new Tone.Freeverb(0.76, 1000)
+    // this.reverb = new Tone.Freeverb(0.9, 4000)
+    this.reverb = new Tone.JCReverb(0.9)
     // A-B track
     this.crossFade = new Tone.CrossFade()
 
-    // Connect 
+    // Connect
     this.crossFade.connect(this.delay)
     this.delay.connect(this.reverb)
     this.reverb.toMaster()
@@ -31,9 +33,9 @@ export default class VoiceMixer {
   }
 
   play(key, mix) {
-    this.reverbWet = mix
-    this.delayWet = 1.0 - mix
-
+    this.reverbWet = easeExpoIn(1 - mix)
+    this.delayWet = easeExpoIn(mix)
+    console.log('play:', this.reverbWet, this.delayWet)
 
     // error check
     const playDatas = [
@@ -92,7 +94,12 @@ export default class VoiceMixer {
 
   // Effects
   get effectAmount() {return this._effectAmount}
-  set effectAmount(value) {this._effectAmount = value}
+  set effectAmount(value) {
+    this._effectAmount = value
+    // Update related
+    this.reverbWet = this.reverbWet
+    this.delayWet = this.delayWet
+  }
 
   get reverbWet () {return this.reverb.wet.value}
   set reverbWet(value) {

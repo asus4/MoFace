@@ -15,7 +15,7 @@ export default class VoiceMixer {
     this.buffers = buffers
 
     // Effect chain
-    this.delay = new Tone.FeedbackDelay('8n', 0.7)
+    this.delay = new Tone.FeedbackDelay('8n', 0.6)
     // this.reverb = new Tone.Freeverb(0.9, 4000)
     this.reverb = new Tone.JCReverb(0.97)
     // A-B track
@@ -35,7 +35,6 @@ export default class VoiceMixer {
   play(key, mix) {
     this.reverbWet = easeExpoIn(1 - mix)
     this.delayWet = easeExpoIn(mix)
-    console.log('play:', this.reverbWet, this.delayWet)
 
     // error check
     const playDatas = [

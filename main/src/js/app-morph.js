@@ -115,7 +115,6 @@ export default class AppMorph {
   async conversation(words, delay = 0) {
     await setTimeoutAsync(delay)
 
-    let count = Math.round(Math.random())
     for (const word of words) {
       let c = ''
       for (const character of word) {
@@ -124,20 +123,17 @@ export default class AppMorph {
           continue
         }
         if (RomaJi.isYoon(character)) {
-          this.say(c + character, count % 2)
+          this.say(c + character, this.position.x)
           c = ''
         } else {
-          this.say(c, count % 2)
+          this.say(c, this.position.x)
           c = character
         }
-        this.setPosition(count % 2, Math.random())
-        count++
         await setTimeoutAsync(300)
       }
       // Say the final character
       if (c.length > 0) {
-        this.setPosition(count % 2, Math.random())
-        this.say(c, count % 2)
+        this.say(c, this.position.x)
       }
       // Wait a little in word
       await setTimeoutAsync(400)

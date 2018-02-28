@@ -44,6 +44,11 @@ const drawTouchGrids = (canvas) => {
   ctx.stroke()
 }
 
+const normalize = (p) => {
+  p[0] = Math.max(Math.min(0.999, p[0]), 0)
+  p[1] = Math.max(Math.min(0.999, p[1]), 0)
+  return p
+}
 
 export default class VirtualKeyboard extends EventEmitter {
   constructor() {
@@ -111,7 +116,7 @@ export default class VirtualKeyboard extends EventEmitter {
   onTouch(e, force = false) {
     const touch = e.touches[0]
     const rect = e.target.getBoundingClientRect()
-    const p = [(touch.clientX - rect.left) / rect.width, (touch.clientY - rect.top) / rect.height]
+    const p = normalize([(touch.clientX - rect.left) / rect.width, (touch.clientY - rect.top) / rect.height])
     const y = Math.floor(p[1] * SCREENMAP.length)
     const x = Math.floor(p[0] * SCREENMAP[y].length)
 

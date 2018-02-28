@@ -62,6 +62,8 @@ export default class AppMorph {
 
     this._effectAmount = 1
     this._effectDecay = 1.5
+
+    this._speakMode = true
   }
 
   initScene() {
@@ -182,6 +184,8 @@ export default class AppMorph {
     // Update effect amount
     if (this.effectAmount > 0.05) {
       this.effectAmount = lerp(this.effectAmount, 0,  deltaTime / this._effectDecay)
+    } else {
+      this.effectAmount = 0
     }
 
     // Render displacement texture
@@ -265,12 +269,17 @@ export default class AppMorph {
   }
   get effectAmount() {return this._effectAmount}
   set effectAmount(value) {
+    if (this._effectAmount === value) {
+      return
+    }
+    // console.log(value)
     this._effectAmount = value
     const value2 = easeQuadOut(value) // get eased value
     this.mixer.effectAmount = lerp(0, 1, value)
     this.displacementTex.learningRate = lerp(0, 0.04, value2)
     this.displacementTex.fillRate = lerp(0.5, 0.085, value2)
   }
-
+  get speakMode() {return this._speakMode}
+  set speakMode(value) {this._speakMode = value}
 }
 

@@ -27,7 +27,6 @@ const gui = config.DEV ? new dat.GUI() : null
 export default function() {
   // Make Vue App
   const store = {
-    speakMode: true,
     isMobile: document.documentElement.classList.contains('mobile'),
     pause: false,
     showInfo: false,
@@ -39,6 +38,7 @@ export default function() {
     inputLogs: ['われわれは', 'どこからきて', 'どこへむかうのか'],
   }
 
+  // update
   let lastTime = 0
   const update = (now) => {
     if (store.pause) {
@@ -50,14 +50,14 @@ export default function() {
     lastTime = now
   }
 
-  new Vue({
+  const app = new Vue({
     el: '#app-morph',
     data: store,
     mixins: [MixInFaceDetect],
     //-------------------
     // Life cycle
     //-------------------
-    mounted: () => {
+    mounted() {
       // App
       store.morph = new AppMorph()
       if (config.DEV) {
@@ -67,8 +67,8 @@ export default function() {
 
       // Events
       store.keyboard.on('key', (input, pan) => {
-        if (store.speakMode) {
-          store.morph.say(input, pan)
+        if (app.speakMode) {
+          app.morph.say(input, pan)
         }
       })
       store.keyboard.on('fade', (x, y, needTextureUpdate) => {
@@ -91,6 +91,16 @@ export default function() {
         console.log('pause changed', value)
         if (!value) {
           requestAnimationFrame(update)
+        }
+      }
+    },
+    computed: {
+      speakMode: {
+        get: () => {
+          return store.morph ? store.morph.speakMode : true
+        },
+        set: (value) => {
+          store.morph.speakMode = value
         }
       }
     },
@@ -124,6 +134,7 @@ export default function() {
       },
     }
   })
+
 
   // Global Events
   window.addEventListener('focus', () => {

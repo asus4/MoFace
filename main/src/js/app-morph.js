@@ -9,7 +9,6 @@ import 'three/examples/js/postprocessing/ShaderPass'
 import 'three/examples/js/postprocessing/RenderPass'
 
 import easeQuadOut from 'eases/quad-out'
-import SimplexNoise from 'simplex-noise'
 import BezierEasing from 'bezier-easing'
 
 import assets from './assets'
@@ -23,7 +22,6 @@ import AutoSwicher from './auto-switcher'
 import DisplacementTexture from './displacement-texture'
 import RomaJi from './roma-ji'
 
-const simplex = new SimplexNoise()
 // const fadeEase = BezierEasing(0.1, 0.5, 0.9, 0.5)
 const fadeEase = BezierEasing(0.2, 0.7, 0.8, 0.3)
 
@@ -58,7 +56,6 @@ export default class AppMorph {
 
     this.channelA = this.autoSwicher.nextChannel()
     this.channelB = this.autoSwicher.nextChannel()
-    this.autoPan = false
 
     this._effectAmount = 1
     this._effectDecay = 1.5
@@ -117,7 +114,6 @@ export default class AppMorph {
    */
   async conversation(words, delay = 0) {
     await setTimeoutAsync(delay)
-    this.autoPan = true
 
     let count = Math.round(Math.random())
     for (const word of words) {
@@ -146,7 +142,6 @@ export default class AppMorph {
       // Wait a little in word
       await setTimeoutAsync(400)
     }
-    this.autoPan = false
   }
 
   /**
@@ -170,11 +165,6 @@ export default class AppMorph {
    * @memberof AppMorph
    */
   update(time, deltaTime) {
-    if (this.autoPan) {
-      this.position.x = simplex.noise2D(time * 1.4, 0.15) + 0.5
-      this.position.y = simplex.noise2D(time * 1, 0.7) + 0.5
-    }
-
     // Update position
     this.smoothPosition.lerp(this.position, 0.3)
     this.mixer.fade = this.morpher.fade = fadeEase(this.smoothPosition.x)

@@ -1,4 +1,4 @@
-# MoFace
+MoFace
 ===
 
 ![https://invisi.jp/moface/](https://invisi.jp/moface/)

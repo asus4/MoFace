@@ -4,7 +4,7 @@ import loadingBar from './js/loading-bar'
 import Preloader from './js/preloader'
 import manifest from './data/manifest'
 
-console.log('GitHub https://github.com/asus4/morph-identity')
+console.log('GitHub https://github.com/asus4/MoFace')
 
 if (!Modernizr.webaudio && !Modernizr.webgl) {
   // TODO no support fallback
